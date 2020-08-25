@@ -1,0 +1,280 @@
+---
+title: "Clustering_Torus_Demo"
+author: "Sungkyu Jung"
+date: '2020 7 21 '
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+ 
+ 
+```{r, warning=FALSE, message=FALSE}
+source('routines.R')
+
+library(MASS)
+library(tidyverse) 
+library(circular)
+library(bio3d)
+# bio data ------------------------------------------
+pdb <- read.pdb("6a32")
+# pdb <- read.pdb("4q21")
+# pdb <- read.pdb("1SSG") 
+
+a <- torsion.pdb(pdb)
+plot(a$phi,a$psi)
+
+data <- cbind(a$phi/180*pi,a$psi/180*pi)
+data <- data[-which(is.na(data[,1])|is.na(data[,2])),]
+data <- on.torus(data)
+```
+
+# 1. Conformal prediction by KDE
+
+```{r}
+a<-cp.torus.kde(data, level = 0.1)
+print(object.size(a),units = "auto")
+
+b<- a$cp.torus %>% pivot_longer(3:5, names_to = "Type", values_to = "value")
+ggplot() + geom_contour(aes(phi, psi, z = ifelse(value,1,0),linetype = Type, color =Type), data = b, size = 1,lineend = "round" ) + 
+  geom_point(mapping = aes(x,y), data = data.frame(x = data[,1],y =data[,2])) + 
+  scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(0,2*pi))+ 
+  scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(0,2*pi))
+
+
+```
+
+# 2. Inductive Conformal Prediction by mixture model 
+
+Check whether fit is okay 
+```{r}
+
+icp.torus<- icp.torus.score(data, split.id = NULL,
+                            method = "mixture",
+                            mixturefitmethod = "a",
+                            param = list(J = 12,concentration = 25))
+layout(1:2)
+plot(icp.torus$mixture$fit$loglkhd.seq, xlab = "iteration",ylab ="l",main = "Observed data log-likelihood")
+plot(log10(  rowSums(diff(icp.torus$mixture$fit$param.seq)^2) ), xlab = "iteration",ylab ="log10(Delta)",main = "L2 Differences in parameter estimates")
+```
+
+
+Evaluate Cn-mix, Cn-max and Cn-ellipse
+```{r}
+ia <- icp.torus.eval(icp.torus, level = 0.1, eval.point = grid.torus())
+b <- cbind( a$cp.torus, ia$Chat_mix == 1, ia$Chat_max == 1, ia$Chat_e == 1)
+colnames(b)[7:9] <- c("C_mix","C_max","C_e")
+b <- b[,c(1,2,6:9)]
+head(b)
+
+b<- b %>%  pivot_longer(4:6, names_to = "Type", values_to = "value")
+g0 <- ggplot() + geom_contour(aes(phi, psi, z = ifelse(value,1,0),linetype = Type, color =Type), data = b, size = 1,lineend = "round" ) + 
+  geom_point(mapping = aes(x,y), data = data.frame(x = data[,1],y =data[,2])) + 
+  scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(0,2*pi))+ 
+  scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(0,2*pi))
+g0 
+```
+
+# 3. Clustering 
+
+```{r, warning=FALSE, message=FALSE}
+K <- 12
+library(ClusterR)
+library(mclust)  
+## By naive K-means
+kmeans.out<-KMeans_rcpp(data,clusters = 12)
+data.frame(phi = data[,1], psi = data[,2], membership = as.factor(kmeans.out$clusters)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("K-means (ignoring the angular constraint)")
+
+## By Non-angular Gaussian Mixture (using state-of-the-art mclust)
+BIC <- mclustBIC(data, G = 12)
+# plot(BIC)
+mod1 <- Mclust(data, x = BIC)
+# summary(mod1, parameters = TRUE)
+plot(mod1, what = "classification",xlab = "phi",ylab = 'psi', main = "Normal mixture") 
+
+# define angular distance: 
+  
+pdist.data2 <- ang.pdist(data) # Use the pairwise L2-angular distance for clustering 
+
+## PAM (Partitioning around medoids - Kaufman and Rousseeuw(1990) )
+pam.out <- Cluster_Medoids(as.matrix(pdist.data2),clusters = 12)
+data.frame(phi = data[,1], psi = data[,2], membership = as.factor(pam.out$clusters)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Partitioning around medoids")
+
+## K-means in the ambient space with kmeans++ initialization
+
+kmeans.out<-KMeans_rcpp(cbind(cos(data),sin(data)),clusters = 12)
+data.frame(phi = data[,1], psi = data[,2], membership = as.factor(kmeans.out$clusters)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("K-means with chordal distance (in the ambient space) ")
+
+## Hierarchical
+hc.complete <- hclust(pdist.data2, method="complete")
+
+library("ggdendro")
+
+ggdendrogram(hc.complete, rotate=TRUE, size=2) + labs(title="Complete Linkage")
+
+#ggdendrogram(hc.complete,main="Average Linkage", xlab="", sub="", cex=.9)
+
+J = 12
+membership <- cutree(hc.complete, J)
+data.frame(phi = data[,1], psi = data[,2], membership = as.factor(membership)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Hierachical clustering with average L2-Angular distance")
+
+```
+
+
+
+# Clustering by conformal prediction
+```{r}
+c <- cluster.assign.torus(data, icp.torus, level = 0.1) 
+g_e <- data.frame(phi = data[,1], psi = data[,2], membership = as.factor(c$cluster.id.by.ehat)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Clustering by ehatj")
+g_e
+
+data.frame(phi = data[,1], psi = data[,2], membership = as.factor(c$cluster.id.by.partialsum)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Clustering by partial sum")
+
+
+g1 <- data.frame(phi = data[,1], psi = data[,2], membership = as.factor(c$cluster.id.outlier)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Clustering with outlier")
+g1
+
+g_mah <- data.frame(phi = data[,1], psi = data[,2], membership = as.factor(c$cluster.id.by.Mah.dist)) %>% 
+  ggplot(aes(phi,psi, color = membership)) + geom_point() + ggtitle("Clustering by Mahalanobis distance")
+g_mah  
+  
+
+
+```
+
+Overlay with fitted ellipses
+```{r}
+# add on g_e, or g_1, or g_0
+g2 <- g_mah 
+
+level = 0.1
+n2 <- icp.torus$n2
+ialpha <- floor( (n2 + 1) * level)
+t <- icp.torus$mixture$score_ellipse[ialpha]
+# Draw.ellipses.bvn.approx(data, icp.torus$mixture$fit$parammat, t, data, c$cluster.id.outlier)
+  
+ellipse.param <- icp.torus$mixture$ellipsefit
+J <- length(ellipse.param$mu1)
+
+# all_nine_ellipses
+theta <- seq(0,2*pi,length.out = 999)
+Z <- cbind(cos(theta), sin(theta))
+
+  shift <- matrix(0,ncol = 2, nrow = 9)
+  shift[,1] <- c(0,2*pi,-2*pi)
+  shift[,2] <- rep(c(0,2*pi,-2*pi), each = 3)
+  
+  
+for(j in 1:J){
+  mu <- c(ellipse.param$mu1[j], ellipse.param$mu2[j])
+  Sinv <- ellipse.param$Sigmainv[[j]]
+  c.minus.t <- ellipse.param$c[j] - t
+  
+  if(c.minus.t < 0){
+    cat("skip",j,",")
+    next}
+  cat("draw",j,",")
+  M <- eigen(Sinv/c.minus.t)
+  Mmhalf <- M$vectors %*% diag( sqrt(1/M$values) ) %*% t(M$vectors)
+  R <- Mmhalf %*% t(Z) 
+  for( shift.id in 1:9){
+    RR <- R + mu + shift[shift.id,]
+    g2 <-   g2 + geom_polygon(aes(x = phi, y = psi),color = "blue",alpha = 0.1, data = data.frame(phi = RR[1,],psi = RR[2,], value = 1))
+  }
+  
+}
+  
+  eps <- pi/10
+  g2 + 
+  scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(-eps,2*pi+eps))+ 
+  scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","2pi/3","2pi"), limits = c(-eps,2*pi+eps))
+  
+  
+
+```
+
+Now choose alpha and J.
+
+For this, fit J mixtures for J = 4:35.
+
+```{r}
+Jvec <- 4:35
+l <- list()
+for (j in Jvec){
+  l[[j]] <- icp.torus.score(data, split.id = NULL,
+                            method = "mixture",
+                            mixturefitmethod = "a",
+                            param = list(J = j,concentration = 25))
+}
+```
+
+Now evaluate $\mu(C_n)$ for a given alpha = 0.1. 
+
+```{r}
+muvec_mix <- Jvec
+muvec_max <- Jvec
+muvec <- Jvec
+for (j in Jvec){
+  a<-icp.torus.eval(l[[j]], level = 0.1, eval.point = grid.torus())
+  muvec[j-3] <- sum(a$Chat_e)/10000
+  muvec_mix[j-3] <- sum(a$Chat_mix)/10000
+  muvec_max[j-3] <- sum(a$Chat_max)/10000
+}
+data.frame(J = Jvec, e = muvec, mix = muvec_mix, max = muvec_max) %>% 
+  pivot_longer(cols = 2:4, names_to = "type")   %>%                                                                 
+  ggplot(aes(x = J, y = value, color = type)) + geom_line()
+```
+
+
+
+Now evaluate $\mu(C_n)$ for a given $J = 22$.
+
+```{r}
+j <- 22 
+n2 <- l[[j]]$n2 
+alphavec <- 1:floor(n2/2) / n2
+N <- length(alphavec)
+Mvec <- alphavec
+
+a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus())
+for (i in 1:N){
+   Mvec[i] <- sum(a$Chat_e[,i])/10000
+}
+
+data.frame(alpha = alphavec, mu = Mvec) %>% ggplot(aes(x = alpha, y = mu)) + geom_line()
+```
+Now evaluate (alpha, J) by looking at the minimum of $\alpha + \mu(C_n)$ 
+
+```{r} 
+n2 <- l[[10]]$n2 
+alphavec <- 1:floor(n2/2) / n2
+N <- length(alphavec)
+
+# need a data frame (alpha, J, mu, alpha + mu)
+out <- data.frame()
+for (j in Jvec){
+  Mvec <- alphavec
+  a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus())
+  for (i in 1:N){
+     Mvec[i] <- sum(a$Chat_e[,i])/10000
+  }
+  out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec + Mvec))
+}
+
+out %>% ggplot(aes(x= alpha, y = mu, color = J)) + geom_point()
+out %>% ggplot(aes(x= alpha, y = criterion, color = J)) + geom_point()
+
+out.index <- which.min(out$criterion)
+out[out.index,]
+
+```
+
+
