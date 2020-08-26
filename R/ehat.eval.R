@@ -8,6 +8,7 @@
 #' @param ellipse.param list which is consisting of mean of each angular
 #'   coordinate, inverse of each covariance matrix, and constant term
 #' @return nrow(X) times ncol(parammat) (n x J) matrix
+#' @export
 
 ehat.eval <- function(X, ellipse.param){
 
