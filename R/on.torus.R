@@ -11,9 +11,11 @@
 #' on.torus(x)
 #' }
 on.torus <- function(x){
-  y <- x - 2 * pi * floor(x/2/pi + 1/2)
-#   y <- x
-#   y[,1] <- x[,1] - 2*pi*floor(x[,1]/2/pi)
-#   y[,2] <- x[,2] - 2*pi*floor(x[,2]/2/pi)
+#  y <- x - 2 * pi * floor(x/2/pi + 1/2) # for [-pi, pi)^2
+  y <- x - 2 * pi * floor(x/2/pi)
+#  default version
+#  y <- x
+#  y[,1] <- x[,1] - 2*pi*floor(x[,1]/2/pi)
+#  y[,2] <- x[,2] - 2*pi*floor(x[,2]/2/pi)
   return(y)
 }
