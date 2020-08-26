@@ -8,10 +8,10 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' grid.torus()
+#' grid.torus(grid.size = 50)
 #' }
 grid.torus <- function(grid.size = 100){
   # returns grid points on torus of size (grid.size) x (grid.size)
   Axis <- seq(-pi, pi, length = grid.size)
-  return( cbind(rep(Axis, grid.size), rep(Axis, each=grid.size)))
+  return(cbind(rep(Axis, grid.size), rep(Axis, each=grid.size)))
 }

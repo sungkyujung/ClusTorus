@@ -18,6 +18,6 @@ grid.torus(grid.size = 100)
 }
 \examples{
 \dontrun{
-grid.torus()
+grid.torus(grid.size = 50)
 }
 }
