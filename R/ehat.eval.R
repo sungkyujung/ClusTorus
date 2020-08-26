@@ -4,7 +4,7 @@
 #'   log - weighted bivariate von Mises for each given data and f
 #'   or each given parameters.
 #'
-#' @param X n x 2 toroidal data on \eqn{[-\pi, pi)^2}
+#' @param X n x 2 toroidal data on \eqn{[-\pi, \pi)^2}
 #' @param ellipse.param list which is consisting of mean of each angular
 #'   coordinate, inverse of each covariance matrix, and constant term
 #' @return nrow(X) times ncol(parammat) (n x J) matrix
