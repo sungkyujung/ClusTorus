@@ -1,4 +1,4 @@
-#' Inductive conformal prediction sets
+#' Conformity score for inductive prediction sets
 #'
 #' \code{icp.torus.score} returns an icp.torus object, containing all values
 #'   to compute the conformity score.
@@ -12,7 +12,7 @@
 #'   supported)
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
-#' @return returns an icp.torus object, containing all values
+#' @return returns an \code{icp.torus} object, containing all values
 #'   to compute the conformity score
 #' @export
 #' @seealso \code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
@@ -137,5 +137,81 @@ icp.torus.score <- function(data, split.id = NULL,
   }
 
   return(icp.torus)
+
+}
+
+#' Inductive prediction sets for each level
+#'
+#' \code{icp.torus.eval} evaluates whether each pre-specified evaluation point
+#'   is contained in the inductive conformal prediction sets for each given
+#'   level.
+#'
+#' @param icp.torus an object containing all values to compute the conformity
+#'   score, which will be constructed with \code{icp.torus.score}.
+#' @param level either a scalar or a vector, or even \code{NULL}. Default value
+#'   is 0.1.
+#' @param eval.point N x N numeric matrix on \eqn{[-\pi, \pi)^2}. Default input is
+#'   \code{grid.torus}.
+#' @return returns a \code{cp} object with the boolean values which
+#'   indicate whether each evaluation point is contained in the inductive
+#'   conformal prediction sets for each given level.
+#' @export
+#' @seealso \code{\link{grid.torus}
+
+icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
+  # evaluates Chat_kde, Chat_mix, Chat_max, Chat_e.
+  N <- nrow(eval.point)
+
+  n2 <- icp.torus$n2
+  nalpha <- length(level)
+  cp <- list(Chat_kde = NULL, Chat_mix = NULL, Chat_max = NULL, Chat_e = NULL,
+             level = level,
+             phi = eval.point[, 1],
+             psi = eval.point[, 2])
+
+
+
+  if(!is.null(icp.torus$kde)){
+
+    Chat_kde <- matrix(0, nrow = N, ncol = nalpha)
+    colnames(Chat_kde) <- level
+
+    phat.grid <- kde.torus(icp.torus$kde$X1, eval.point, concentration = icp.torus$kde$concentration)
+    for (i in 1:nalpha){
+      ialpha <- floor((n2 + 1) * level[i])
+
+      # indices for inclusion in Chat_kde
+      Chat_kde[, i] <- phat.grid >= icp.torus$kde$score[ialpha]
+    }
+    cp$Chat_kde <- Chat_kde
+  }
+
+  if(!is.null(icp.torus$mixture)){
+    Chat_mix <- matrix(0, nrow = N, ncol = nalpha)
+    colnames(Chat_mix) <- level
+
+    Chat_max <- Chat_mix
+    Chat_e <- Chat_mix
+
+    phatj <- phat.eval(eval.point, icp.torus$mixture$fit$parammat)
+    ehatj <- ehat.eval(eval.point, icp.torus$mixture$ellipsefit)
+    phat_mix <- rowSums(phatj)
+    phat_max <- apply(phatj, 1, max)
+    ehat <- apply(ehatj, 1, max)
+
+    for (i in 1:nalpha){
+      ialpha <- floor( (n2 + 1) * level[i])
+
+      Chat_mix[, i] <- phat_mix >= icp.torus$mixture$score[ialpha]
+      Chat_max[, i] <- phat_max >= icp.torus$mixture$score_max[ialpha]
+      Chat_e[, i]   <-    ehat  >= icp.torus$mixture$score_ellipse[ialpha]
+    }
+
+    cp$Chat_mix <- Chat_mix
+    cp$Chat_max <- Chat_max
+    cp$Chat_e <- Chat_e
+  }
+
+  return(cp)
 
 }
