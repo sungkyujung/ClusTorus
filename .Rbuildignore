@@ -4,3 +4,4 @@
 .gitignore
 .Rhistory
 README.md
+.DS_Store
