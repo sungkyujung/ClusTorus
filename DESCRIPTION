@@ -20,3 +20,7 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends: 
     R (>= 2.10)
+Imports: 
+    BAMBI,
+    igraph,
+    polynom
