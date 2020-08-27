@@ -8,9 +8,12 @@ norm.appr.param(parammat)
 }
 \arguments{
 \item{parammat}{6 x J parameter data with the following components:
-\code{parammat[1, ]} : the weights for each von Mises sine density
-\code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises sine density for n = 1, 2, 3
-\code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises sine density for m = 1, 2}
+
+  \code{parammat[1, ]} : the weights for each von Mises sine density
+
+  \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises sine density for n = 1, 2, 3
+
+  \code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises sine density for m = 1, 2}
 }
 \value{
 returns approximated parameters for bivariate normal distribution with \code{list}:
