@@ -156,7 +156,7 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   indicate whether each evaluation point is contained in the inductive
 #'   conformal prediction sets for each given level.
 #' @export
-#' @seealso \code{\link{grid.torus}
+#' @seealso \code{\link{grid.torus}}
 
 icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
   # evaluates Chat_kde, Chat_mix, Chat_max, Chat_e.

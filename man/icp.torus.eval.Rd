@@ -27,5 +27,5 @@ returns a \code{cp} object with the boolean values which
   level.
 }
 \seealso{
-
+\code{\link{grid.torus}}
 }
