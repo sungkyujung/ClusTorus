@@ -15,7 +15,9 @@ wtd.stat.ang(data, w)
 }
 \value{
 list which is consisting of the following components:
+
   \code{Mean} weighted extrinsic mean direction
+
   \code{R} mean resultant length
 }
 \description{

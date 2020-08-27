@@ -8,7 +8,9 @@
 #'   \code{sum(w) == 1}. Moreover, the length of \code{w} is the same with
 #'   \code{nrow(data)}.
 #' @return list which is consisting of the following components:
+#'
 #'   \code{Mean} weighted extrinsic mean direction
+#'
 #'   \code{R} mean resultant length
 #' @export
 #' @examples
