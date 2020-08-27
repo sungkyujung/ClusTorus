@@ -7,9 +7,9 @@
 kde.torus(data, eval.point = grid.torus(), concentration = 25)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[-\pi, \pi)^2}}
+\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
 
-\item{eval.point}{N x N numeric matrix on \eqn{[-\pi, \pi)^2}. Default input is
+\item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 \code{grid.torus}.}
 
 \item{concentration}{positive number which has the role of \eqn{\kappa} of
@@ -23,7 +23,7 @@ von Mises distribution. Default value is 25.}
 }
 \examples{
 \dontrun{
-data <- matrix(c(-pi/3, -pi/3, pi/2, pi/4),
+data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
                nrow = 2, byrow = TRUE)
 
 kde.torus(data)

@@ -3,7 +3,7 @@
 #' \code{icp.torus.score} returns an icp.torus object, containing all values
 #'   to compute the conformity score.
 #'
-#' @param data n x 2 matrix of toroidal data on \eqn{[-\pi, \pi)^2}
+#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param split.id a n-vector consisting of values 1 (estimation) and 2(evaluation)
 #' @param method a string one of "all", "kde" and "mixture" which determines the
 #'   phat.
@@ -150,7 +150,7 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   score, which will be constructed with \code{icp.torus.score}.
 #' @param level either a scalar or a vector, or even \code{NULL}. Default value
 #'   is 0.1.
-#' @param eval.point N x N numeric matrix on \eqn{[-\pi, \pi)^2}. Default input is
+#' @param eval.point N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 #'   \code{grid.torus}.
 #' @return returns a \code{cp} object with the boolean values which
 #'   indicate whether each evaluation point is contained in the inductive

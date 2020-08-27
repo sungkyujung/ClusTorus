@@ -4,7 +4,7 @@
 #'   and \eqn{f_j(x)} is the j-th von Mises sine density which is determined by
 #'   j-th parameters of the given parameter data.
 #'
-#' @param X n x 2 toroidal data on \eqn{[-\pi, pi)^2}
+#' @param X n x 2 toroidal data on \eqn{[0, 2\pi)^2}
 #' @param parammat 6 x J parameter data with the following components:
 #'   \code{parammat[1, ]} : the weights for each von Mises sine density
 #'   \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises sine density for n = 1, 2, 3

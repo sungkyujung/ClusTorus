@@ -7,7 +7,7 @@
 ang.dist(x, y)
 }
 \arguments{
-\item{x, y}{angular data on \eqn{[-\pi, \pi)}}
+\item{x, y}{angular data on \eqn{[0, 2\pi)}}
 }
 \description{
 \code{ang.dist()} computes angular distances.
@@ -15,7 +15,7 @@ ang.dist(x, y)
 \examples{
 \dontrun{
 x <- pi/3
-y <- -pi/3
+y <- pi/4
 
 ang.dist(x, y)
 }

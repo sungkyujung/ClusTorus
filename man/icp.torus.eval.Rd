@@ -13,7 +13,7 @@ score, which will be constructed with \code{icp.torus.score}.}
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
 is 0.1.}
 
-\item{eval.point}{N x N numeric matrix on \eqn{[-\pi, \pi)^2}. Default input is
+\item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 \code{grid.torus}.}
 }
 \value{

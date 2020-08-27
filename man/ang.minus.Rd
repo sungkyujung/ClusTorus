@@ -7,7 +7,7 @@
 ang.minus(x, y)
 }
 \arguments{
-\item{x, y}{angular data on \eqn{[-\pi, \pi)}}
+\item{x, y}{angular data on \eqn{[0, 2\pi)}}
 }
 \description{
 \code{ang.minus()} computes angular subtraction.
@@ -15,7 +15,7 @@ ang.minus(x, y)
 \examples{
 \dontrun{
 x <- pi/2
-y <- -pi/2
+y <- pi/3
 
 ang.minus(x, y)
 }

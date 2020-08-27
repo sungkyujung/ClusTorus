@@ -7,7 +7,7 @@
 ehat.eval(X, ellipse.param)
 }
 \arguments{
-\item{X}{n x 2 toroidal data on \eqn{[-\pi, \pi)^2}}
+\item{X}{n x 2 toroidal data on \eqn{[0, 2\pi)^2}}
 
 \item{ellipse.param}{list which is consisting of mean of each angular
 coordinate, inverse of each covariance matrix, and constant term}

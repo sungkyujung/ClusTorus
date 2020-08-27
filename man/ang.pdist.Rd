@@ -7,7 +7,7 @@
 ang.pdist(data)
 }
 \arguments{
-\item{data}{n x d angular data on \eqn{[-\pi, \pi)^d}}
+\item{data}{n x d angular data on \eqn{[0, 2\pi)^d}}
 }
 \value{
 \code{ang.pdist} returns an object of class \code{dist}.
@@ -17,9 +17,9 @@ ang.pdist(data)
 }
 \examples{
 \dontrun{
-data <- matrix(c(pi/3, -pi/3, pi/2,
-                 -pi, -pi/4, pi/2,
-                 0, -pi/3, -pi/6),
+data <- matrix(c(pi/3, pi/3, pi/2,
+                 pi, pi/4, pi/2,
+                 0, pi/3, pi/6),
                ncol = 3, byrow = TRUE)
 
 ang.pdist(data)

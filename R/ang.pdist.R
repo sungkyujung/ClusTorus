@@ -2,20 +2,20 @@
 #'
 #' \code{ang.pdist()} computes pairwise distances matrix.
 #'
-#' @param data n x d angular data on \eqn{[-\pi, \pi)^d}
+#' @param data n x d angular data on \eqn{[0, 2\pi)^d}
 #' @return \code{ang.pdist} returns an object of class \code{dist}.
 #' @export
 #' @examples
 #' \dontrun{
-#' data <- matrix(c(pi/3, -pi/3, pi/2,
-#'                  -pi, -pi/4, pi/2,
-#'                  0, -pi/3, -pi/6),
+#' data <- matrix(c(pi/3, pi/3, pi/2,
+#'                  pi, pi/4, pi/2,
+#'                  0, pi/3, pi/6),
 #'                ncol = 3, byrow = TRUE)
 #'
 #' ang.pdist(data)
 #' }
 ang.pdist <- function(data){
-  # assuming that data are n x d angular data on [-pi,pi)^d
+  # assuming that data are n x d angular data on [0, 2pi)^d
   # computes L2 angular distance
 
   n <- nrow(data)

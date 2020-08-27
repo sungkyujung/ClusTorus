@@ -13,7 +13,7 @@ icp.torus.score(
 )
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[-\pi, \pi)^2}}
+\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
 
 \item{split.id}{a n-vector consisting of values 1 (estimation) and 2(evaluation)}
 

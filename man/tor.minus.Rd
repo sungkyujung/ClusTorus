@@ -17,9 +17,9 @@ tor.minus(data, mu)
 }
 \examples{
 \dontrun{
-data <- matrix(c(pi/3, pi/4, pi/2, -pi/2),
+data <- matrix(c(pi/3, pi/4, pi/2, pi/2),
                ncol = 2, byrow = TRUE)
-mu <- c(pi/2, -pi/2)
+mu <- c(pi/2, pi/2)
 
 tor.minus(data, mu)
 }

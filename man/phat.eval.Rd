@@ -7,7 +7,7 @@
 phat.eval(X, parammat)
 }
 \arguments{
-\item{X}{n x 2 toroidal data on \eqn{[-\pi, pi)^2}}
+\item{X}{n x 2 toroidal data on \eqn{[0, 2\pi)^2}}
 
 \item{parammat}{6 x J parameter data with the following components:
 \code{parammat[1, ]} : the weights for each von Mises sine density

@@ -2,12 +2,12 @@
 #'
 #' \code{ang.minus()} computes angular subtraction.
 #'
-#' @param x,y angular data on \eqn{[-\pi, \pi)}
+#' @param x,y angular data on \eqn{[0, 2\pi)}
 #' @export
 #' @examples
 #' \dontrun{
 #' x <- pi/2
-#' y <- -pi/2
+#' y <- pi/3
 #'
 #' ang.minus(x, y)
 #' }

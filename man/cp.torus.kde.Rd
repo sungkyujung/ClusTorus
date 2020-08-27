@@ -7,9 +7,9 @@
 cp.torus.kde(data, eval.point = grid.torus(), level = 0.1, concentration = 25)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[-\pi, \pi)^2}}
+\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
 
-\item{eval.point}{N x N numeric matrix on \eqn{[-\pi, \pi)^2}. Default input is
+\item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 \code{grid.torus}.}
 
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
@@ -31,7 +31,7 @@ If \code{level} is \code{NULL}, then return kde at \code{eval.point}
 }
 \examples{
 \dontrun{
-data <- matrix(c(-pi/3, -pi/3, pi/2, pi/4),
+data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
                nrow = 2, byrow = TRUE)
 
 cp.torus.kde(data)

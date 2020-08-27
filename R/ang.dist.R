@@ -2,12 +2,12 @@
 #'
 #' \code{ang.dist()} computes angular distances.
 #'
-#' @param x,y angular data on \eqn{[-\pi, \pi)}
+#' @param x,y angular data on \eqn{[0, 2\pi)}
 #' @export
 #' @examples
 #' \dontrun{
 #' x <- pi/3
-#' y <- -pi/3
+#' y <- pi/4
 #'
 #' ang.dist(x, y)
 #'}

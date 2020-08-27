@@ -12,6 +12,6 @@
 #' }
 grid.torus <- function(grid.size = 100){
   # returns grid points on torus of size (grid.size) x (grid.size)
-  Axis <- seq(-pi, pi, length = grid.size)
+  Axis <- seq(0, 2 * pi, length = grid.size)
   return(cbind(rep(Axis, grid.size), rep(Axis, each=grid.size)))
 }

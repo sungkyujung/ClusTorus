@@ -15,7 +15,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' data <- matrix(c(-pi/3, -pi/3, pi/2, pi/4),
+#' data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
 #'                nrow = 2, byrow = TRUE)
 #'
 #' cp.torus.kde(data)
