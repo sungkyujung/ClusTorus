@@ -12,7 +12,6 @@
 #'   \code{Mean} weighted extrinsic mean direction
 #'
 #'   \code{R} mean resultant length
-#' @export
 #' @examples
 #' \dontrun{
 #'   data <- matrix(c(pi/3, pi/3, pi/2,
