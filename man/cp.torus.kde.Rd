@@ -27,14 +27,15 @@ If \code{level} is \code{NULL}, then return kde at \code{eval.point}
 }
 \description{
 \code{cp.torus.kde} computes conformal prediction set indices
-  (TRUE if in the set) using kernel density estimation as conformal scores.
+  (TRUE if in the set) using kernel density estimation as conformity score.
 }
 \examples{
 \dontrun{
 data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
                nrow = 2, byrow = TRUE)
 
-cp.torus.kde(data)
+cp.torus.kde(data, eval.point = grid.torus(),
+             level = 0.05, concentration = 25)
 }
 }
 \seealso{

@@ -16,10 +16,10 @@ kde.torus(data, eval.point = grid.torus(), concentration = 25)
 von Mises distribution. Default value is 25.}
 }
 \value{
-\code{kde.torus} returns N-vector of kdes evaluated at eval.point
+\code{kde.torus} returns N-dimensional vector of kdes evaluated at eval.point
 }
 \description{
-\code{kde.torus()} returns a kde using independent bivariate von mises kernel.
+\code{kde.torus} returns a kde using independent bivariate von mises kernel.
 }
 \examples{
 \dontrun{

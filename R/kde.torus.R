@@ -1,13 +1,13 @@
 #' Kernel density estimation using circular von Mises distribution
 #'
-#' \code{kde.torus()} returns a kde using independent bivariate von mises kernel.
+#' \code{kde.torus} returns a kde using independent bivariate von mises kernel.
 #'
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param eval.point N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 #'  \code{grid.torus}.
 #' @param concentration positive number which has the role of \eqn{\kappa} of
 #'   von Mises distribution. Default value is 25.
-#' @return \code{kde.torus} returns N-vector of kdes evaluated at eval.point
+#' @return \code{kde.torus} returns N-dimensional vector of kdes evaluated at eval.point
 #' @export
 #' @seealso \code{\link{grid.torus}}
 #' @examples

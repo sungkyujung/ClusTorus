@@ -15,7 +15,8 @@ icp.torus.score(
 \arguments{
 \item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
 
-\item{split.id}{a n-vector consisting of values 1 (estimation) and 2(evaluation)}
+\item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
+and 2(evaluation)}
 
 \item{method}{a string one of "all", "kde" and "mixture" which determines the
 phat.}
@@ -29,7 +30,7 @@ fitting and the concetnration parameter.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values
-  to compute the conformity score
+  to compute the conformity score.
 }
 \description{
 \code{icp.torus.score} returns an icp.torus object, containing all values
@@ -37,10 +38,26 @@ returns an \code{icp.torus} object, containing all values
 }
 \examples{
 \dontrun{
-data <- matrix(c(-pi/3, -pi/3, pi/2, pi/4),
-               nrow = 2, byrow = TRUE)
+## mean vectors
 
-icp.torus.score(data, method = "kde", mixturefitmethod = "circular")
+Mu1 <- c(3, 0)
+Mu2 <- c(2, 2)
+Mu3 <- c(1, 4)
+
+## covariance matrices
+
+Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+
+## 2-dimensional multivariate normal data wrapped with toroidal space
+
+data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+              mvrnorm(n=50, Mu2, Sigma2),
+              mvrnorm(n=50, Mu3, Sigma3))
+icp.torus <- icp.torus.score(data, method = "all",
+                             mixturefitmethod = "general",)
+                             param = list(J = 4, concentration = 25)
 }
 }
 \seealso{

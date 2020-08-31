@@ -7,15 +7,20 @@
 ang.minus(x, y)
 }
 \arguments{
-\item{x, y}{angular data on \eqn{[0, 2\pi)}}
+\item{x, y}{angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}}
+}
+\value{
+returns a scalar or a vector whose elements are in
+  \eqn{[0, 2\pi)}.
 }
 \description{
-\code{ang.minus()} computes angular subtraction.
+\code{ang.minus} computes element-wise angular subtraction defined as
+\deqn{x -  y := Arg(exp(i(x-y)))}
 }
 \examples{
 \dontrun{
-x <- pi/2
-y <- pi/3
+x <- c(pi/2, 0)
+y <- c(pi, pi/3)
 
 ang.minus(x, y)
 }

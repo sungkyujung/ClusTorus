@@ -1,7 +1,7 @@
 #' Conformal prediction set indices with kernel density estimation
 #'
 #' \code{cp.torus.kde} computes conformal prediction set indices
-#'   (TRUE if in the set) using kernel density estimation as conformal scores.
+#'   (TRUE if in the set) using kernel density estimation as conformity score.
 #'
 #' @inheritParams kde.torus
 #' @param level either a scalar or a vector, or even \code{NULL}. Default value
@@ -18,7 +18,8 @@
 #' data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
 #'                nrow = 2, byrow = TRUE)
 #'
-#' cp.torus.kde(data)
+#' cp.torus.kde(data, eval.point = grid.torus(),
+#'              level = 0.05, concentration = 25)
 #' }
 
 cp.torus.kde <- function(data, eval.point = grid.torus(),

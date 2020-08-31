@@ -10,10 +10,11 @@ ang.pdist(data)
 \item{data}{n x d angular data on \eqn{[0, 2\pi)^d}}
 }
 \value{
-\code{ang.pdist} returns an object of class \code{dist}.
+\code{ang.pdist} returns pairwise angular distances matrix
+  with the class \code{dist}
 }
 \description{
-\code{ang.pdist()} computes pairwise distances matrix.
+\code{ang.pdist} computes pairwise angular distances matrix.
 }
 \examples{
 \dontrun{
@@ -24,4 +25,7 @@ data <- matrix(c(pi/3, pi/3, pi/2,
 
 ang.pdist(data)
 }
+}
+\seealso{
+\code{\link{ang.dist}}
 }

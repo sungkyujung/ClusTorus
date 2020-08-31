@@ -26,6 +26,32 @@ returns a \code{cp} object with the boolean values which
   is contained in the inductive conformal prediction sets for each given
   level.
 }
+\examples{
+\dontrun{
+## mean vectors
+
+Mu1 <- c(3, 0)
+Mu2 <- c(2, 2)
+Mu3 <- c(1, 4)
+
+## covariance matrices
+
+Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+
+## 2-dimensional multivariate normal data wrapped with toroidal space
+
+data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+              mvrnorm(n=50, Mu2, Sigma2),
+              mvrnorm(n=50, Mu3, Sigma3))
+icp.torus <- icp.torus.score(data, method = "all",
+                             mixturefitmethod = "general",)
+                             param = list(J = 4, concentration = 25)
+
+icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
+}
+}
 \seealso{
-\code{\link{grid.torus}}
+\code{\link{grid.torus}}, \code{\link{icp.torus.score}}
 }

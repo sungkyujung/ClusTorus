@@ -1,13 +1,15 @@
-#' Angular distances
+#' Angular distance
 #'
-#' \code{ang.dist()} computes angular distances.
+#' \code{ang.dist} computes element-wise angular distance between
+#'  two angular values in \eqn{[0,2\pi)}.
 #'
-#' @param x,y angular data on \eqn{[0, 2\pi)}
+#' @param x,y angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}
+#' @return angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- pi/3
-#' y <- pi/4
+#' x <- c(pi/3, 0)
+#' y <- c(pi/4, pi/2)
 #'
 #' ang.dist(x, y)
 #'}

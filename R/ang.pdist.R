@@ -1,9 +1,11 @@
 #' Pairwise L2 angular distance
 #'
-#' \code{ang.pdist()} computes pairwise distances matrix.
+#' \code{ang.pdist} computes pairwise angular distances matrix.
 #'
 #' @param data n x d angular data on \eqn{[0, 2\pi)^d}
-#' @return \code{ang.pdist} returns an object of class \code{dist}.
+#' @return \code{ang.pdist} returns pairwise angular distances matrix
+#'   with the class \code{dist}
+#' @seealso \code{\link{ang.dist}}
 #' @export
 #' @examples
 #' \dontrun{
@@ -25,11 +27,11 @@ ang.pdist <- function(data){
   for (i in 1:n-1){
     ad <- 0
     for (dd in 1:d){
-      ad <- ad + ( ang.dist(data[i,dd], data[(i+1):n, dd]) )^2
+      ad <- ad + (ang.dist(data[i, dd], data[(i + 1):n, dd]))^2
     }
     ad <- sqrt(ad)
-    pdistmat[i, (i+1):n] <- ad
-    pdistmat[(i+1):n, i] <- ad
+    pdistmat[i, (i + 1):n] <- ad
+    pdistmat[(i + 1):n, i] <- ad
   }
   as.dist(pdistmat)
 }

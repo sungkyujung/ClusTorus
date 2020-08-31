@@ -2,20 +2,24 @@
 % Please edit documentation in R/ang.dist.R
 \name{ang.dist}
 \alias{ang.dist}
-\title{Angular distances}
+\title{Angular distance}
 \usage{
 ang.dist(x, y)
 }
 \arguments{
-\item{x, y}{angular data on \eqn{[0, 2\pi)}}
+\item{x, y}{angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}}
+}
+\value{
+angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 }
 \description{
-\code{ang.dist()} computes angular distances.
+\code{ang.dist} computes element-wise angular distance between
+ two angular values in \eqn{[0,2\pi)}.
 }
 \examples{
 \dontrun{
-x <- pi/3
-y <- pi/4
+x <- c(pi/3, 0)
+y <- c(pi/4, pi/2)
 
 ang.dist(x, y)
 }

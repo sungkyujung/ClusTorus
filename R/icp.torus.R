@@ -4,7 +4,8 @@
 #'   to compute the conformity score.
 #'
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
-#' @param split.id a n-vector consisting of values 1 (estimation) and 2(evaluation)
+#' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
+#'   and 2(evaluation)
 #' @param method a string one of "all", "kde" and "mixture" which determines the
 #'   phat.
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
@@ -13,15 +14,31 @@
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
 #' @return returns an \code{icp.torus} object, containing all values
-#'   to compute the conformity score
+#'   to compute the conformity score.
 #' @export
 #' @seealso \code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
 #' @examples
 #' \dontrun{
-#' data <- matrix(c(-pi/3, -pi/3, pi/2, pi/4),
-#'                nrow = 2, byrow = TRUE)
+#' ## mean vectors
 #'
-#' icp.torus.score(data, method = "kde", mixturefitmethod = "circular")
+#' Mu1 <- c(3, 0)
+#' Mu2 <- c(2, 2)
+#' Mu3 <- c(1, 4)
+#'
+#' ## covariance matrices
+#'
+#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#'
+#' ## 2-dimensional multivariate normal data wrapped with toroidal space
+#'
+#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#'               mvrnorm(n=50, Mu2, Sigma2),
+#'               mvrnorm(n=50, Mu3, Sigma3))
+#' icp.torus <- icp.torus.score(data, method = "all",
+#'                              mixturefitmethod = "general",)
+#'                              param = list(J = 4, concentration = 25)
 #' }
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("all", "kde", "mixture"),
@@ -156,7 +173,32 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   indicate whether each evaluation point is contained in the inductive
 #'   conformal prediction sets for each given level.
 #' @export
-#' @seealso \code{\link{grid.torus}}
+#' @seealso \code{\link{grid.torus}}, \code{\link{icp.torus.score}}
+#' @examples
+#' \dontrun{
+#' ## mean vectors
+#'
+#' Mu1 <- c(3, 0)
+#' Mu2 <- c(2, 2)
+#' Mu3 <- c(1, 4)
+#'
+#' ## covariance matrices
+#'
+#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#'
+#' ## 2-dimensional multivariate normal data wrapped with toroidal space
+#'
+#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#'               mvrnorm(n=50, Mu2, Sigma2),
+#'               mvrnorm(n=50, Mu3, Sigma3))
+#' icp.torus <- icp.torus.score(data, method = "all",
+#'                              mixturefitmethod = "general",)
+#'                              param = list(J = 4, concentration = 25)
+#'
+#' icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
+#' }
 
 icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
   # evaluates Chat_kde, Chat_mix, Chat_max, Chat_e.

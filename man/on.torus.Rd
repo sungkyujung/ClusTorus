@@ -2,15 +2,19 @@
 % Please edit documentation in R/on.torus.R
 \name{on.torus}
 \alias{on.torus}
-\title{Transform the angular values to be on principal interval}
+\title{Transform the angular data to be on principal interval}
 \usage{
 on.torus(x)
 }
 \arguments{
-\item{x}{Matrix-formed numeric data which has 2 columns.}
+\item{x}{d-dimensional angular data(vector or matrix) whose unit is the radian.}
+}
+\value{
+d-dimensional radian-unit angular data on \eqn{[0, 2\pi)^d}.
 }
 \description{
-\code{on.torus()} transforms data to be on \eqn{[0, 2\pi)^2}.
+\code{on.torus} transforms d-dimensional angular data
+  to be on \eqn{[0, 2\pi)^d}.
 }
 \examples{
 \dontrun{

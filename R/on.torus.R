@@ -1,8 +1,10 @@
-#' Transform the angular values to be on principal interval
+#' Transform the angular data to be on principal interval
 #'
-#' \code{on.torus()} transforms data to be on \eqn{[0, 2\pi)^2}.
+#' \code{on.torus} transforms d-dimensional angular data
+#'   to be on \eqn{[0, 2\pi)^d}.
 #'
-#' @param x Matrix-formed numeric data which has 2 columns.
+#' @param x d-dimensional angular data(vector or matrix) whose unit is the radian.
+#' @return d-dimensional radian-unit angular data on \eqn{[0, 2\pi)^d}.
 #' @export
 #' @examples
 #' \dontrun{

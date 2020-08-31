@@ -10,11 +10,11 @@ grid.torus(grid.size = 100)
 \item{grid.size}{number of grid for each axis. Default value is 100.}
 }
 \value{
-\code{grid.torus} returns (grid.size) x (grid.size) numeric matrix
-  which indicates the grid points on torus
+returns (grid.size) x (grid.size) numeric matrix
+  which indicates the grid points on torus.
 }
 \description{
-\code{grid.torus()} returns an equally-spaced grid on torus.
+\code{grid.torus} returns an equally-spaced grid on torus.
 }
 \examples{
 \dontrun{

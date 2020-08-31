@@ -1,10 +1,13 @@
 #' Toroidal subtraction
 #'
-#' \code{tor.minus()} computes angular subtraction bewtween n x 2 toroidal data and
+#' \code{tor.minus} computes angular subtraction bewtween n x 2 toroidal data and
 #'   a 2 dimensional vector.
 #'
-#' @param data n x 2 matrix of toroidal values
-#' @param mu a 2-vector
+#' @param data n x 2 matrix of toroidal data
+#' @param mu a 2-dimensinal vector
+#' @return angular subtraction bewtween n x 2 toroidal data and
+#'   a 2 dimensional vector.
+#' @seealso \code{\link{ang.minus}}
 #' @export
 #' @examples
 #' \dontrun{
