@@ -1,4 +1,4 @@
-#' Protein data, for example
+#' Structure of the SARS-CoV-2 spike glycoprotein
 #'
 #' A dataset containing 6 different angular data of almost 430 proteins.
 #'
@@ -8,5 +8,5 @@
 #'   \item{phi}{angular variable, in arc-degree}
 #'   ...
 #' }
-#' @source \url{https://www.ebi.ac.uk/pdbe/entry/pdb/6A32}
-"protein_6a32"
+#' @source \url{http://www.rcsb.org/structure/6VXX}
+"SARS_CoV_2"
