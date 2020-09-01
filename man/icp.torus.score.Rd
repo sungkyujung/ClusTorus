@@ -58,7 +58,7 @@ data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
 data <- on.torus(data)
 
 icp.torus <- icp.torus.score(data, method = "all",
-                             mixturefitmethod = "general",)
+                             mixturefitmethod = "general",
                              param = list(J = 4, concentration = 25))
 }
 }

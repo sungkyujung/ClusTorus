@@ -39,7 +39,7 @@
 #' data <- on.torus(data)
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
-#'                              mixturefitmethod = "general",)
+#'                              mixturefitmethod = "general",
 #'                              param = list(J = 4, concentration = 25))
 #' }
 icp.torus.score <- function(data, split.id = NULL,
@@ -198,8 +198,8 @@ icp.torus.score <- function(data, split.id = NULL,
 #' data <- on.torus(data)
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
-#'                              mixturefitmethod = "general",)
-#'                              param = list(J = 4, concentration = 25)
+#'                              mixturefitmethod = "general",
+#'                              param = list(J = 4, concentration = 25))
 #'
 #' icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 #' }
