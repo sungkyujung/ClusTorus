@@ -41,10 +41,12 @@ Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
 Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
 
 ## 2-dimensional multivariate normal data wrapped with toroidal space
-
+require(MASS)
 data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
               mvrnorm(n=50, Mu2, Sigma2),
               mvrnorm(n=50, Mu3, Sigma3))
+data <- on.torus(data)
+
 icp.torus <- icp.torus.score(data, method = "all",
                              mixturefitmethod = "general",)
                              param = list(J = 4, concentration = 25)

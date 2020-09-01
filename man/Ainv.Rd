@@ -27,5 +27,6 @@ Mardia, K. V. and Jupp, P. E. (2000), Directional Statistics,
   New York: Wiley.
 }
 \seealso{
-See the similar function in package \code{circular} : \code{\link[circular]{A1inv}}
+See the similar function in package \code{circular} :
+  \code{\link[circular]{A1inv}}
 }

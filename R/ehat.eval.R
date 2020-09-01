@@ -9,6 +9,39 @@
 #'   coordinate, inverse of each covariance matrix, and constant term
 #' @return nrow(X) times ncol(parammat) (n x J) matrix
 #' @export
+#' @examples
+#' \dontrun{
+#' ## mean vectors
+#'
+#' Mu1 <- c(3, 0)
+#' Mu2 <- c(2, 2)
+#' Mu3 <- c(1, 4)
+#'
+#' ## covariance matrices
+#'
+#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#'
+#' ## 2-dimensional multivariate normal data wrapped with toroidal space
+#' require(MASS)
+#' X <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#'            mvrnorm(n=50, Mu2, Sigma2),
+#'            mvrnorm(n=50, Mu3, Sigma3))
+#'
+#' X <- on.torus(X)
+#'
+#' parammat <- matrix(c(0.4, 0.3, 0.3,
+#'                      20, 25, 25,
+#'                      30, 25, 20,
+#'                      1, 2, 3,
+#'                      1, 2, 3,
+#'                      0, 2, 4), nrow = 6, byrow =TRUE)
+#'
+#' elipse.param <- norm.appr.param(parammat)
+#'
+#' ehat.eval(X, ellipse.param)
+#' }
 
 ehat.eval <- function(X, ellipse.param){
 

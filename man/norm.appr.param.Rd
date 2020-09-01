@@ -11,18 +11,42 @@ norm.appr.param(parammat)
 
   \code{parammat[1, ]} : the weights for each von Mises sine density
 
-  \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises sine density for n = 1, 2, 3
+  \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises
+  sine density for n = 1, 2, 3
 
-  \code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises sine density for m = 1, 2}
+  \code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises
+   sine density for m = 1, 2}
 }
 \value{
-returns approximated parameters for bivariate normal distribution with \code{list}:
-  \code{list$Sigmainv[j]} : approximated covariance matrix for j-th von Mises
-  \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^-1} for j-th von Mises
+returns approximated parameters for bivariate normal
+distribution with \code{list}:
+
+  \code{list$Sigmainv[j]} : approximated covariance matrix for
+  j-th bivariate normal distribution, approximation of the j-th von Mises.
+
+  \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^-1} for
+  j-th bivariate normal distribution, approximation of the j-th von Mises.
 }
 \description{
 \code{norm.appr.param} approximates the bivariate von Mises sine densities
-  to bivariate normal densities.
+  to bivariate normal densities with returning the parameters for
+  the normal densities.
+}
+\examples{
+\dontrun{
+
+parammat <- matrix(c(0.4, 0.3, 0.3,
+                     20, 25, 25,
+                     30, 25, 20,
+                     1, 2, 3,
+                     1, 2, 3,
+                     0, 2, 4), nrow = 6, byrow =TRUE)
+
+norm.appr.param(parammat)
+}
+}
+\references{
+
 }
 \seealso{
 \code{\link[BAMBI]{dvmsin}}

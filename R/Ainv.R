@@ -8,7 +8,8 @@
 #' @param x numeric value in \eqn{[0,1]}.
 #' @param kmax positive value. Default value is 2000.
 #' @export
-#' @seealso See the similar function in package \code{circular} : \code{\link[circular]{A1inv}}
+#' @seealso See the similar function in package \code{circular} :
+#'   \code{\link[circular]{A1inv}}
 #' @references  Mardia, K. V. and Jupp, P. E. (2000), Directional Statistics,
 #'   New York: Wiley.
 #' @examples
