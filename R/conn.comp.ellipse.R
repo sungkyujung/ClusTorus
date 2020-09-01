@@ -6,6 +6,7 @@
 #'
 #' @param ellipse.param list which is consisting of mean of each angular
 #'   coordinate, inverse of each covariance matrix, and constant term.
+#'
 #' @param t a numeric value which determines the size of ellipses.
 #' @return a \code{list} which contains two components:
 #'
