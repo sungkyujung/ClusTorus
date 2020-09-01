@@ -38,7 +38,7 @@
 #'                      1, 2, 3,
 #'                      0, 2, 4), nrow = 6, byrow =TRUE)
 #'
-#' elipse.param <- norm.appr.param(parammat)
+#' ellipse.param <- norm.appr.param(parammat)
 #'
 #' ehat.eval(X, ellipse.param)
 #' }
