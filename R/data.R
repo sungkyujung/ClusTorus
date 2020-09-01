@@ -1,6 +1,7 @@
-#' Structure of the SARS-CoV-2 spike glycoprotein
+#' 6VXX: Structure of the SARS-CoV-2 spike glycoprotein(closed state)
 #'
-#' A dataset containing 6 different angular data of almost 430 proteins.
+#' The torsion angle dataset of the SARS-CoV-2 spike glycopreotein.
+#'
 #'
 #' @format A list with 11 attributes:
 #' \describe{
