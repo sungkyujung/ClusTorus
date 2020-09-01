@@ -8,8 +8,9 @@
 #'
 #' @inheritParams wtd.stat.ang
 #' @return list which is consisting of \code{y1bar}, \code{y2bar}, \code{S12}.
-#' @references 'S. Jung, K. Park, and B. Kim,
+#' @references 'S. Jung, K. Park, and B. Kim (2020),
 #'   "Clustering on the torus by conformal prediction"
+#'
 
 wtd.stat.amb <- function(data, w){
   # returns the vector-valued weighted means in the ambient space and the cross matrix

@@ -25,6 +25,6 @@ See section A.1 of the article 'Clustering on the
   ambient space and the cross matrix.
 }
 \references{
-'Clustering on the torus by conformal prediction', S. Jung,
-  K. Park, and B. Kim (2020)
+'S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
 }
