@@ -1,8 +1,47 @@
 #' Clustering by connected components of ellipses
 #'
+#' \code{cluster.assign.torus} returns clustering assignment for data
+#'   given \code{icp.torus} objects, which can be constructed with
+#'   \code{icp.torus.score}.
 #'
+#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}.
+#' @param icp.torus an object containing all values to compute the conformity
+#'   score, which will be constructed with \code{icp.torus.score}.
+#' @param level either a scalar or a vector, or even \code{NULL}. Default value
+#'   is 0.1.
+#' @return clustering assignment for data, given icp.torus objects
+#' @export
+#' @references 'S. Jung, K. Park, and B. Kim (2020),
+#'   "Clustering on the torus by conformal prediction"
+#' @seealso \code{\link[ClusTorus]{icp.torus.score}}
+#' @examples
+#' \dontrun{
+#' ## mean vectors
 #'
-
+#' Mu1 <- c(3, 0)
+#' Mu2 <- c(2, 2)
+#' Mu3 <- c(1, 4)
+#'
+#' ## covariance matrices
+#'
+#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#'
+#' ## 2-dimensional multivariate normal data wrapped with toroidal space
+#' require(MASS)
+#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#'               mvrnorm(n=50, Mu2, Sigma2),
+#'               mvrnorm(n=50, Mu3, Sigma3))
+#' data <- on.torus(data)
+#'
+#' icp.torus <- icp.torus.score(data, method = "all",
+#'                              mixturefitmethod = "general",
+#'                              param = list(J = 4, concentration = 25))
+#' level <- c(0.1, 0.08)
+#'
+#' cluster.assign.torus(data, icp.torus, level)
+#' }
 cluster.assign.torus <- function(data, icp.torus, level){
   # clustering by connected components of ellipses
   #
