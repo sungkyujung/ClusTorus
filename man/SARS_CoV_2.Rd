@@ -5,20 +5,49 @@
 \alias{SARS_CoV_2}
 \title{6VXX: Structure of the SARS-CoV-2 spike glycoprotein(closed state)}
 \format{
-A list with 11 attributes:
+This list contains the following components:
 \describe{
-  \item{psi}{angular variable, in arc-degree}
-  \item{phi}{angular variable, in arc-degree}
-  ...
+  \item{\code{psi}}{protein backbone chain angle
+    for atoms C, N, C_alpha and C, in arc-degree.}
+  \item{\code{phi}}{protein backbone chain angle
+    for atoms N, C_alpha, C and N, in arc-degree.}
+  \item{\code{omega}}{protein backbone chain angle
+    for atoms C_alpha, C, N and C-alpha, in arc-degree.}
+  \item{\code{chi1}}{side chain torsion angle
+    for atoms N, C_alpha, C_beta and *G, in arc-degree.}
+  \item{\code{chi2}}{side chain torsion angle
+    for atoms C_alpha, C_beta, *G and *D, in arc-degree.}
+  \item{\code{chi3}}{side chain torsion angle
+    for atomsC_beta, *G, *D and *E, in arc-degree.}
+  \item{\code{chi4}}{side chain torsion angle
+    for atoms *G, *D, *E and *Z, in arc-degree.}
+  \item{\code{chi5}}{side chain torsion angle
+    for atoms *D, *E, *Z and NH1, in arc-degree.}
+  \item{\code{alpha}}{virtual torsion angle between
+    consecutive C_alpha atoms.}
+  \item{\code{coords}}{numeric matrix of 'justified' coordinates.}
+  \item{\code{tbl}}{a numeric matrix of psi, phi, and chi torsion
+    angles.}
 }
 }
 \source{
-\url{http://www.rcsb.org/structure/6VXX}
+This data can be downloaded in
+  \url{http://www.rcsb.org/structure/6VXX}, or with using R package
+  \code{bio3d}.
 }
 \usage{
 SARS_CoV_2
 }
 \description{
 The torsion angle dataset of the SARS-CoV-2 spike glycopreotein.
+}
+\references{
+Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
+  spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
+  Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
+}
+\seealso{
+Description of the angluar information is from the 'value'
+  part of \code{\link[bio3d]{torsion.pdb}}.
 }
 \keyword{datasets}
