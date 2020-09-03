@@ -2,6 +2,7 @@
 
 export(Ainv)
 export(EMsinvMmix)
+export(EMsinvMmix.init)
 export(Test.intersection.ellipse)
 export(Test.intersection.ellipse.torus)
 export(ang.dist)
