@@ -13,7 +13,7 @@
 #' @param J number of components of mixture density
 #' @param hc use \code{\link[stats]{hclust}} to construct
 #'   hierarchical clustering. You may tune the parameters of
-#'   \code{\link[stats]{hclust}} for change the method of
+#'   \code{\link[stats]{hclust}} to change the method for
 #'   initalizing the parameters.
 #' @return returns \code{parammat} which will become the input of
 #'   \code{\link[ClusTorus]{EMsinvMmix}}, the detail is below:

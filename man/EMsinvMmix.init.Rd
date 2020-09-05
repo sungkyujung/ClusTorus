@@ -13,7 +13,7 @@ EMsinvMmix.init(data, J = 4, hc = hclust(ang.pdist(data)))
 
 \item{hc}{use \code{\link[stats]{hclust}} to construct
 hierarchical clustering. You may tune the parameters of
-\code{\link[stats]{hclust}} for change the method of
+\code{\link[stats]{hclust}} to change the method for
 initalizing the parameters.}
 }
 \value{
