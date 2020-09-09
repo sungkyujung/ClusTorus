@@ -109,7 +109,7 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
   while(TRUE){
     cnt <- cnt + 1
 
-    if(verbose){if (cnt %% 10 == 0){ cat(cnt)}}
+    if(verbose){if (cnt %% 10 == 0){cat(".")}}
 
     # E-step ------------------------------------------------------------------
     # E-step to update pimat = Prob of ith sample to be in the jthe group
@@ -252,7 +252,7 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
 
 
     diff <- sum( (param.seq[nrow(param.seq),] - param.seq[nrow(param.seq)-1,])^2, na.rm = TRUE )
-    cat(cnt >= maxiter | diff < THRESHOLD)
+    # cat(cnt >= maxiter | diff < THRESHOLD)
     if(cnt >= maxiter | diff < THRESHOLD){break}
 
   }
