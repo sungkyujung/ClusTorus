@@ -103,7 +103,10 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
 
   pimat <- matrix(0,nrow = n, ncol = J)
   #cat(ncol(parammat))
-  if(verbose){cat("EMsinvMmix: fitting vM2 with option ",type, ", J=", J, ".\n")}
+  if(verbose){
+    cat("EMsinvMmix: fitting vM2 with option ",type, ", J=", J, "\n")
+    cat("\n")
+    }
 
   cnt <- 1
   while(TRUE){
@@ -253,7 +256,10 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
 
     diff <- sum( (param.seq[nrow(param.seq),] - param.seq[nrow(param.seq)-1,])^2, na.rm = TRUE )
     # cat(cnt >= maxiter | diff < THRESHOLD)
-    if(cnt >= maxiter | diff < THRESHOLD){break}
+    if(cnt >= maxiter | diff < THRESHOLD){
+      cat("Done")
+      cat("\n")
+      break}
 
   }
 
@@ -280,7 +286,10 @@ sinvM.ECMEb <- function(wstat, kappa1, kappa2, lambda, mu1, mu2, THRESHOLD = 1e-
     # STOP IF NOT CHANGING
     diffb <- norm(mu1c - mu1) + norm(mu2c - mu2)
     r <- r + 1
-    if(r >= 100 | diffb < THRESHOLD){break}
+    if(r >= 100 | diffb < THRESHOLD){
+      cat("Done")
+      cat("\n")
+      break}
     mu1 <- mu1c
     mu2 <- mu2c
 
