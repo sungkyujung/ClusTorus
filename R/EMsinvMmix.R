@@ -105,7 +105,6 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
   #cat(ncol(parammat))
   if(verbose){
     cat("EMsinvMmix: fitting vM2 with option ",type, ", J=", J, "\n")
-    cat("\n")
     }
 
   cnt <- 1
