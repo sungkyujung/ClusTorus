@@ -11,3 +11,5 @@ Install the development version from GitHub with:
 # install.packages("devtools")
 devtools::install_github("sungkyujung/ClusTorus")
 ```
+
+Your R version must be equal to, or larger than 3.6.0
