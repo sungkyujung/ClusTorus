@@ -7,7 +7,7 @@
 icp.torus.score(
   data,
   split.id = NULL,
-  method = c("all", "kde", "mixture"),
+  method = c("all", "kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
   param = list(J = 4, concentration = 25)
 )
@@ -18,8 +18,8 @@ icp.torus.score(
 \item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
 and 2(evaluation)}
 
-\item{method}{a string one of "all", "kde" and "mixture" which determines the
-phat.}
+\item{method}{a string one of "all", "kde", "mixture", and "kmeans"
+which determines the model for clustering}
 
 \item{mixturefitmethod}{a string one of "circular", "axis-aligned", "general",
 and "Bayesian" which determines the fitting method.("Bayesian" is not yet
@@ -61,6 +61,12 @@ icp.torus <- icp.torus.score(data, method = "all",
                              mixturefitmethod = "general",
                              param = list(J = 4, concentration = 25))
 }
+}
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction", and
+  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+  "Predictive Clustering"
 }
 \seealso{
 \code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
