@@ -57,41 +57,72 @@ cluster.assign.torus <- function(data, icp.torus, level){
   n2 <- icp.torus$n2
   ialpha <- floor( (n2 + 1) * level)
 
+  # For kmeans to kspheres --------------------------------------------------
+
+  if(!is.null(icp.torus$kmeans)){
+    cluster.obj <- list(kmeans = NULL, mixture = NULL)
+    t <- icp.torus$kmeans$score_sphere[ialpha]
+    cluster.obj$kmeans <- conn.comp.ellipse(icp.torus$kmeans$spherefit, t)
+    K <- cluster.obj$kmeans$ncluster
+    ehatj <- ehat.eval(data, icp.torus$kmeans$spherefit)
+
+    ehatj[,cluster.obj$kmeans$componentid == 0] <- -Inf
+
+    maxj.id <- apply(ehatj, 1, which.max)
+    cluster.id1 <- cluster.obj$kmeans$componentid[maxj.id]
+    cluster.obj$kmeans$cluster.id.by.ehat <- cluster.id1
+
+    partsum <- matrix(0, nrow = nrow(data), ncol = K)
+    for(k in 1:K){
+      ifelse(sum( cluster.obj$kmeans$componentid == k) > 1,
+             partsum[,k] <- rowSums(ehatj[,cluster.obj$kmeans$componentid == k]),
+             partsum[,k] <- ehatj[,cluster.obj$kmeans$componentid == k])
+    }
+    cluster.obj$kmeans$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+
+    ehat <- apply(ehatj,1,max)
+
+    cluster.id1[!(ehat >= icp.torus$kmeans$score_sphere[ialpha])] <- K+1
+    cluster.obj$kmeans$cluster.id.outlier <- cluster.id1
+  }
+
   # For max-ellipse ---------------------------------------------------------
 
-  t <- icp.torus$mixture$score_ellipse[ialpha]
-  cluster.obj <- conn.comp.ellipse(icp.torus$mixture$ellipsefit, t)
-  K <- cluster.obj$ncluster
-  ehatj <- ehat.eval(data, icp.torus$mixture$ellipsefit)
+  if(!is.null(icp.torus$mixture)){
+    t <- icp.torus$mixture$score_ellipse[ialpha]
+    cluster.obj$mixture <- conn.comp.ellipse(icp.torus$mixture$ellipsefit, t)
+    K <- cluster.obj$mixture$ncluster
+    ehatj <- ehat.eval(data, icp.torus$mixture$ellipsefit)
 
-  ehatj[,cluster.obj$componentid == 0] <- -Inf
+    ehatj[,cluster.obj$mixture$componentid == 0] <- -Inf
 
-  maxj.id <- apply(ehatj, 1, which.max)
-  cluster.id1 <- cluster.obj$componentid[maxj.id]
-  cluster.obj$cluster.id.by.ehat <- cluster.id1
+    maxj.id <- apply(ehatj, 1, which.max)
+    cluster.id1 <- cluster.obj$mixture$componentid[maxj.id]
+    cluster.obj$mixture$cluster.id.by.ehat <- cluster.id1
 
-  partsum <- matrix(0, nrow = nrow(data), ncol = K)
-  for(k in 1:K){
-    ifelse(sum( cluster.obj$componentid == k) > 1,
-           partsum[,k] <- rowSums(ehatj[,cluster.obj$componentid == k]),
-           partsum[,k] <- ehatj[,cluster.obj$componentid == k])
+    partsum <- matrix(0, nrow = nrow(data), ncol = K)
+    for(k in 1:K){
+      ifelse(sum( cluster.obj$mixture$componentid == k) > 1,
+             partsum[,k] <- rowSums(ehatj[,cluster.obj$mixture$componentid == k]),
+             partsum[,k] <- ehatj[,cluster.obj$mixture$componentid == k])
+    }
+    cluster.obj$mixture$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+
+    ehat <- apply(ehatj,1,max)
+
+    cluster.id1[!(ehat >= icp.torus$mixture$score_ellipse[ialpha])] <- K+1
+    cluster.obj$mixture$cluster.id.outlier <- cluster.id1
+
+    # Use mahalanobis distance
+
+    mah <- mah.dist2.eval(data, icp.torus$mixture$ellipsefit)
+    mah[,cluster.obj$mixture$componentid == 0] <- Inf
+
+    maxj.id <- apply(mah, 1, which.min)
+    cluster.id1 <- cluster.obj$mixture$componentid[maxj.id]
+    cluster.obj$mixture$cluster.id.by.Mah.dist <- cluster.id1
+
   }
-  cluster.obj$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
-
-  ehat <- apply(ehatj,1,max)
-
-  cluster.id1[!(ehat >= icp.torus$mixture$score_ellipse[ialpha])] <- K+1
-  cluster.obj$cluster.id.outlier <- cluster.id1
-
-  # Use mahalanobis distance
-
-  mah <- mah.dist2.eval(data, icp.torus$mixture$ellipsefit)
-  mah[,cluster.obj$componentid == 0] <- Inf
-
-  maxj.id <- apply(mah, 1, which.min)
-  cluster.id1 <- cluster.obj$componentid[maxj.id]
-  cluster.obj$cluster.id.by.Mah.dist <- cluster.id1
-
 
   return(cluster.obj)
 }

@@ -6,8 +6,8 @@
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
-#' @param method a string one of "all", "kde" and "mixture" which determines the
-#'   phat.
+#' @param method a string one of "all", "kde", "mixture", and "kmeans"
+#'   which determines the model for clustering
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
 #'   and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 #'   supported)
@@ -17,6 +17,10 @@
 #'   to compute the conformity score.
 #' @export
 #' @seealso \code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
+#' @references S. Jung, K. Park, and B. Kim (2020),
+#'   "Clustering on the torus by conformal prediction", and
+#'   Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+#'   "Predictive Clustering"
 #' @examples
 #' \dontrun{
 #' ## mean vectors
@@ -43,7 +47,7 @@
 #'                              param = list(J = 4, concentration = 25))
 #' }
 icp.torus.score <- function(data, split.id = NULL,
-                            method = c("all", "kde", "mixture"),
+                            method = c("all", "kde", "mixture", "kmeans"),
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
                             param = list(J = 4, concentration = 25)){
   # returns an icp.torus object, containing all values to compute the conformity score.
@@ -71,13 +75,14 @@ icp.torus.score <- function(data, split.id = NULL,
   n2 <- nrow(X2)
 
   # Prepare output
-  icp.torus <- list(kde = NULL, mixture = NULL, n2 = n2, split.id = split.id)
+  icp.torus <- list(kde = NULL, mixture = NULL, kmeans = NULL,
+                    n2 = n2, split.id = split.id)
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
 
   # 1. kde
-  if (method != "mixture"){
+  if (sum(method == c("kde", "all")) == 1){
     phat <- kde.torus(X1, X2, concentration = param$concentration)
     # phat.X2.sorted <- sort(phat)
 
@@ -87,7 +92,7 @@ icp.torus.score <- function(data, split.id = NULL,
   }
 
   # 2. mixture fitting
-  if (method != "kde"){
+  if (sum(method == c("mixture", "all")) == 1){
 
     icp.torus$mixture$fittingmethod <- mixturefitmethod
 
@@ -155,6 +160,29 @@ icp.torus.score <- function(data, split.id = NULL,
 
   }
 
+  # 3. kmeans to kspheres
+  if (sum(method == c("kmeans", "all")) == 1){
+    # require the package ClusterR
+    # implement explicit kmeans clustering for find the centers
+    kmeans.out <- ClusterR::KMeans_rcpp(cbind(cos(data),sin(data)), clusters = param$J)
+    centroids <- kmeans.out$centroids
+    centers <-cbind(atan2(centroids[, 3], centroids[, 1]), atan2(centroids[, 4], centroids[, 2]))
+    centers <- on.torus(centers)
+    # consider -R as ehat in von mises mixture approximation
+    sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
+    sphere.param$mu1 <- centers[, 1]
+    sphere.param$mu2 <- centers[, 2]
+    sphere.param$c <- rep(0, param$J)
+    for(j in 1:param$J){
+      sphere.param$Sigmainv[[j]] <- diag(2)
+    }
+    icp.torus$kmeans$spherefit <- sphere.param
+
+    ehatj <- ehat.eval(X2, sphere.param)
+
+    icp.torus$kmeans$score_sphere <- sort(apply(ehatj, 1, max))
+
+  }
   return(icp.torus)
 
 }
@@ -211,6 +239,7 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
   n2 <- icp.torus$n2
   nalpha <- length(level)
   cp <- list(Chat_kde = NULL, Chat_mix = NULL, Chat_max = NULL, Chat_e = NULL,
+             Chat_kmeans = NULL,
              level = level,
              phi = eval.point[, 1],
              psi = eval.point[, 2])
@@ -246,7 +275,7 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     ehat <- apply(ehatj, 1, max)
 
     for (i in 1:nalpha){
-      ialpha <- floor( (n2 + 1) * level[i])
+      ialpha <- floor((n2 + 1) * level[i])
 
       Chat_mix[, i] <- phat_mix >= icp.torus$mixture$score[ialpha]
       Chat_max[, i] <- phat_max >= icp.torus$mixture$score_max[ialpha]
@@ -258,6 +287,19 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     cp$Chat_e <- Chat_e
   }
 
+  if(!is.null(icp.torus$kmeans)){
+    Chat_kmeans <- matrix(0, nrow = N, ncol = nalpha)
+
+    ehatj <- ehat.eval(eval.point, icp.torus$kmeans$spherefit)
+    ehat <- apply(ehatj, 1, max)
+
+    for (i in 1:nalpha){
+      ialpha <- floor((n2 + 1) * level[i])
+      Chat_kmeans[, i] <- ehat >= icp.torus$kmeans$score_sphere[ialpha]
+    }
+
+    cp$Chat_kmeans <- Chat_kmeans
+  }
   return(cp)
 
 }
