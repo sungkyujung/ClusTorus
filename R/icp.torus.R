@@ -168,6 +168,7 @@ icp.torus.score <- function(data, split.id = NULL,
     centroids <- kmeans.out$centroids
     centers <-cbind(atan2(centroids[, 3], centroids[, 1]), atan2(centroids[, 4], centroids[, 2]))
     centers <- on.torus(centers)
+
     # consider -R as ehat in von mises mixture approximation
     sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
     sphere.param$mu1 <- centers[, 1]

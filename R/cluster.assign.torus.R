@@ -12,7 +12,9 @@
 #' @return clustering assignment for data, given icp.torus objects
 #' @export
 #' @references 'S. Jung, K. Park, and B. Kim (2020),
-#'   "Clustering on the torus by conformal prediction"
+#'   "Clustering on the torus by conformal prediction" and
+#'   Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+#'   "Predictive Clustering"
 #' @seealso \code{\link[ClusTorus]{icp.torus.score}}
 #' @examples
 #' \dontrun{
@@ -56,11 +58,10 @@ cluster.assign.torus <- function(data, icp.torus, level){
   # two: outliers are assigned to cluster K+1.
   n2 <- icp.torus$n2
   ialpha <- floor( (n2 + 1) * level)
-
+  cluster.obj <- list(kmeans = NULL, mixture = NULL)
   # For kmeans to kspheres --------------------------------------------------
 
   if(!is.null(icp.torus$kmeans)){
-    cluster.obj <- list(kmeans = NULL, mixture = NULL)
     t <- icp.torus$kmeans$score_sphere[ialpha]
     cluster.obj$kmeans <- conn.comp.ellipse(icp.torus$kmeans$spherefit, t)
     K <- cluster.obj$kmeans$ncluster
