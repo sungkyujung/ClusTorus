@@ -192,8 +192,8 @@ g0
 #c
 c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
 #c
-predicted.label[,3] <- c$cluster.id.by.ehat
-predicted.label[,4] <- c$cluster.id.outlier
+predicted.label[,3] <- c$mixture$cluster.id.by.ehat
+predicted.label[,4] <- c$mixture$cluster.id.outlier
 
 aa <- rep(0,4)
 
@@ -201,15 +201,15 @@ for (j in 1:4){
   aa[j] <- adjustedRandIndex(predicted.label[,j],data.test.label)
   }
 
-g_e <- data.frame(phi = data.test[,1], psi = data.test[,2], membership = as.factor(c$cluster.id.by.ehat)) %>%
+g_e <- data.frame(phi = data.test[,1], psi = data.test[,2], membership = as.factor(c$mixture$cluster.id.by.ehat)) %>%
   ggplot(aes(phi,psi, color = membership)) + geom_point() +
   scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+
   scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+
   ggtitle(paste("Clustering by hat{e}, K=",c$ncluster))
 
 
-g1 <- data.frame(phi = data.test[,1], psi = data.test[,2], membership = as.factor(c$cluster.id.outlier)) %>%
-  mutate(membership = ifelse(membership == max(c$cluster.id.outlier), "out", membership)) %>%
+g1 <- data.frame(phi = data.test[,1], psi = data.test[,2], membership = as.factor(c$mixture$cluster.id.outlier)) %>%
+  mutate(membership = ifelse(membership == max(c$mixture$cluster.id.outlier), "out", membership)) %>%
   ggplot(aes(phi,psi, color = membership)) + geom_point() +
   scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+
   scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+

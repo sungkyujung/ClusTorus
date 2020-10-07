@@ -112,6 +112,14 @@ for (j in 1:testing.n){
 }
 Out.dt <- rbind(Out.dt,
                 data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
+
+C <- CC$Chat_kmeans
+Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+for (j in 1:testing.n){
+  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+}
+Out.dt <- rbind(Out.dt,
+                data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_kmeans"))
 }
 
 Out.dt %>% arrange(alpha,Type) %>%  head()
@@ -211,8 +219,7 @@ Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
 for (j in 1:testing.n){
   Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
 }
-Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE")
-)
+Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE"))
 
 
 C <- CC$Chat_mix
@@ -230,8 +237,16 @@ for (j in 1:testing.n){
 }
 Out.dt <- rbind(Out.dt,
                 data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
-}
 
+
+C <- CC$Chat_kmeans
+Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+for (j in 1:testing.n){
+  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+}
+Out.dt <- rbind(Out.dt,
+                data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_kmeans"))
+}
 
 Out.dt2 <- Out.dt
 
