@@ -1,5 +1,5 @@
 # ClusTorus
-Clustering on the torus by conformal prediction
+Clustering on The Torus by Conformal Prediction
 
 R functions and routines for paper "Clustering on the torus by conformal prediction" by Jung, Park and Kim. 
 
