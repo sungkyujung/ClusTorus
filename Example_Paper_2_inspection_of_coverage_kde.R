@@ -2,7 +2,6 @@ library(MASS)
 library(cowplot)
 library(tidyverse)
 library(ClusTorus)
-# source('routines.R')
 set.seed(2)
 Out.dt <- NULL
 RR  = 100
@@ -10,116 +9,116 @@ for (i in 1:RR){
 # Prepare data 1 ------------------------------------------------------------
 
 # Example: five clusters
-Mu1 <- c(3,0)
-Mu2 <- c(2,2)
-Mu3 <- c(1,4)
-Sigma1 <- matrix(c(0.1,0.05,0.05,0.2),2,2)
-Sigma2 <- matrix(c(0.1,0,0,0.01),2,2)
-Sigma3 <- matrix(c(0.01,0,0,0.1),2,2)
+  Mu1 <- c(3,0)
+  Mu2 <- c(2,2)
+  Mu3 <- c(1,4)
+  Sigma1 <- matrix(c(0.1,0.05,0.05,0.2),2,2)
+  Sigma2 <- matrix(c(0.1,0,0,0.01),2,2)
+  Sigma3 <- matrix(c(0.01,0,0,0.1),2,2)
 
-unidata <- cbind(2*runif(50, -0.5, 0.5), 0.5*runif(50, -0.5, 0.5))
-data.unif <- cbind(unidata[,1]+ 0, unidata[,2] + 1)
-data.diamond <- t(matrix(c(cos(-pi/4),-sin(-pi/4),
-                           sin(-pi/4),cos(-pi/4)),2,2) %*% t(unidata)) +cbind(rep(5, 50), rep(3, 50))
+  unidata <- cbind(2*runif(50, -0.5, 0.5), 0.5*runif(50, -0.5, 0.5))
+  data.unif <- cbind(unidata[,1]+ 0, unidata[,2] + 1)
+  data.diamond <- t(matrix(c(cos(-pi/4),-sin(-pi/4),
+                             sin(-pi/4),cos(-pi/4)),2,2) %*% t(unidata)) +cbind(rep(5, 50), rep(3, 50))
 
-Example1 <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-                  mvrnorm(n=50, Mu2, Sigma2),
-                  mvrnorm(n=50, Mu3, Sigma3),
-                  data.unif,
-                  data.diamond)
-Example1 <- on.torus(Example1)
-label <- c(rep(1,70),rep(2,50),
-           rep(3,50),
-           rep(4,50),
-           rep(5,50))
-dat1 <- cbind( as.data.frame(Example1) , as.factor(label))
-colnames(dat1) <- c("phi","psi","label")
+  Example1 <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+                    mvrnorm(n=50, Mu2, Sigma2),
+                    mvrnorm(n=50, Mu3, Sigma3),
+                    data.unif,
+                    data.diamond)
+  Example1 <- on.torus(Example1)
+  label <- c(rep(1,70),rep(2,50),
+             rep(3,50),
+             rep(4,50),
+             rep(5,50))
+  dat1 <- cbind( as.data.frame(Example1) , as.factor(label))
+  colnames(dat1) <- c("phi","psi","label")
 
-unidata <- cbind(2*runif(50, -0.5, 0.5), 0.5*runif(50, -0.5, 0.5))
-data.unif <- cbind(unidata[,1]+ 0, unidata[,2] + 1)
-data.diamond <- t(matrix(c(cos(-pi/4),-sin(-pi/4),
-                           sin(-pi/4),cos(-pi/4)),2,2) %*% t(unidata)) +cbind(rep(5, 50), rep(3, 50))
+  unidata <- cbind(2*runif(50, -0.5, 0.5), 0.5*runif(50, -0.5, 0.5))
+  data.unif <- cbind(unidata[,1]+ 0, unidata[,2] + 1)
+  data.diamond <- t(matrix(c(cos(-pi/4),-sin(-pi/4),
+                             sin(-pi/4),cos(-pi/4)),2,2) %*% t(unidata)) +cbind(rep(5, 50), rep(3, 50))
 
-Example1 <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-                  mvrnorm(n=50, Mu2, Sigma2),
-                  mvrnorm(n=50, Mu3, Sigma3),
-                  data.unif,
-                  data.diamond)
-Example1 <- on.torus(Example1)
-label <- c(rep(1,70),rep(2,50),
-           rep(3,50),
-           rep(4,50),
-           rep(5,50))
-dat1.test <- cbind( as.data.frame(Example1) , as.factor(label))
-colnames(dat1.test) <- c("phi","psi","label")
+  Example1 <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+                    mvrnorm(n=50, Mu2, Sigma2),
+                    mvrnorm(n=50, Mu3, Sigma3),
+                    data.unif,
+                    data.diamond)
+  Example1 <- on.torus(Example1)
+  label <- c(rep(1,70),rep(2,50),
+             rep(3,50),
+             rep(4,50),
+             rep(5,50))
+  dat1.test <- cbind( as.data.frame(Example1) , as.factor(label))
+  colnames(dat1.test) <- c("phi","psi","label")
 
 
 # Evaluate Coverage -------------------------------------------------------
 
 
-data <- dat1[,1:2]
-data.test <- dat1.test
-data.test.label <- data.test[,3]
-data.test <- as.matrix(data.test[,1:2])
+  data <- dat1[,1:2]
+  data.test <- dat1.test
+  data.test.label <- data.test[,3]
+  data.test <- as.matrix(data.test[,1:2])
 
-grid.test <- grid.torus()
-testing.n <- nrow(data)
-
-
-n2 <- floor(nrow(data)/2)
-alphavec <- 1:floor(n2/2) / n2
-alphavec <- alphavec[alphavec <= 0.4]
-N <- length(alphavec)
+  grid.test <- grid.torus()
+  testing.n <- nrow(data)
 
 
-
-icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
-                                method = "all",
-                                mixturefitmethod = "a",
-                                param = list(concentration = 25, J = 13))
-CC <- icp.torus.eval(icp.torus, level = alphavec, eval.point = grid.torus())
+  n2 <- floor(nrow(data)/2)
+  alphavec <- 1:floor(n2/2) / n2
+  alphavec <- alphavec[alphavec <= 0.4]
+  N <- length(alphavec)
 
 
 
-C <- CC$Chat_e
-Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-for (j in 1:testing.n){
-  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-}
-Out.dt <- rbind(Out.dt, data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_e"))
-
-C <- CC$Chat_kde
-Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-for (j in 1:testing.n){
-  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-}
-Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE")
-)
+  icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
+                                  method = "all",
+                                  mixturefitmethod = "a",
+                                  param = list(concentration = 25, J = 13))
+  CC <- icp.torus.eval(icp.torus, level = alphavec, eval.point = grid.torus())
 
 
-C <- CC$Chat_mix
-Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-for (j in 1:testing.n){
-  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-}
-Out.dt <- rbind(Out.dt,
-                data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_mix"))
 
-C <- CC$Chat_max
-Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-for (j in 1:testing.n){
-  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-}
-Out.dt <- rbind(Out.dt,
-                data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
+  C <- CC$Chat_e
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt, data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_e"))
 
-C <- CC$Chat_kmeans
-Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-for (j in 1:testing.n){
-  Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-}
-Out.dt <- rbind(Out.dt,
-                data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_kmeans"))
+  C <- CC$Chat_kde
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE")
+  )
+
+
+  C <- CC$Chat_mix
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,
+                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_mix"))
+
+  C <- CC$Chat_max
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,
+                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
+
+  C <- CC$Chat_kmeans
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,
+                  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_kmeans"))
 }
 
 Out.dt %>% arrange(alpha,Type) %>%  head()
