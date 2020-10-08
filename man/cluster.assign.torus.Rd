@@ -54,7 +54,9 @@ cluster.assign.torus(data, icp.torus, level)
 }
 \references{
 'S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction"
+  "Clustering on the torus by conformal prediction" and
+  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+  "Predictive Clustering"
 }
 \seealso{
 \code{\link[ClusTorus]{icp.torus.score}}
