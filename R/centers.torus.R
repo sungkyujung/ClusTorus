@@ -30,10 +30,10 @@
 #'               mvrnorm(n=50, Mu3, Sigma3))
 #' data <- on.torus(data)
 #'
-#' centers.torus(data, k = 4)
+#' centers.torus(data, k = 10)
 #' }
 
-centers.torus <- function(data, k = 4){
+centers.torus <- function(data, k = 10){
   kmeans.out <- ClusterR::KMeans_rcpp(cbind(cos(data),sin(data)), clusters = k)
 
   centroids <- kmeans.out$centroids
