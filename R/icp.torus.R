@@ -82,32 +82,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
-
-  # 1. kmeans to kspheres
-  if (sum(method == c("kmeans", "all")) == 1){
-    # require the package ClusterR
-    # implement explicit kmeans clustering for find the centers
-    if(is.null(centers)){
-      centers <- centers.torus(X1, param$J)
-    }
-
-    # consider -R as ehat in von mises mixture approximation
-
-    sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
-    sphere.param$mu1 <- centers[, 1]
-    sphere.param$mu2 <- centers[, 2]
-    sphere.param$c <- rep(0, param$J)
-    for(j in 1:param$J){
-      sphere.param$Sigmainv[[j]] <- diag(2)
-    }
-    icp.torus$kmeans$spherefit <- sphere.param
-
-    spherej <- ehat.eval(X2, sphere.param)
-    icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
-
-  }
-
-  # 2. kde
+  # 1. kde
   if (sum(method == c("kde", "all")) == 1){
     phat <- kde.torus(X1, X2, concentration = param$concentration)
     # phat.X2.sorted <- sort(phat)
@@ -117,7 +92,7 @@ icp.torus.score <- function(data, split.id = NULL,
     icp.torus$kde$X1 <- X1
   }
 
-  # 3. mixture fitting
+  # 2. mixture fitting
   if (sum(method == c("mixture", "all")) == 1){
 
     icp.torus$mixture$fittingmethod <- mixturefitmethod
@@ -183,6 +158,30 @@ icp.torus.score <- function(data, split.id = NULL,
     #   ehatj[,j] <- -apply(cbind(A,z), 1, function(a){a[1]*a[3]+a[2]*a[4]}) + ellipse.param$c[j]
     # }
     icp.torus$mixture$score_ellipse <- sort(apply(ehatj, 1, max))
+
+  }
+
+  # 3. kmeans to kspheres
+  if (sum(method == c("kmeans", "all")) == 1){
+    # require the package ClusterR
+    # implement explicit kmeans clustering for find the centers
+    if(is.null(centers)){
+      centers <- centers.torus(X1, param$J)
+    }
+
+    # consider -R as ehat in von mises mixture approximation
+
+    sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
+    sphere.param$mu1 <- centers[, 1]
+    sphere.param$mu2 <- centers[, 2]
+    sphere.param$c <- rep(0, param$J)
+    for(j in 1:param$J){
+      sphere.param$Sigmainv[[j]] <- diag(2)
+    }
+    icp.torus$kmeans$spherefit <- sphere.param
+
+    spherej <- ehat.eval(X2, sphere.param)
+    icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
 
   }
 
