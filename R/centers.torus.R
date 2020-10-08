@@ -1,11 +1,12 @@
-#' Centers for explicit kmeans clustering on torus
+#' Centers from explicit kmeans clustering on torus
 #'
 #' \code{centers.torus} returns a matrix, containing toroidal angles
 #'   which are given by explicit kmeans algorithm on torus.
 #'
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param k a scalar which determines the number of centers
-#' @return a matrix containing toroidal angles
+#' @return a matrix containing toroidal angles which indicates
+#'   k centers.
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2020),
 #'   "Clustering on the torus by conformal prediction"
