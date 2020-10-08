@@ -9,7 +9,8 @@ icp.torus.score(
   split.id = NULL,
   method = c("all", "kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-  param = list(J = 4, concentration = 25)
+  param = list(J = 4, concentration = 25),
+  centers = NULL
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ supported)}
 
 \item{param}{the number of components (in \code{list} form) for mixture
 fitting and the concetnration parameter.}
+
+\item{centers}{a matrix, containing toroidal angles whose rows are the centers
+for kmeans to ksphere method.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values
