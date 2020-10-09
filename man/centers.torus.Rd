@@ -2,7 +2,7 @@
 % Please edit documentation in R/centers.torus.R
 \name{centers.torus}
 \alias{centers.torus}
-\title{Centers from explicit kmeans clustering on torus}
+\title{Centers from extrinsic kmeans clustering on torus}
 \usage{
 centers.torus(data, k = 10)
 }
@@ -17,7 +17,7 @@ a matrix containing toroidal angles which indicates
 }
 \description{
 \code{centers.torus} returns a matrix, containing toroidal angles
-  which are given by explicit kmeans algorithm on torus.
+  which are given by extrinsic kmeans algorithm on torus.
 }
 \examples{
 \dontrun{
@@ -45,5 +45,7 @@ centers.torus(data, k = 10)
 }
 \references{
 S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction"
+  "Clustering on the torus by conformal prediction" and
+  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+  "Predictive Clustering"
 }

@@ -14,11 +14,13 @@
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
 #' @param centers  a matrix, containing toroidal angles whose rows are the centers
-#'   for kmeans to ksphere method.
+#'   for kmeans to ksphere method. If \code{centers} is given priorly given, then
+#'   \code{centers.torus} will be implemented alternatively.
 #' @return returns an \code{icp.torus} object, containing all values
 #'   to compute the conformity score.
 #' @export
-#' @seealso \code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
+#' @seealso \code{\link[ClusTorus]{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}},
+#'   \code{\link[ClusTorus]{centers.torus}}
 #' @references S. Jung, K. Park, and B. Kim (2020),
 #'   "Clustering on the torus by conformal prediction", and
 #'   Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
@@ -205,7 +207,7 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   indicate whether each evaluation point is contained in the inductive
 #'   conformal prediction sets for each given level.
 #' @export
-#' @seealso \code{\link{grid.torus}}, \code{\link{icp.torus.score}}
+#' @seealso \code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
 #' @examples
 #' \dontrun{
 #' ## mean vectors

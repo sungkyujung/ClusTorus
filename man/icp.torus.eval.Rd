@@ -55,5 +55,5 @@ icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 }
 }
 \seealso{
-\code{\link{grid.torus}}, \code{\link{icp.torus.score}}
+\code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
 }

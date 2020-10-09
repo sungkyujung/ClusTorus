@@ -30,7 +30,8 @@ supported)}
 fitting and the concetnration parameter.}
 
 \item{centers}{a matrix, containing toroidal angles whose rows are the centers
-for kmeans to ksphere method.}
+for kmeans to ksphere method. If \code{centers} is given priorly given, then
+\code{centers.torus} will be implemented alternatively.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values
@@ -73,5 +74,6 @@ S. Jung, K. Park, and B. Kim (2020),
   "Predictive Clustering"
 }
 \seealso{
-\code{\link{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}}
+\code{\link[ClusTorus]{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}},
+  \code{\link[ClusTorus]{centers.torus}}
 }
