@@ -23,5 +23,4 @@ Depends:
 Imports: 
     BAMBI,
     igraph,
-    polynom,
-    ClusterR
+    polynom
