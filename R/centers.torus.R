@@ -37,9 +37,9 @@
 #' }
 
 centers.torus <- function(data, k = 10){
-  kmeans.out <- ClusterR::KMeans_rcpp(cbind(cos(data),sin(data)), clusters = k)
-
-  centroids <- kmeans.out$centroids
+  # kmeans.out <- ClusterR::KMeans_rcpp(cbind(cos(data),sin(data)), clusters = k)
+  kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = k)
+  centroids <- kmeans.out$centers
   centers <-cbind(atan2(centroids[, 3], centroids[, 1]), atan2(centroids[, 4], centroids[, 2]))
 
   centers <- on.torus(centers)
