@@ -104,7 +104,7 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
   pimat <- matrix(0,nrow = n, ncol = J)
   #cat(ncol(parammat))
   if(verbose){
-    cat("EMsinvMmix: fitting vM2 with option ",type, ", J=", J, "\n")
+    cat("EMsinvMmix: fitting vM2 with option ",type, ", J =", J, "\n")
     }
 
   cnt <- 1
