@@ -166,7 +166,7 @@ icp.torus.score <- function(data, split.id = NULL,
   # 3. kmeans to kspheres
   if (sum(method == c("kmeans", "all")) == 1){
     # require the package ClusterR
-    # implement explicit kmeans clustering for find the centers
+    # implement extrinsic kmeans clustering for find the centers
     if(is.null(centers)){
       centers <- centers.torus(X1, param$J)
     }
