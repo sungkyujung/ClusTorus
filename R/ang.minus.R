@@ -5,7 +5,7 @@
 #'
 #' @param x,y angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @return returns a scalar or a vector whose elements are in
-#'   \eqn{[0, 2\pi)}.
+#'   \eqn{[-\pi, \pi)}.
 #' @export
 #' @examples
 #' \dontrun{

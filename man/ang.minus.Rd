@@ -11,7 +11,7 @@ ang.minus(x, y)
 }
 \value{
 returns a scalar or a vector whose elements are in
-  \eqn{[0, 2\pi)}.
+  \eqn{[-\pi, \pi)}.
 }
 \description{
 \code{ang.minus} computes element-wise angular subtraction defined as
