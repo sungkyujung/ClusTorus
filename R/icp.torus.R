@@ -1,7 +1,7 @@
 #' Conformity score for inductive prediction sets
 #'
-#' \code{icp.torus.score} returns an icp.torus object, containing all values
-#'   to compute the conformity score.
+#' \code{icp.torus.score} prepares all values
+#'   for computing the conformity score for specified methods.
 #'
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
@@ -11,11 +11,11 @@
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
 #'   and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 #'   supported)
+#' @param kmeansfitmethod a string one of "intrinsic" or "extrinsic".
+#'   If "extrinsic", then extrinsic kmeans clustering method will be
+#'   implemented. ("intrinsic" is not yet supported)
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
-#' @param centers  a matrix, containing toroidal angles whose rows are the centers
-#'   for kmeans to ksphere method. If \code{centers} is given priorly given, then
-#'   \code{centers.torus} will be implemented alternatively.
 #' @return returns an \code{icp.torus} object, containing all values
 #'   to compute the conformity score.
 #' @export
@@ -53,7 +53,8 @@
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("all", "kde", "mixture", "kmeans"),
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-                            param = list(J = 4, concentration = 25), centers = NULL){
+                            kmeansfitmethod = c("identical", "various"),
+                            param = list(J = 4, concentration = 25)){
   # returns an icp.torus object, containing all values to compute the conformity score.
 
   # Use sample splitting to produce (inductive) conformal prediction sets
@@ -65,7 +66,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   method <- match.arg(method)
   mixfitmethod <- match.arg(mixturefitmethod)
-
+  kmeansfitmethod <- match.arg(kmeansfitmethod)
 
   # sample spliting; preparing data
   n <- nrow(data)
@@ -165,21 +166,13 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # 3. kmeans to kspheres
   if (sum(method == c("kmeans", "all")) == 1){
-    # require the package ClusterR
     # implement extrinsic kmeans clustering for find the centers
-    if(is.null(centers)){
-      centers <- centers.torus(X1, param$J)
-    }
 
     # consider -R as ehat in von mises mixture approximation
+    # where R is the notation in J. Shin (2019)
+    sphere.param <- kmeans.kspheres(X1, centers = param$J,
+                                    type = kmeansfitmethod)
 
-    sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
-    sphere.param$mu1 <- centers[, 1]
-    sphere.param$mu2 <- centers[, 2]
-    sphere.param$c <- rep(0, param$J)
-    for(j in 1:param$J){
-      sphere.param$Sigmainv[[j]] <- diag(2)
-    }
     icp.torus$kmeans$spherefit <- sphere.param
 
     spherej <- ehat.eval(X2, sphere.param)

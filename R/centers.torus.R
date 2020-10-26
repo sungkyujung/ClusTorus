@@ -1,9 +1,9 @@
-#' Centers from extrinsic kmeans clustering on torus
+#' Centers from extrinsic kmeans clustering on torus (depreciated)
 #'
 #' \code{centers.torus} returns a matrix, containing toroidal angles
 #'   which are given by extrinsic kmeans algorithm on torus.
 #'
-#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
+#' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #' @param k a scalar which determines the number of centers
 #' @return a matrix containing toroidal angles which indicates
 #'   k centers.
@@ -40,7 +40,7 @@ centers.torus <- function(data, k = 10){
   # kmeans.out <- ClusterR::KMeans_rcpp(cbind(cos(data),sin(data)), clusters = k)
   kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = k)
   centroids <- kmeans.out$centers
-  centers <-cbind(atan2(centroids[, 3], centroids[, 1]), atan2(centroids[, 4], centroids[, 2]))
+  centers <-atan2(centroids[, (d + 1):(2 * d)], centroids[, 1:d])
 
   centers <- on.torus(centers)
   return(centers)

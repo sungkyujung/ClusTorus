@@ -2,12 +2,12 @@
 % Please edit documentation in R/centers.torus.R
 \name{centers.torus}
 \alias{centers.torus}
-\title{Centers from extrinsic kmeans clustering on torus}
+\title{Centers from extrinsic kmeans clustering on torus (depreciated)}
 \usage{
 centers.torus(data, k = 10)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
+\item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
 
 \item{k}{a scalar which determines the number of centers}
 }

@@ -9,8 +9,8 @@ icp.torus.score(
   split.id = NULL,
   method = c("all", "kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-  param = list(J = 4, concentration = 25),
-  centers = NULL
+  kmeansfitmethod = c("identical", "various"),
+  param = list(J = 4, concentration = 25)
 )
 }
 \arguments{
@@ -26,20 +26,20 @@ which determines the model for clustering}
 and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 supported)}
 
+\item{kmeansfitmethod}{a string one of "intrinsic" or "extrinsic".
+If "extrinsic", then extrinsic kmeans clustering method will be
+implemented. ("intrinsic" is not yet supported)}
+
 \item{param}{the number of components (in \code{list} form) for mixture
 fitting and the concetnration parameter.}
-
-\item{centers}{a matrix, containing toroidal angles whose rows are the centers
-for kmeans to ksphere method. If \code{centers} is given priorly given, then
-\code{centers.torus} will be implemented alternatively.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values
   to compute the conformity score.
 }
 \description{
-\code{icp.torus.score} returns an icp.torus object, containing all values
-  to compute the conformity score.
+\code{icp.torus.score} prepares all values
+  for computing the conformity score for specified methods.
 }
 \examples{
 \dontrun{
