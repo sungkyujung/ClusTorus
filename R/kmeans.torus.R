@@ -77,8 +77,8 @@ kmeans.torus <- function(data, centers = 10,
     # case for centers given as points on toroidal space
     if(length(centers) > 1){
 
-      centers <- cbind(cos(centers), sin(centers))
-      kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centers,
+      centroids <- cbind(cos(centers), sin(centers))
+      kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centroids,
                            iter.max = iter.max, nstart = nstart)
 
     }
@@ -99,27 +99,38 @@ kmeans.torus <- function(data, centers = 10,
     kmeans$membership <- kmeans.out$cluster
     kmeans$size <- kmeans.out$size
 
-    k <- nrow(centers)
+    J <- max(kmeans.out$cluster)
 
     # since the data are on T^d, totss is not the summation of
     # withinss and betweenss
 
-    # calculate withinss
-    for(j in 1:k){
+    # -------- calculate withinss -----------
 
-      cluster.dev <- t(apply(data[kmeans$membership == j, ], 1, ang.minus,
-                           y = colMeans(data[kmeans$membership == j, ])))
+    # initialize with 0 vector
+    kmeans$withinss <- rep(0, J)
 
+    for(j in 1:J){
+
+      # if the size of cluster is 1, withinss is 0
+      if (kmeans$size[j] == 1) { next }
+
+      # the case for the cluster size larger than 1
+      cluster.dev <- t(apply(data[kmeans$membership == j, ],
+                             1, ang.minus,
+                             y = colMeans(data[kmeans$membership == j, ])))
       kmeans$withinss[j] <- sum(cluster.dev^2)
     }
 
-    # calculate totss
+    # --------- calculate totss ------------
+
     tot.mean <- colMeans(data)
     tot.dev <- t(apply(data, 1, ang.minus, y = tot.mean))
     kmeans$totss <- sum(tot.dev^2)
 
-    # calculate betweenss
-    center.distmat <- ang.pdist(kmeans$centers)
+    # --------- calculate betweenss ----------
+
+    # if there is only one cluster, then center.distmat must be 0
+    center.distmat <- ifelse(is.vector(centers), 0, ang.pdist(kmeans$centers))
     kmeans$betweenss <- sum(center.distmat^2)
 
     # 2. Intrinsic kmeans(not yet bulit)
