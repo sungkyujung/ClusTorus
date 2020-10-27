@@ -66,25 +66,28 @@ kmeans.kspheres <- function(data, centers = 10,
                              method = "extrinsic")
 
   centers <- kmeans.out$centers
-
-
-  sphere.param$mu1 <- centers[, 1]
-  sphere.param$mu2 <- centers[, 2]
   J <- nrow(centers)
+  # -------------- initializing ----------------
 
   # 1. identical spheres
-  if(type == "identical"){
+  # In fact, the initialized parameters are for the identical case.
+  sphere.param$mu1 <- centers[, 1]
+  sphere.param$mu2 <- centers[, 2]
+  sphere.param$c <- rep(0, J)
 
-    sphere.param$c <- rep(0, J)
+  for(j in 1:J){
+    sphere.param$Sigmainv[[j]] <- diag(d)
+  }
+
+
+  # 2. various spheres
+  if (type == "various"){
+
     for(j in 1:J){
-      sphere.param$Sigmainv[[j]] <- diag(d)
-    }
 
+      # if the size of cluster is 1, the cluster contains only one point.
+      if (kmeans.out$size[j] == 0) { next }
 
-    # various spheres
-  } else if (type == "various"){
-
-    for(j in 1:J){
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
       sigma_j <- kmeans.out$withinss[j] / nj
