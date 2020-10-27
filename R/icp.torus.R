@@ -53,7 +53,7 @@
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("all", "kde", "mixture", "kmeans"),
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-                            kmeansfitmethod = c("identical", "various"),
+                            kmeansfitmethod = c("identical", "various", "general"),
                             param = list(J = 4, concentration = 25)){
   # returns an icp.torus object, containing all values to compute the conformity score.
 
