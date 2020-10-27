@@ -60,7 +60,7 @@
 
 
 kmeans.torus <- function(data, centers = 10,
-                         method = c("intrinsic", "extrinsic"),
+                         method = c("extrinsic", "intrinsic"),
                          iter.max = 100, nstart = 1){
 
   # prepare for d - dimensional expansion
