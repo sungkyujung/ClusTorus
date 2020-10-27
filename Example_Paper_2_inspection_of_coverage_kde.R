@@ -73,7 +73,7 @@ for (i in 1:RR){
 
 
   icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
-                                  method = "kmeans",
+                                  method = "all",
                                   mixturefitmethod = "a",
                                   kmeansfitmethod = "v",
                                   param = list(J = 13, concentration = 25))
@@ -81,37 +81,37 @@ for (i in 1:RR){
 
 
 
-#  C <- CC$Chat_e
-#  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-#  for (j in 1:testing.n){
-#    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-#  }
-#  Out.dt <- rbind(Out.dt, data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_e"))
+  C <- CC$Chat_e
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt, data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_e"))
 
-#  C <- CC$Chat_kde
-#  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-#  for (j in 1:testing.n){
-#    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-#  }
-#  Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE")
-#  )
+  C <- CC$Chat_kde
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,  data.frame(alpha = alphavec,coverage = colMeans(Inclusion.test), Type = "C_KDE")
+  )
 
 
-#  C <- CC$Chat_mix
-#  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-#  for (j in 1:testing.n){
-#    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-#  }
-#  Out.dt <- rbind(Out.dt,
-#                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_mix"))
+  C <- CC$Chat_mix
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,
+                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_mix"))
 
-#  C <- CC$Chat_max
-#  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-#  for (j in 1:testing.n){
-#    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-#  }
-#  Out.dt <- rbind(Out.dt,
-#                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
+  C <- CC$Chat_max
+  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+  for (j in 1:testing.n){
+    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+  }
+  Out.dt <- rbind(Out.dt,
+                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_max"))
 
   C <- CC$Chat_kmeans
   Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
