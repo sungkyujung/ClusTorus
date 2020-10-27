@@ -91,84 +91,84 @@ kmeans.kspheres <- function(data, centers = 10,
       # if the size of cluster is 1, the cluster contains only one point.
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
-      sigma_j <- ifelse(kmeans.out$size[j] == 1, 
+      sigma_j <- ifelse(kmeans.out$size[j] == 1,
                         1e-50, kmeans.out$withinss[j] / nj)
 
       sphere.param$c[j] <- 2 * log(pi_j) - d * log(sigma_j)
       sphere.param$Sigmainv[[j]] <- diag(d) / sigma_j
     }
   }
-  
+
   # 3. general ellipses ------------------------
   # initialize the parameters with EMsinvMmix.init and norm.appr.param
   # Use generalized Lloyd's algorithm
-  
+
   else if (type == "general"){
     # Step.1 ------------------------------------
     # initialize the parameters
     sphere.param <- norm.appr.param(parammat)
     J <- ncol(parammat)
-    
+
     # vectorize the sphere.param: this will be used for escaping loop
     param.seq <- unlist(sphere.param)
-    
+
     if(verbose){
       cat("kmeans.kspheres: fitting parameters with option ",type, ", J =", J, "\n")
     }
-    
+
     cnt <- 1
     while(TRUE){
       cnt <- cnt + 1
-      
+
       if(verbose){if (cnt %% 10 == 0){cat(".")}}
-      
+
       # Step.2 ------------------------------------
       # prepare w's which work like weights
       wmat <- matrix(0, n, J)
-      
-      
+
+
       ehatj <- ehat.eval(data, sphere.param)
       maxj <- apply(ehatj, 1, which.max)
-      
+
       # evaluate wmat
       for(j in 1:J){ wmat[, j] <- maxj == j }
-      
+
       # Step.3 -------------------------------------
       # update mu's
       wmat.mul <- apply(wmat, 2, function(x, y){x * y}, data)
-      
-      mu <- matrix(unlist(lapply(wmat.mul, colSums)), 
+
+      mu <- matrix(unlist(lapply(wmat.mul, colSums)),
                    nrow = J, byrow = TRUE) / colSums(wmat)
-      
+
       sphere.param$mu1 <- mu[, 1]
       sphere.param$mu2 <- mu[, 2]
-      
+
       # Step.4 and Step.5
-      
+
       for(j in 1:J){
-        
+
         # Step.4 -----------------------------------
         z <- tor.minus(data, c(sphere.param$mu1[j], sphere.param$mu2[j]))
-        
+
         # create "flatten" matrix, whose each column indicates
         # the entries of matrix created by (Y_i - mu_j)(Y_i - mu_j)^T
-        S <- apply(z, 1, function(x) {as.matrix(x) %*% t(as.matrix(x))})
-        
+        S <- apply(z, 1, function(x) {as.matrix(x) %*% x})
+
         S <- matrix(apply(t((t(S) * wmat[, j])), 1, sum), nrow = d) / sum(wmat[, j])
         sphere.param$Sigmainv[[j]] <- solve(S)
-        
+
         # Step.5 -----------------------------------
         pi_j <- sum(wmat[, j]) / n
-        
+
         # update c's
         sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
       }
-      
-      param.seq <- rbind(unlist(sphere.param))
-      
-      diff <- sum((param.seq[nrow(param.seq), ] - param.seq[nrow(param.seq) - 1, ])^2, 
+
+      param.seq <- rbind(param.seq, unlist(sphere.param))
+
+      diff <- sum((param.seq[nrow(param.seq), ] - param.seq[nrow(param.seq) - 1, ])^2,
                   na.rm = TRUE)
-      
+
       if(cnt >= maxiter | diff < THRESHOLD){
         cat("Done")
         cat("\n")
