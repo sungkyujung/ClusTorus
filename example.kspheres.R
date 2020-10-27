@@ -149,8 +149,8 @@ Example_paper_supp <- function(J, dat1, dat1.test){
 
   for (j in Jvec){
     l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
-                              method = "kmeans",
-                              kmeansfitmethod = "various",
+                              method = "kmeans", 
+                              kmeansfitmethod = 'v',
                               param = list(J = j))
   }
 
