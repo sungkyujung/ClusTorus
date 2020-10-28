@@ -68,14 +68,14 @@ kmeans.kspheres <- function(data, centers = 10,
   kmeans.out <- kmeans.torus(data, centers = centers,
                              method = "extrinsic")
 
-  centers <- kmeans.out$centers
-  J <- nrow(centers)
+  centroid <- kmeans.out$centers
+  J <- nrow(centroid)
   # -------------- initializing ----------------
 
   # 1. identical spheres
   # In fact, the initialized parameters are for the identical case.
-  sphere.param$mu1 <- centers[, 1]
-  sphere.param$mu2 <- centers[, 2]
+  sphere.param$mu1 <- centroid[, 1]
+  sphere.param$mu2 <- centroid[, 2]
   sphere.param$c <- rep(0, J)
 
   for(j in 1:J){
@@ -135,9 +135,10 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # Step.3 -------------------------------------
       # update mu's
-      wmat.mul <- apply(wmat, 2, function(x, y){x * y}, data)
+      wmat.mul <- apply(wmat, 2, '*', data)
+      wmat.mul <- lapply(wmat.mul, colSums)
 
-      mu <- matrix(unlist(lapply(wmat.mul, colSums)),
+      mu <- matrix(unlist(wmat.mul),
                    nrow = J, byrow = TRUE) / colSums(wmat)
 
       sphere.param$mu1 <- mu[, 1]
