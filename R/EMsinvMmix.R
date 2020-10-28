@@ -285,7 +285,7 @@ sinvM.ECMEb <- function(wstat, kappa1, kappa2, lambda, mu1, mu2, THRESHOLD = 1e-
     # STOP IF NOT CHANGING
     diffb <- norm(mu1c - mu1) + norm(mu2c - mu2)
     r <- r + 1
-    if(r >= 100 | diffb < THRESHOLD){
+    if(r >= 100 || diffb < THRESHOLD){
       cat("Done")
       cat("\n")
       break}
