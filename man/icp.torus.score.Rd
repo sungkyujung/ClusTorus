@@ -9,7 +9,7 @@ icp.torus.score(
   split.id = NULL,
   method = c("all", "kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-  kmeansfitmethod = c("identical", "various"),
+  kmeansfitmethod = c("identical", "various", "ellipse"),
   param = list(J = 4, concentration = 25)
 )
 }
@@ -26,9 +26,12 @@ which determines the model for clustering}
 and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 supported)}
 
-\item{kmeansfitmethod}{a string one of "intrinsic" or "extrinsic".
-If "extrinsic", then extrinsic kmeans clustering method will be
-implemented. ("intrinsic" is not yet supported)}
+\item{kmeansfitmethod}{character which must be "identical", "various", or "ellipse".
+If "identical", the radii of k-spheres are identical.
+If "various", the radii of k-spheres may be different.
+If, "ellipse", clustering with k-ellipses. The parameters to construct
+the ellipses are optimized with generalized Lloyd algorithm, which is
+modified for toroidal space. To see the detail, see the references.}
 
 \item{param}{the number of components (in \code{list} form) for mixture
 fitting and the concetnration parameter.}

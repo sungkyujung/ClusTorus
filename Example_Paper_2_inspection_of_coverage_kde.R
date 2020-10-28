@@ -75,7 +75,7 @@ for (i in 1:RR){
   icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
                                   method = "all",
                                   mixturefitmethod = "a",
-                                  kmeansfitmethod = "v",
+                                  kmeansfitmethod = "e",
                                   param = list(J = 13, concentration = 25))
   CC <- icp.torus.eval(icp.torus, level = alphavec, eval.point = grid.torus())
 
@@ -203,6 +203,7 @@ N <- length(alphavec)
 icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
                             method = "all",
                             mixturefitmethod = "a",
+                            kmeansfitmethod = "e",
                             param = list(concentration = 25, J = 13))
 CC <- icp.torus.eval(icp.torus, level = alphavec, eval.point = grid.torus())
 

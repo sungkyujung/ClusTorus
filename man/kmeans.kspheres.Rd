@@ -4,18 +4,29 @@
 \alias{kmeans.kspheres}
 \title{K-Means Clustering to K-Spheres Clustering on Torus}
 \usage{
-kmeans.kspheres(data, centers = 10, type = c("identical", "various"))
+kmeans.kspheres(
+  data,
+  centers = 10,
+  type = c("identical", "various", "ellipse"),
+  parammat = EMsinvMmix.init(data, centers),
+  THRESHOLD = 1e-10,
+  maxiter = 200,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{data}{data n x d matrix of toroidal data on \eqn{[0, 2\pi)^2}}
+\item{data}{data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
 
 \item{centers}{either the number of clusters or a set of initial
 cluster centers. If a number, a random set of row in x is
 chosen as the initial centers.}
 
-\item{type}{character which must be "identical" or "various".
+\item{type}{character which must be "identical", "various", or "ellipse".
 If "identical", the radii of k-spheres are identical.
-If "various", the radii of k-spheres may be different.}
+If "various", the radii of k-spheres may be different.
+If, "ellipse", clustering with k-ellipses. The parameters to construct
+the ellipses are optimized with generalized Lloyd algorithm, which is
+modified for toroidal space. To see the detail, see the references.}
 }
 \value{
 returns a \code{sphere.param} object,

@@ -3,13 +3,16 @@
 #' \code{kmeans.kspheres} prepares the parameters for conformity scores
 #'   which are derived by k-means clustering on torus.
 #'
-#' @param data data n x d matrix of toroidal data on \eqn{[0, 2\pi)^2}
+#' @param data data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #' @param centers either the number of clusters or a set of initial
 #'   cluster centers. If a number, a random set of row in x is
 #'   chosen as the initial centers.
-#' @param type character which must be "identical" or "various".
+#' @param type character which must be "identical", "various", or "ellipse".
 #'   If "identical", the radii of k-spheres are identical.
 #'   If "various", the radii of k-spheres may be different.
+#'   If, "ellipse", clustering with k-ellipses. The parameters to construct
+#'   the ellipses are optimized with generalized Lloyd algorithm, which is
+#'   modified for toroidal space. To see the detail, see the references.
 #'
 #' @return returns a \code{sphere.param} object,
 #'   containing all values which determines the shape and
@@ -46,7 +49,7 @@
 #' kmeans.kspheres(data, centers = 3, type = "various")
 #' }
 kmeans.kspheres <- function(data, centers = 10,
-                            type = c("identical", "various", "general"),
+                            type = c("identical", "various", "ellipse"),
                             parammat = EMsinvMmix.init(data, centers),
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE){
@@ -103,7 +106,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # initialize the parameters with EMsinvMmix.init and norm.appr.param
   # Use generalized Lloyd's algorithm
 
-  else if (type == "general"){
+  else if (type == "ellipse"){
     # Step.1 ------------------------------------
     # initialize the parameters
     sphere.param <- norm.appr.param(parammat)
@@ -120,7 +123,7 @@ kmeans.kspheres <- function(data, centers = 10,
     while(TRUE){
       cnt <- cnt + 1
 
-      if(verbose){if (cnt %% 10 == 0){cat(".")}}
+      if(verbose){if (cnt %% 2 == 0){cat(".")}}
 
       # Step.2 ------------------------------------
       # prepare w's which work like weights
@@ -135,18 +138,23 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # Step.3 -------------------------------------
       # update mu's
+      
       wmat.mul <- apply(wmat, 2, '*', data)
-      wmat.mul <- lapply(wmat.mul, colSums)
+      wmat.mul <- rbind(wmat.mul, wmat)
+      wmat.mul <- apply(wmat.mul, 2, function(x){
+        wtd.stat.ang(matrix(x[1:(d * n)], n, byrow = F),
+                     w = x[((d * n) + 1):length(x)] / sum(x[((d * n) + 1):length(x)]))$Mean})
 
-      mu <- matrix(unlist(wmat.mul),
-                   nrow = J, byrow = TRUE) / colSums(wmat)
+      mu <- t(wmat.mul)
 
       sphere.param$mu1 <- mu[, 1]
       sphere.param$mu2 <- mu[, 2]
-
+      
+      sphere.param$mu1[is.na(sphere.param$mu1)] <- 0
+      sphere.param$mu2[is.na(sphere.param$mu2)] <- 0
       # Step.4 and Step.5
 
-      for(j in 1:J){
+      for (j in 1:J){
 
         # Step.4 -----------------------------------
         z <- tor.minus(data, c(sphere.param$mu1[j], sphere.param$mu2[j]))
@@ -156,11 +164,16 @@ kmeans.kspheres <- function(data, centers = 10,
         S <- apply(z, 1, function(x) {as.matrix(x) %*% x})
 
         S <- matrix(apply(t((t(S) * wmat[, j])), 1, sum), nrow = d) / sum(wmat[, j])
+        
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- THRESHOLD * diag(d)
+        }
+        
         sphere.param$Sigmainv[[j]] <- solve(S)
-
+         
         # Step.5 -----------------------------------
-        pi_j <- sum(wmat[, j]) / n
-
+        pi_j <- ifelse(sum(wmat[, j]) == 0, THRESHOLD, sum(wmat[, j]) / n)
+        
         # update c's
         sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
       }
@@ -170,7 +183,7 @@ kmeans.kspheres <- function(data, centers = 10,
       diff <- sum((param.seq[nrow(param.seq), ] - param.seq[nrow(param.seq) - 1, ])^2,
                   na.rm = TRUE)
 
-      if(cnt >= maxiter | diff < THRESHOLD){
+      if (cnt >= maxiter | diff < THRESHOLD){
         cat("Done")
         cat("\n")
         break}

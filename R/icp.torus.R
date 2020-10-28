@@ -11,9 +11,12 @@
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
 #'   and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 #'   supported)
-#' @param kmeansfitmethod a string one of "intrinsic" or "extrinsic".
-#'   If "extrinsic", then extrinsic kmeans clustering method will be
-#'   implemented. ("intrinsic" is not yet supported)
+#' @param kmeansfitmethod character which must be "identical", "various", or "ellipse".
+#'   If "identical", the radii of k-spheres are identical.
+#'   If "various", the radii of k-spheres may be different.
+#'   If, "ellipse", clustering with k-ellipses. The parameters to construct
+#'   the ellipses are optimized with generalized Lloyd algorithm, which is
+#'   modified for toroidal space. To see the detail, see the references.
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
 #' @return returns an \code{icp.torus} object, containing all values
@@ -53,7 +56,7 @@
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("all", "kde", "mixture", "kmeans"),
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-                            kmeansfitmethod = c("identical", "various", "general"),
+                            kmeansfitmethod = c("identical", "various", "ellipse"),
                             param = list(J = 4, concentration = 25)){
   # returns an icp.torus object, containing all values to compute the conformity score.
 
