@@ -17,7 +17,7 @@ plot_clustering <- function(icp.torus, choosealpha){
     geom_contour(aes(phi, psi, z = ifelse(value,1,0)), data = b, size = 1,lineend = "round" ) + 
     geom_point(mapping = aes(x,y,shape = c, color = c), data = data.frame(x = data[,1],y =data[,2], 
                                                                           c = as.factor(c$cluster.id.by.ehat))) 
-  g0 + ggtitle(paste("ICP, vM2 mixture with J=",chooseJ,", alpha=",choosealpha)) 
+  g0 + ggtitle(paste("ICP, vM2 mixture with J =",chooseJ,", alpha =",choosealpha)) 
   
   g2 <- g0
   
