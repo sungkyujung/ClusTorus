@@ -4,13 +4,7 @@
 \alias{kmeans.torus}
 \title{K-Means Clustering on Torus}
 \usage{
-kmeans.torus(
-  data,
-  centers = 10,
-  method = c("extrinsic", "intrinsic"),
-  iter.max = 100,
-  nstart = 1
-)
+kmeans.torus(data, centers = 10, iter.max = 100, nstart = 1)
 }
 \arguments{
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
@@ -18,10 +12,6 @@ kmeans.torus(
 \item{centers}{either the number of clusters or a set of initial
 cluster centers. If a number, a random set of row in x is
 chosen as the initial centers.}
-
-\item{method}{a string one of "intrinsic" or "extrinsic".
-If "extrinsic", then extrinsic kmeans clustering method will be
-implemented. ("intrinsic" is not yet supported)}
 
 \item{iter.max}{the maximum number of iterations}
 
@@ -36,8 +26,8 @@ returns a \code{kmeans} object, which contains
   each cluster.
 }
 \description{
-\code{kmeans.torus} implements k-means clustering on toroidal
- space.
+\code{kmeans.torus} implements extrinsic k-means clustering
+ on toroidal space.
 }
 \details{
 In Euclidean space, we know that the total sum of squares

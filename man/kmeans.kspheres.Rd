@@ -7,7 +7,7 @@
 kmeans.kspheres(
   data,
   centers = 10,
-  type = c("identical", "various", "ellipse"),
+  type = c("homogeneous-circular", "heterogeneous-circular", "general"),
   parammat = EMsinvMmix.init(data, centers),
   THRESHOLD = 1e-10,
   maxiter = 200,
@@ -21,12 +21,13 @@ kmeans.kspheres(
 cluster centers. If a number, a random set of row in x is
 chosen as the initial centers.}
 
-\item{type}{character which must be "identical", "various", or "ellipse".
-If "identical", the radii of k-spheres are identical.
-If "various", the radii of k-spheres may be different.
-If, "ellipse", clustering with k-ellipses. The parameters to construct
-the ellipses are optimized with generalized Lloyd algorithm, which is
-modified for toroidal space. To see the detail, see the references.}
+\item{type}{character which must be "homogeneous-circular",
+"heterogeneous-circular", or "general".
+ If "homogeneous-circular", the radii of k-spheres are identical.
+ If "heterogeneous-cricular", the radii of k-spheres may be different.
+ If, "general", clustering with k-ellipses. The parameters to construct
+ the ellipses are optimized with generalized Lloyd algorithm, which is
+ modified for toroidal space. To see the detail, see the references.}
 }
 \value{
 returns a \code{sphere.param} object,

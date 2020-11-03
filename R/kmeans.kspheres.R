@@ -7,10 +7,11 @@
 #' @param centers either the number of clusters or a set of initial
 #'   cluster centers. If a number, a random set of row in x is
 #'   chosen as the initial centers.
-#' @param type character which must be "identical", "various", or "ellipse".
-#'   If "identical", the radii of k-spheres are identical.
-#'   If "various", the radii of k-spheres may be different.
-#'   If, "ellipse", clustering with k-ellipses. The parameters to construct
+#' @param type character which must be "homogeneous-circular",
+#'  "heterogeneous-circular", or "general".
+#'   If "homogeneous-circular", the radii of k-spheres are identical.
+#'   If "heterogeneous-cricular", the radii of k-spheres may be different.
+#'   If, "general", clustering with k-ellipses. The parameters to construct
 #'   the ellipses are optimized with generalized Lloyd algorithm, which is
 #'   modified for toroidal space. To see the detail, see the references.
 #'
@@ -49,7 +50,9 @@
 #' kmeans.kspheres(data, centers = 3, type = "various")
 #' }
 kmeans.kspheres <- function(data, centers = 10,
-                            type = c("identical", "various", "ellipse"),
+                            type = c("homogeneous-circular",
+                                     "heterogeneous-circular",
+                                     "general"),
                             parammat = EMsinvMmix.init(data, centers),
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE){
@@ -87,7 +90,7 @@ kmeans.kspheres <- function(data, centers = 10,
 
 
   # 2. various spheres --------------------------
-  if (type == "various"){
+  if (type == "heterogeneous-circular"){
 
     for(j in 1:J){
 
@@ -95,7 +98,7 @@ kmeans.kspheres <- function(data, centers = 10,
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
       sigma_j <- ifelse(kmeans.out$size[j] == 1,
-                        1e-50, kmeans.out$withinss[j] / nj)
+                        1e-50, kmeans.out$withinss[j] / (nj * d))
 
       sphere.param$c[j] <- 2 * log(pi_j) - d * log(sigma_j)
       sphere.param$Sigmainv[[j]] <- diag(d) / sigma_j
@@ -106,7 +109,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # initialize the parameters with EMsinvMmix.init and norm.appr.param
   # Use generalized Lloyd's algorithm
 
-  else if (type == "ellipse"){
+  else if (type == "general"){
     # Step.1 ------------------------------------
     # initialize the parameters
     sphere.param <- norm.appr.param(parammat)
@@ -138,7 +141,7 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # Step.3 -------------------------------------
       # update mu's
-      
+
       wmat.mul <- apply(wmat, 2, '*', data)
       wmat.mul <- rbind(wmat.mul, wmat)
       wmat.mul <- apply(wmat.mul, 2, function(x){
@@ -149,7 +152,7 @@ kmeans.kspheres <- function(data, centers = 10,
 
       sphere.param$mu1 <- mu[, 1]
       sphere.param$mu2 <- mu[, 2]
-      
+
       sphere.param$mu1[is.na(sphere.param$mu1)] <- 0
       sphere.param$mu2[is.na(sphere.param$mu2)] <- 0
       # Step.4 and Step.5
@@ -164,16 +167,16 @@ kmeans.kspheres <- function(data, centers = 10,
         S <- apply(z, 1, function(x) {as.matrix(x) %*% x})
 
         S <- matrix(apply(t((t(S) * wmat[, j])), 1, sum), nrow = d) / sum(wmat[, j])
-        
+
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
           S <- THRESHOLD * diag(d)
         }
-        
+
         sphere.param$Sigmainv[[j]] <- solve(S)
-         
+
         # Step.5 -----------------------------------
         pi_j <- ifelse(sum(wmat[, j]) == 0, THRESHOLD, sum(wmat[, j]) / n)
-        
+
         # update c's
         sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
       }
