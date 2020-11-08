@@ -61,13 +61,10 @@ kmeans.torus <- function(data, centers = 10,
 
   # prepare for d - dimensional expansion
   d <- ncol(data)
-  method <- match.arg(method)
 
   kmeans <- list(data = data, centers = NULL,
                  membership = NULL, totss = NULL, withinss = NULL,
                  betweenss = NULL, size = NULL)
-
-  # 1. Extrinsic kmeans
 
   # case for centers given as points on toroidal space
   if(length(centers) > 1){
@@ -127,8 +124,6 @@ kmeans.torus <- function(data, centers = 10,
   # if there is only one cluster, then center.distmat must be 0
   center.distmat <- ifelse(is.vector(centers), 0, ang.pdist(kmeans$centers))
   kmeans$betweenss <- sum(center.distmat^2)
-
-  # 2. Intrinsic kmeans(not yet bulit)
 
   return(kmeans)
 }

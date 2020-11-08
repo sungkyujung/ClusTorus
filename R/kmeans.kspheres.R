@@ -71,8 +71,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # Use extrinsic kmeans clustering for initial center points.
   # centers is given as a number, in default, but it may also be given
   # as a matrix which indicates the toroidal points.
-  kmeans.out <- kmeans.torus(data, centers = centers,
-                             method = "extrinsic")
+  kmeans.out <- kmeans.torus(data, centers = centers)
 
   centroid <- kmeans.out$centers
   J <- nrow(centroid)
