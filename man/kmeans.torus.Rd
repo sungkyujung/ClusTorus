@@ -57,7 +57,7 @@ data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
               mvrnorm(n=50, Mu3, Sigma3))
 data <- on.torus(data)
 
-kmeans.torus(data, centers = 3, method = "extrinsic",
+kmeans.torus(data, centers = 3,
              iter.max = 100, nstart = 1)
 }
 }
