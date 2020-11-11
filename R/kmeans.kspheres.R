@@ -96,7 +96,7 @@ kmeans.kspheres <- function(data, centers = 10,
       # if the size of cluster is 1, the cluster contains only one point.
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
-      sigma_j <- ifelse(kmeans.out$size[j] == 1,
+      sigma_j <- ifelse(kmeans.out$size[j] <= 1,
                         1e-50, kmeans.out$withinss[j] / (nj * d))
 
       sphere.param$c[j] <- 2 * log(pi_j) - d * log(sigma_j)
