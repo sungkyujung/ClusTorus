@@ -25,7 +25,7 @@
 wtd.stat.ang <- function(data, w){
   # computes weighted extrinsic mean direction and mean resultant length
   #
-
+  if(is.vector(data)){ data <- t(as.matrix(data))}
   # note w is multiplied to each column of the former
   wtd_ext_mean <- colMeans((cos(data) + 1i * sin(data)) * w)
 
