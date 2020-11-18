@@ -59,7 +59,7 @@ data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
               mvrnorm(n=50, Mu3, Sigma3))
 data <- on.torus(data)
 
-kmeans.kspheres(data, centers = 3, type = "various")
+kmeans.kspheres(data, centers = 3, type = "general")
 }
 }
 \references{
