@@ -63,7 +63,7 @@ kmeans.torus <- function(data, centers = 10,
   n <- nrow(data)
   d <- ncol(data)
 
-  kmeans <- list(data = data, centers = NULL, means = NULL,
+  kmeans <- list(data = data, centers = NULL,
                  membership = NULL, totss = NULL, withinss = NULL,
                  betweenss = NULL, size = NULL)
 
@@ -101,32 +101,24 @@ kmeans.torus <- function(data, centers = 10,
 
   # initialize with 0 vector
   kmeans$withinss <- rep(0, J)
-  kmeans$means <- matrix(0, nrow = J, ncol = d)
+
   for(j in 1:J){
 
     # if the size of cluster is 1, withinss is 0
     if (kmeans$size[j] == 1) { next }
 
     # the case for the cluster size larger than 1
-    # nj <- length(data[kmeans$membership == j, ])
-    # j.mean <- wtd.stat.ang(data[kmeans$membership == j, ], rep(1, nj) / nj)$Mean
-    j.result <- optim(kmeans$centers[j, ], function(center){
-      sum(tor.minus(data[kmeans$membership == j, ], center)^2)
-    })
-    kmeans$means[j, ] <- j.result$par
-    kmeans$withinss[j] <- j.result$value
+    nj <- length(data[kmeans$membership == j, ])
+    j.mean <- wtd.stat.ang(data[kmeans$membership == j, ], rep(1, nj) / nj)$Mean
+
+    
+    kmeans$withinss[j] <- sum(tor.minus(data[kmeans$membership == j, ], j.mean)^2)
   }
 
   # --------- calculate totss ------------
 
   tot.mean <- wtd.stat.ang(data, rep(1, n) / n)$Mean
-  tot.result <- optim(tot.mean, function(center){
-    sum(tor.minus(data, center)^2)
-  })
-  
-  kmeans$totss <- tot.result$value
-  # tot.dev <- t(apply(data, 1, ang.minus, y = tot.mean))
-  # kmeans$totss <- sum(tot.dev^2)
+  kmeans$totss <- sum(tor.minus(data, tot.mean)^2)
 
   # --------- calculate betweenss ----------
 

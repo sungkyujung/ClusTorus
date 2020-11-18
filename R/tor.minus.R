@@ -24,4 +24,8 @@ tor.minus <- function(data, mu){
   cbind(
     ang.minus(data[,1], mu[1]),
     ang.minus(data[,2], mu[2]))
+  
+  # for higher dimension -----------
+  # t(apply(data, 1, ang.minus, Mu))
+  
 }
