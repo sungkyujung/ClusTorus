@@ -47,7 +47,7 @@
 #'               mvrnorm(n=50, Mu3, Sigma3))
 #' data <- on.torus(data)
 #'
-#' kmeans.kspheres(data, centers = 3, type = "various")
+#' kmeans.kspheres(data, centers = 3, type = "general")
 #' }
 kmeans.kspheres <- function(data, centers = 10,
                             type = c("homogeneous-circular",
@@ -77,7 +77,7 @@ kmeans.kspheres <- function(data, centers = 10,
   J <- nrow(centroid)
   # -------------- initializing ----------------
 
-  # 1. identical spheres
+  # 1. homogeneous spheres
   # In fact, the initialized parameters are for the identical case.
   sphere.param$mu1 <- centroid[, 1]
   sphere.param$mu2 <- centroid[, 2]
@@ -88,7 +88,7 @@ kmeans.kspheres <- function(data, centers = 10,
   }
 
 
-  # 2. various spheres --------------------------
+  # 2. heterogeneous spheres --------------------------
   if (type == "heterogeneous-circular"){
 
     for(j in 1:J){
@@ -104,7 +104,7 @@ kmeans.kspheres <- function(data, centers = 10,
     }
   }
 
-  # 3. general ellipses ------------------------
+  # 3. general ellipsoids ------------------------
   # initialize the parameters with EMsinvMmix.init and norm.appr.param
   # Use generalized Lloyd's algorithm
 
@@ -141,19 +141,24 @@ kmeans.kspheres <- function(data, centers = 10,
       # Step.3 -------------------------------------
       # update mu's
 
-      wmat.mul <- apply(wmat, 2, '*', data)
-      wmat.mul <- rbind(wmat.mul, wmat)
-      wmat.mul <- apply(wmat.mul, 2, function(x){
-        wtd.stat.ang(matrix(x[1:(d * n)], n, byrow = F),
-                     w = x[((d * n) + 1):length(x)] / sum(x[((d * n) + 1):length(x)]))$Mean})
+      # wmat.mul <- apply(wmat, 2, '*', data)
+      # wmat.mul <- rbind(wmat.mul, wmat)
+      # wmat.mul <- apply(wmat.mul, 2, function(x){
+      #   wtd.stat.ang(matrix(x[1:(d * n)], n, byrow = F),
+      #                w = x[((d * n) + 1):length(x)] / sum(x[((d * n) + 1):length(x)]))$Mean})
+      wmat.mul <- apply(wmat, 2, function(x){
+        dat.j <- data[x == 1, ]
+        nj <- length(dat.j) / d
+        if(nj > 0){
+          return(wtd.stat.ang(dat.j, w = rep(1, nj) / nj)$Mean)
+        } else { return(rep(0, d)) }
+      })
 
       mu <- t(wmat.mul)
 
       sphere.param$mu1 <- mu[, 1]
       sphere.param$mu2 <- mu[, 2]
 
-      sphere.param$mu1[is.na(sphere.param$mu1)] <- 0
-      sphere.param$mu2[is.na(sphere.param$mu2)] <- 0
       # Step.4 and Step.5
 
       for (j in 1:J){
