@@ -7,17 +7,17 @@
 tor.minus(data, mu)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data}
+\item{data}{n x d matrix of toroidal data}
 
-\item{mu}{a 2-dimensinal vector}
+\item{mu}{a d-dimensinal vector}
 }
 \value{
-angular subtraction bewtween n x 2 toroidal data and
-  a 2 dimensional vector.
+angular subtraction bewtween n x d toroidal data and
+  a d dimensional vector.
 }
 \description{
-\code{tor.minus} computes angular subtraction bewtween n x 2 toroidal data and
-  a 2 dimensional vector.
+\code{tor.minus} computes angular subtraction bewtween n x d toroidal data and
+  a d dimensional vector.
 }
 \examples{
 \dontrun{

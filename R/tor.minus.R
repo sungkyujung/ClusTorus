@@ -1,12 +1,12 @@
 #' Toroidal subtraction
 #'
-#' \code{tor.minus} computes angular subtraction bewtween n x 2 toroidal data and
-#'   a 2 dimensional vector.
+#' \code{tor.minus} computes angular subtraction bewtween n x d toroidal data and
+#'   a d dimensional vector.
 #'
-#' @param data n x 2 matrix of toroidal data
-#' @param mu a 2-dimensinal vector
-#' @return angular subtraction bewtween n x 2 toroidal data and
-#'   a 2 dimensional vector.
+#' @param data n x d matrix of toroidal data
+#' @param mu a d-dimensinal vector
+#' @return angular subtraction bewtween n x d toroidal data and
+#'   a d dimensional vector.
 #' @seealso \code{\link{ang.minus}}
 #' @export
 #' @examples
@@ -19,13 +19,13 @@
 #' }
 
 tor.minus <- function(data, mu){
-  # data is n x 2 matrix of toroidal values, mu is a 2-vector.
+  # data is n x d matrix of toroidal values, mu is a d-vector.
   # returns toroidal subtraction
-  cbind(
-    ang.minus(data[,1], mu[1]),
-    ang.minus(data[,2], mu[2]))
+  # cbind(
+  #   ang.minus(data[,1], mu[1]),
+  #   ang.minus(data[,2], mu[2]))
   
   # for higher dimension -----------
-  # t(apply(data, 1, ang.minus, Mu))
+  t(apply(data, 1, ang.minus, Mu))
   
 }
