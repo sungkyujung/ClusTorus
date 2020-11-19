@@ -8,7 +8,7 @@ devtools::load_all()
 # library(ClusTorus)
 # source('routines.R')
 
-set.seed(20201)
+set.seed(2021)
 # Prepare data 1 ------------------------------------------------------------
 
 # Example: five clusters
@@ -151,7 +151,7 @@ Example_paper_supp <- function(J, dat1, dat1.test){
   for (j in Jvec){
     l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
                               method = "kmeans",
-                              kmeansfitmethod = "g",
+                              kmeansfitmethod = "he",
                               param = list(J = j))
   }
 
