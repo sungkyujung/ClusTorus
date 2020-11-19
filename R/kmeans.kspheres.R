@@ -162,18 +162,21 @@ kmeans.kspheres <- function(data, centers = 10,
       # Step.4 and Step.5
 
       for (j in 1:J){
-
+        dat.j <- data[wmat[, j] == 1, ]
         # Step.4 -----------------------------------
-        z <- tor.minus(data, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+        z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
 
-        # create "flatten" matrix, whose each column indicates
-        # the entries of matrix created by (Y_i - mu_j)(Y_i - mu_j)^T
-        S <- apply(z, 1, function(x) {as.matrix(x) %*% x})
-
-        S <- matrix(apply(t((t(S) * wmat[, j])), 1, sum), nrow = d) / sum(wmat[, j])
+        # evaluate the MLE of Sigma_j
+        S <- t(z) %*% z / nrow(z)
 
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- THRESHOLD * diag(d)
+          S <- diag(diag(S))
+          if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+            S <- sum(S) / d * diag(d)
+            if (sum(is.na(S)) != 0 || sum(S) == 0){
+              S <- THRESHOLD * diag(d)
+            }
+          }
         }
 
         sphere.param$Sigmainv[[j]] <- solve(S)
