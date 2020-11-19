@@ -186,7 +186,7 @@ Example_paper_supp <- function(J, dat1, dat1.test){
     geom_point(mapping = aes(x,y), data = data.frame(x = data[,1],y =data[,2])) +
     scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+
     scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))
-  g0 <- g0 + ggtitle(paste("ICP, kmeans fitting with J=",Jhat,", alpha=",alphahat))
+  g0 <- g0 + ggtitle(paste("ICP, kellipsoids fitting with J=",Jhat,", alpha=",alphahat))
   g0
 
   #c <- cluster.assign.torus(data, icp.torus, level = alphahat)
