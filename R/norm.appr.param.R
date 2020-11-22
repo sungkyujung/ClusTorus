@@ -39,9 +39,8 @@ norm.appr.param <- function(parammat){
   # parameters for elliptical approximation of bivariate von mises
   J <- ncol(parammat)
 
-  ellipse.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
-  ellipse.param$mu1 <- parammat[5, ]
-  ellipse.param$mu2 <- parammat[6, ]
+  ellipse.param <- list(mu = NULL, Sigmainv = NULL, c = NULL)
+  ellipse.param$mu <- cbind(parammat[5, ], parammat[6, ])
   for (j in 1:J){
     kap1 <- parammat[2, j]
     kap2 <- parammat[3, j]
