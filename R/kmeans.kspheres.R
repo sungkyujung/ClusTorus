@@ -11,7 +11,8 @@
 #'  "heterogeneous-circular", or "general".
 #'   If "homogeneous-circular", the radii of k-spheres are identical.
 #'   If "heterogeneous-circular", the radii of k-spheres may be different.
-#'   If, "general", clustering with k-ellipses. The parameters to construct
+#'   If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
+#'   If, "general", clustering with k-ellipsoids. The parameters to construct
 #'   the ellipses are optimized with generalized Lloyd algorithm, which is
 #'   modified for toroidal space. To see the detail, see the references.
 #'
@@ -52,6 +53,7 @@
 kmeans.kspheres <- function(data, centers = 10,
                             type = c("homogeneous-circular",
                                      "heterogeneous-circular",
+                                     "ellipsoids",
                                      "general"),
                             parammat = EMsinvMmix.init(data, centers),
                             THRESHOLD = 1e-10, maxiter = 200,
@@ -66,7 +68,7 @@ kmeans.kspheres <- function(data, centers = 10,
   d <- ncol(data)
   n <- nrow(data)
 
-  sphere.param <- list(mu1 = NULL, mu2 = NULL, Sigmainv = NULL, c = NULL)
+  sphere.param <- list(mu = NULL, Sigmainv = NULL, c = NULL)
 
   # Use extrinsic kmeans clustering for initial center points.
   # centers is given as a number, in default, but it may also be given
@@ -79,8 +81,10 @@ kmeans.kspheres <- function(data, centers = 10,
 
   # 1. homogeneous spheres
   # In fact, the initialized parameters are for the identical case.
-  sphere.param$mu1 <- centroid[, 1]
-  sphere.param$mu2 <- centroid[, 2]
+  # sphere.param$mu1 <- centroid[, 1]
+  # sphere.param$mu2 <- centroid[, 2]
+  sphere.param$mu <- centroid
+
   sphere.param$c <- rep(0, J)
 
   for(j in 1:J){
@@ -104,12 +108,46 @@ kmeans.kspheres <- function(data, centers = 10,
     }
   }
 
-  # 3. general ellipsoids ------------------------
+  # 3. kmeans to ellipsoids ----------------------------
+  else if (type == "ellipsoids") {
+
+    for (j in 1:J){
+
+      nj <- kmeans.out$size[j]
+      pi_j <- nj / n
+
+      dat.j <- data[kmeans.out$membership == j, ]
+
+      # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+      z <- tor.minus(dat.j, sphere.param$mu[j, ])
+
+      S <- t(z) %*% z / nrow(z)
+
+      if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+        S <- diag(diag(S))
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- sum(S) / d * diag(d)
+          if (sum(is.na(S)) != 0 || sum(S) == 0){
+            S <- THRESHOLD * diag(d)
+          }
+        }
+      }
+
+      sphere.param$Sigmainv[[j]] <- solve(S)
+
+      # Step.5 -----------------------------------
+      pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
+                     THRESHOLD, sum(kmeans.out$membership == j) / n)
+
+    }
+  }
+
+
+  # 4. general ellipsoids ------------------------
   # initialize the parameters with EMsinvMmix.init and norm.appr.param
   # Use generalized Lloyd's algorithm
-
   else if (type == "general"){
-    # Step.1 ------------------------------------
+    # Step.1 --------------------------------------------
     # initialize the parameters
     sphere.param <- norm.appr.param(parammat)
     J <- ncol(parammat)
@@ -122,6 +160,7 @@ kmeans.kspheres <- function(data, centers = 10,
     }
 
     cnt <- 1
+   # cnt.singular <- 0
     while(TRUE){
       cnt <- cnt + 1
 
@@ -133,7 +172,8 @@ kmeans.kspheres <- function(data, centers = 10,
 
 
       ehatj <- ehat.eval(data, sphere.param)
-      maxj <- apply(ehatj, 1, which.max)
+      # maxj <- apply(ehatj, 1, which.max)
+      maxj <- max.col(ehatj, ties.method = "first")
 
       # evaluate wmat
       for(j in 1:J){ wmat[, j] <- maxj == j }
@@ -156,15 +196,17 @@ kmeans.kspheres <- function(data, centers = 10,
 
       mu <- t(wmat.mul)
 
-      sphere.param$mu1 <- mu[, 1]
-      sphere.param$mu2 <- mu[, 2]
+      # sphere.param$mu1 <- mu[, 1]
+      # sphere.param$mu2 <- mu[, 2]
+      sphere.param$mu <- mu
 
       # Step.4 and Step.5
 
       for (j in 1:J){
         dat.j <- data[wmat[, j] == 1, ]
         # Step.4 -----------------------------------
-        z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+        # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+        z <- tor.minus(dat.j, sphere.param$mu[j, ])
 
         # evaluate the MLE of Sigma_j
         S <- t(z) %*% z / nrow(z)
@@ -175,6 +217,7 @@ kmeans.kspheres <- function(data, centers = 10,
             S <- sum(S) / d * diag(d)
             if (sum(is.na(S)) != 0 || sum(S) == 0){
               S <- THRESHOLD * diag(d)
+            #  cnt.singular <- cnt.singular + 1
             }
           }
         }
@@ -198,6 +241,10 @@ kmeans.kspheres <- function(data, centers = 10,
         cat("\n")
         break}
     }
+   # if (cnt.singular >= 1){
+   #   cat("Warning : Singular matrices are altered to the idenity.")
+   #    cat("\n")}
   }
+
   return(sphere.param)
 }

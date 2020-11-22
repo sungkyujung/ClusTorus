@@ -15,6 +15,7 @@
 #'  "heterogeneous-circular", or "general".
 #'   If "homogeneous-circular", the radii of k-spheres are identical.
 #'   If "heterogeneous-cricular", the radii of k-spheres may be different.
+#'   If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
 #'   If, "general", clustering with k-ellipses. The parameters to construct
 #'   the ellipses are optimized with generalized Lloyd algorithm, which is
 #'   modified for toroidal space. To see the detail, see the references.
@@ -59,6 +60,7 @@ icp.torus.score <- function(data, split.id = NULL,
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
                             kmeansfitmethod = c("homogeneous-circular",
                                                 "heterogeneous-circular",
+                                                "ellipsoids",
                                                 "general"),
                             param = list(J = 4, concentration = 25)){
   # returns an icp.torus object, containing all values to compute the conformity score.
@@ -140,7 +142,8 @@ icp.torus.score <- function(data, split.id = NULL,
     #                              mu2 = vm2mixfit$parammat[6,j],log = FALSE
     #   ) * vm2mixfit$parammat[1,j]
     # }
-    icp.torus$mixture$score_max <- sort(apply(phatj, 1, max))
+    # icp.torus$mixture$score_max <- sort(apply(phatj, 1, max))
+    icp.torus$mixture$score_max <- sort(do.call(pmax, as.data.frame(phatj)))
 
     # compute parameters for ellipses and phat_e(X2)
     ellipse.param <- norm.appr.param(vm2mixfit$parammat)
@@ -166,7 +169,8 @@ icp.torus.score <- function(data, split.id = NULL,
     #   A <- z %*% S
     #   ehatj[,j] <- -apply(cbind(A,z), 1, function(a){a[1]*a[3]+a[2]*a[4]}) + ellipse.param$c[j]
     # }
-    icp.torus$mixture$score_ellipse <- sort(apply(ehatj, 1, max))
+    # icp.torus$mixture$score_ellipse <- sort(apply(ehatj, 1, max))
+    icp.torus$mixture$score_ellipse <- sort(do.call(pmax, as.data.frame(ehatj)))
 
   }
 
@@ -182,7 +186,8 @@ icp.torus.score <- function(data, split.id = NULL,
     icp.torus$kmeans$spherefit <- sphere.param
 
     spherej <- ehat.eval(X2, sphere.param)
-    icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
+    # icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
+    icp.torus$kmeans$score_sphere <- sort(do.call(pmax, as.data.frame(spherej)))
 
   }
 
@@ -274,8 +279,11 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     phatj <- phat.eval(eval.point, icp.torus$mixture$fit$parammat)
     ehatj <- ehat.eval(eval.point, icp.torus$mixture$ellipsefit)
     phat_mix <- rowSums(phatj)
-    phat_max <- apply(phatj, 1, max)
-    ehat <- apply(ehatj, 1, max)
+    # phat_max <- apply(phatj, 1, max)
+    # ehat <- apply(ehatj, 1, max)
+    phat_max <- do.call(pmax, as.data.frame(phatj))
+    ehat <- do.call(pmax, as.data.frame(ehatj))
+
 
     for (i in 1:nalpha){
       ialpha <- floor((n2 + 1) * level[i])
@@ -294,7 +302,7 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     Chat_kmeans <- matrix(0, nrow = N, ncol = nalpha)
 
     spherej <- ehat.eval(eval.point, icp.torus$kmeans$spherefit)
-    sphere <- apply(spherej, 1, max)
+    sphere <- do.call(pmax, as.data.frame(spherej))
 
     for (i in 1:nalpha){
       ialpha <- floor((n2 + 1) * level[i])

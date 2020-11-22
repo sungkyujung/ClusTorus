@@ -8,7 +8,7 @@ devtools::load_all()
 # library(ClusTorus)
 # source('routines.R')
 
-set.seed(2021)
+set.seed(20201)
 # Prepare data 1 ------------------------------------------------------------
 
 # Example: five clusters
@@ -117,8 +117,12 @@ ggsave("./examples/Toy_Data0.png", width = 8, height = 4)
 
 
 # Clustering by four methods (subfunction definition)------------------------------------------
-Example_paper_supp <- function(J, dat1, dat1.test){
+Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circular",
+                                                            "heterogeneous-circular",
+                                                            "ellipsoids",
+                                                            "general")){
 
+  type <- match.arg(type)
   data <- dat1[,1:2]
   data.test <- dat1.test
 
@@ -143,7 +147,7 @@ Example_paper_supp <- function(J, dat1, dat1.test){
   l <- list()
 
   # sample spliting; preparing data
-  set.seed(2020)
+  set.seed(20201)
   n <- nrow(data)
   split.id <- rep(2,n)
   split.id[ sample(n,floor(n/2)) ] <- 1
@@ -151,7 +155,7 @@ Example_paper_supp <- function(J, dat1, dat1.test){
   for (j in Jvec){
     l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
                               method = "kmeans",
-                              kmeansfitmethod = "he",
+                              kmeansfitmethod = type,
                               param = list(J = j))
   }
 
@@ -160,14 +164,20 @@ Example_paper_supp <- function(J, dat1, dat1.test){
   N <- length(alphavec)
   out <- data.frame()
 
+
   for (j in Jvec){
     Mvec <- alphavec
+    start <- Sys.time()
     a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus())
-    for (i in 1:N){
-      Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
-    }
-    out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec + Mvec))
+    end <- Sys.time()
+    # for (i in 1:N){
+    #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
+    # }
+    Mvec <- colSums(a$Chat_kmeans)/10000
+
+    out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
   }
+
 
   out.index <- which.min(out$criterion)
   out[out.index,]
@@ -191,7 +201,9 @@ Example_paper_supp <- function(J, dat1, dat1.test){
 
   #c <- cluster.assign.torus(data, icp.torus, level = alphahat)
   #c
+  # start <- Sys.time()
   c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
+  # end <- Sys.time()
   #c
   predicted.label[,3] <- c$kmeans$cluster.id.by.ehat
   predicted.label[,4] <- c$kmeans$cluster.id.outlier
@@ -254,26 +266,25 @@ Example_paper_supp <- function(J, dat1, dat1.test){
   }
   Out.dt <- data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_kmeans")
 
-  icp.torus.kde<- icp.torus.score(as.matrix(data), split.id = split.id,
-                                  method = "kde",
-                                  mixturefitmethod = "a",
-                                  param = list(concentration = 25))
-
-  icp.kde.region <- icp.torus.eval(icp.torus.kde, level = alphavec, eval.point = grid.torus())
-
-  C <- icp.kde.region$Chat_kde
-  Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
-  for (j in 1:testing.n){
-    Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
-  }
-  Out.dt <- rbind(Out.dt,
-                  data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_KDE"))
-
+#   icp.torus.kde<- icp.torus.score(as.matrix(data), split.id = split.id,
+#                                   method = "kde",
+#                                   mixturefitmethod = "a",
+#                                   param = list(concentration = 25))
+# #
+#   icp.kde.region <- icp.torus.eval(icp.torus.kde, level = alphavec, eval.point = grid.torus())
+#
+#   C <- icp.kde.region$Chat_kde
+#   Inclusion.test <- matrix(0, nrow = testing.n, ncol = ncol(C))
+#   for (j in 1:testing.n){
+#     Inclusion.test[j,] <- C[which.min(rowSums( (t( t(grid.test) - data.test[j,]))^2) ),]
+#   }
+#   Out.dt <- rbind(Out.dt,
+#                   data.frame(alpha = alphavec, coverage = colMeans(Inclusion.test), Type = "C_KDE"))
+#
 
   head(Out.dt)
   g_cover <- Out.dt %>% ggplot(aes(1-alpha, coverage,color = Type, group = Type))  + geom_line() +
     geom_point() + geom_abline(slope = 1, intercept = 0) + geom_vline(xintercept =  1- alphahat,linetype = "dotted" )
-
 
 
 
@@ -285,38 +296,56 @@ Example_paper_supp <- function(J, dat1, dat1.test){
 
 
 
-
+  cat(end - start)
 
 
 
   list(choice = out[out.index,], labels = predicted.label, Rand = aa, clustering.result = c,
        gg = g0,ge = g_e, gout = g1, g_k1 = g_kmeans1, g_k2 = g_kmeans2, coverage = Out.dt, g_cover  = g_cover )
+
 }
 
 
 # Actual run --------------------------------------------------------------
 
 J <- 5
-dat1.results <- Example_paper_supp(J, dat1, dat1.test)
+dat1.results.ho <- Example_paper_supp(J, dat1, dat1.test, type = "ho")
+dat1.results.he <- Example_paper_supp(J, dat1, dat1.test, type = "he")
+dat1.results.e <- Example_paper_supp(J, dat1, dat1.test, type = "e")
+dat1.results.ge <- Example_paper_supp(J, dat1, dat1.test, type = "g")
 J <- 2
-dat2.results <- Example_paper_supp(J, dat2, dat2.test)
+dat2.results.ho <- Example_paper_supp(J, dat2, dat2.test, type = "ho")
+dat2.results.he <- Example_paper_supp(J, dat2, dat2.test, type = "he")
+dat2.results.e <- Example_paper_supp(J, dat2, dat2.test, type = "e")
+dat2.results.ge <- Example_paper_supp(J, dat2, dat2.test, type = "g")
 
 dat1.results$Rand
 dat2.results$Rand
 
-plot_grid(dat1.results$gg ,
-          dat2.results$gg , label_size = 12)
+plot_grid(dat1.results.ge$gg ,
+          dat2.results.ge$gg ,
+          dat1.results.he$gg ,
+          dat2.results.he$gg ,
+          dat1.results.ge$gg ,
+          dat2.results.ge$gg ,
+          label_size = 12, nrow = 3, ncol = 2
+          )
 ggsave("./examples/Toy_Data1.png", width = 8, height = 4)
 
 plot_grid(
-  dat1.results$g_k1 ,
-  dat2.results$g_k1 ,
-  dat1.results$g_k2 ,
-  dat2.results$g_k2 ,
-  dat1.results$ge ,
-  dat2.results$ge ,
-  dat1.results$gout ,
-  dat2.results$gout , label_size = 12, nrow = 4, ncol = 2)
+  dat1.results.ho$g_k1 ,
+  dat2.results.ho$g_k1 ,
+  dat1.results.ho$g_k2 ,
+  dat2.results.ho$g_k2 , label_size = 12, nrow = 2, ncol = 2)
+
+plot_grid(
+  dat1.results.ho$gout ,
+  dat2.results.ho$gout ,
+  dat1.results.he$gout ,
+  dat2.results.he$gout ,
+  dat1.results.ge$gout ,
+  dat2.results.ge$gout ,
+  label_size = 12, nrow = 3, ncol = 2)
 
 ggsave("./examples/Toy_Data2.png", width = 12, height = 16)
 

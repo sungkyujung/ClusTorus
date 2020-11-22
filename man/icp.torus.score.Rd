@@ -9,7 +9,8 @@ icp.torus.score(
   split.id = NULL,
   method = c("all", "kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-  kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "general"),
+  kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
+    "general"),
   param = list(J = 4, concentration = 25)
 )
 }
@@ -30,6 +31,7 @@ supported)}
 "heterogeneous-circular", or "general".
  If "homogeneous-circular", the radii of k-spheres are identical.
  If "heterogeneous-cricular", the radii of k-spheres may be different.
+ If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
  If, "general", clustering with k-ellipses. The parameters to construct
  the ellipses are optimized with generalized Lloyd algorithm, which is
  modified for toroidal space. To see the detail, see the references.}
