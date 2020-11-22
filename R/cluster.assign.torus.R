@@ -69,7 +69,8 @@ cluster.assign.torus <- function(data, icp.torus, level){
 
     ehatj[,cluster.obj$kmeans$componentid == 0] <- -Inf
 
-    maxj.id <- apply(ehatj, 1, which.max)
+    # maxj.id <- apply(ehatj, 1, which.max)
+    maxj.id <- max.col(ehatj, ties.method = "first")
     cluster.id1 <- cluster.obj$kmeans$componentid[maxj.id]
     cluster.obj$kmeans$cluster.id.by.ehat <- cluster.id1
 
@@ -79,9 +80,11 @@ cluster.assign.torus <- function(data, icp.torus, level){
              partsum[,k] <- rowSums(ehatj[,cluster.obj$kmeans$componentid == k]),
              partsum[,k] <- ehatj[,cluster.obj$kmeans$componentid == k])
     }
-    cluster.obj$kmeans$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+    # cluster.obj$kmeans$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+    cluster.obj$kmeans$cluster.id.by.partialsum <- max.col(partsum, ties.method = "first")
 
-    ehat <- apply(ehatj,1,max)
+    # ehat <- apply(ehatj,1,max)
+    ehat <- do.call(pmax, as.data.frame(ehatj))
 
     cluster.id1[!(ehat >= icp.torus$kmeans$score_sphere[ialpha])] <- K+1
     cluster.obj$kmeans$cluster.id.outlier <- cluster.id1
@@ -97,7 +100,8 @@ cluster.assign.torus <- function(data, icp.torus, level){
 
     ehatj[,cluster.obj$mixture$componentid == 0] <- -Inf
 
-    maxj.id <- apply(ehatj, 1, which.max)
+    # maxj.id <- apply(ehatj, 1, which.max)
+    maxj.id <- max.col(ehatj, ties.method = "first")
     cluster.id1 <- cluster.obj$mixture$componentid[maxj.id]
     cluster.obj$mixture$cluster.id.by.ehat <- cluster.id1
 
@@ -107,9 +111,11 @@ cluster.assign.torus <- function(data, icp.torus, level){
              partsum[,k] <- rowSums(ehatj[,cluster.obj$mixture$componentid == k]),
              partsum[,k] <- ehatj[,cluster.obj$mixture$componentid == k])
     }
-    cluster.obj$mixture$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+    # cluster.obj$mixture$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
+    cluster.obj$mixture$cluster.id.by.partialsum <- max.col(partsum, ties.method = "first")
 
-    ehat <- apply(ehatj,1,max)
+    # ehat <- apply(ehatj,1,max)
+    ehat <- do.call(pmax, as.data.frame(ehatj))
 
     cluster.id1[!(ehat >= icp.torus$mixture$score_ellipse[ialpha])] <- K+1
     cluster.obj$mixture$cluster.id.outlier <- cluster.id1
@@ -119,7 +125,8 @@ cluster.assign.torus <- function(data, icp.torus, level){
     mah <- mah.dist2.eval(data, icp.torus$mixture$ellipsefit)
     mah[,cluster.obj$mixture$componentid == 0] <- Inf
 
-    maxj.id <- apply(mah, 1, which.min)
+    # maxj.id <- apply(mah, 1, which.min)
+    maxj.id <- max.col(-mah, ties.method = "first")
     cluster.id1 <- cluster.obj$mixture$componentid[maxj.id]
     cluster.obj$mixture$cluster.id.by.Mah.dist <- cluster.id1
 
