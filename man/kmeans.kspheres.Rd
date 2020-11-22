@@ -7,7 +7,7 @@
 kmeans.kspheres(
   data,
   centers = 10,
-  type = c("homogeneous-circular", "heterogeneous-circular", "general"),
+  type = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids", "general"),
   parammat = EMsinvMmix.init(data, centers),
   THRESHOLD = 1e-10,
   maxiter = 200,
@@ -25,7 +25,8 @@ chosen as the initial centers.}
 "heterogeneous-circular", or "general".
  If "homogeneous-circular", the radii of k-spheres are identical.
  If "heterogeneous-circular", the radii of k-spheres may be different.
- If, "general", clustering with k-ellipses. The parameters to construct
+ If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
+ If, "general", clustering with k-ellipsoids. The parameters to construct
  the ellipses are optimized with generalized Lloyd algorithm, which is
  modified for toroidal space. To see the detail, see the references.}
 }
