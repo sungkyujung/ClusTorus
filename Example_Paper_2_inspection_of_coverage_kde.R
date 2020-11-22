@@ -73,7 +73,7 @@ for (i in 1:RR){
 
 
   icp.torus<- icp.torus.score(as.matrix(data), split.id = NULL,
-                                  method = "kmeans",
+                                  method = "a",
                                   mixturefitmethod = "a",
                                   kmeansfitmethod = "g",
                                   param = list(J = 13, concentration = 25))
