@@ -35,11 +35,13 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   i <- index[1]
   j <- index[2]
 
-  mean.1 <- matrix(c(ellipse.param$mu1[i], ellipse.param$mu2[i]),ncol = 1)
+  # mean.1 <- matrix(c(ellipse.param$mu1[i], ellipse.param$mu2[i]),ncol = 1)
+  mean.1 <- as.matrix(ellipse.param$mu[i, ])
   Sinv1 <- ellipse.param$Sigmainv[[i]]
   c1.minus.t <- ellipse.param$c[i] - t
 
-  mean.2 <- matrix(c(ellipse.param$mu1[j], ellipse.param$mu2[j]),ncol = 1)
+  # mean.2 <- matrix(c(ellipse.param$mu1[j], ellipse.param$mu2[j]),ncol = 1)
+  mean.2 <- as.matrix(ellipse.param$mu[j, ])
   Sinv2 <- ellipse.param$Sigmainv[[j]]
   c2.minus.t <- ellipse.param$c[j] - t
 

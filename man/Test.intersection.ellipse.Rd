@@ -26,7 +26,7 @@ If they intersect, then return \code{TRUE}. If not,
 mean.1 <- c(1, 0)
 mean.2 <- c(0, 2)
 M.1 <- diag(c(3, 4))
-M/2 <- matrix(c(5, 2, 2, 1), nrow = 2, byrow = TRUE)
+M.2 <- matrix(c(5, 2, 2, 1), nrow = 2, byrow = TRUE)
 
 Test.intersection.ellipse(mean.1, M.1, mean.2, M.2)
 }

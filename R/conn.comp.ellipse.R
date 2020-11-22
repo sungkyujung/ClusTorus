@@ -36,7 +36,7 @@
 
 conn.comp.ellipse <- function(ellipse.param, t){
 
-  J <- length(ellipse.param$mu1)
+  J <- length(ellipse.param$c)
   Adj.matrix <- matrix(0,nrow = J, ncol = J)
   for (j in 1:(J-1)){
     for (k in (j+1):J){
