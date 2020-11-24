@@ -57,7 +57,7 @@ colnames(dat1.test) <- c("phi","psi","label")
 
 # Prepare data 2 ------------------------------------------------------------
 
-set.seed(2020)
+set.seed(20201)
 # Example: ball and L shape
 Mu <- c(1,5)
 Sigma <- matrix(c(0.05,0,0,0.05),2,2)

@@ -147,7 +147,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   l <- list()
 
   # sample spliting; preparing data
-  set.seed(20201)
+  set.seed(2020)
   n <- nrow(data)
   split.id <- rep(2,n)
   split.id[ sample(n,floor(n/2)) ] <- 1
@@ -156,6 +156,8 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
     l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
                               method = "kmeans",
                               kmeansfitmethod = type,
+                              init = "h",
+                              additional.condition = T,
                               param = list(J = j))
   }
 
@@ -319,16 +321,25 @@ dat2.results.he <- Example_paper_supp(J, dat2, dat2.test, type = "he")
 dat2.results.e <- Example_paper_supp(J, dat2, dat2.test, type = "e")
 dat2.results.ge <- Example_paper_supp(J, dat2, dat2.test, type = "g")
 
-dat1.results$Rand
-dat2.results$Rand
+model1 <- cbind(dat1.results.ho$Rand[4], dat1.results.he$Rand[4],
+                dat1.results.e$Rand[4], dat1.results.ge$Rand[4])
+model2 <- cbind(dat2.results.ho$Rand[4], dat2.results.he$Rand[4],
+                dat2.results.e$Rand[4], dat2.results.ge$Rand[4])
 
-plot_grid(dat1.results.ge$gg ,
-          dat2.results.ge$gg ,
+model1
+model2
+# dat1.results$Rand
+# dat2.results$Rand
+
+plot_grid(dat1.results.ho$gg ,
+          dat2.results.ho$gg ,
           dat1.results.he$gg ,
           dat2.results.he$gg ,
+          dat1.results.e$gg ,
+          dat2.results.e$gg ,
           dat1.results.ge$gg ,
           dat2.results.ge$gg ,
-          label_size = 12, nrow = 3, ncol = 2
+          label_size = 12, nrow = 4, ncol = 2
           )
 ggsave("./examples/Toy_Data1.png", width = 8, height = 4)
 
@@ -343,9 +354,11 @@ plot_grid(
   dat2.results.ho$gout ,
   dat1.results.he$gout ,
   dat2.results.he$gout ,
+  dat1.results.e$gout ,
+  dat2.results.e$gout ,
   dat1.results.ge$gout ,
   dat2.results.ge$gout ,
-  label_size = 12, nrow = 3, ncol = 2)
+  label_size = 12, nrow = 4, ncol = 2)
 
 ggsave("./examples/Toy_Data2.png", width = 12, height = 16)
 
