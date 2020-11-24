@@ -3,14 +3,15 @@
 #' \code{icp.torus.score} prepares all values
 #'   for computing the conformity score for specified methods.
 #'
-#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
+#' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
 #' @param method a string one of "all", "kde", "mixture", and "kmeans"
-#'   which determines the model for clustering
+#'   which determines the model for clustering. Default is "all".
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
 #'   and "Bayesian" which determines the fitting method.("Bayesian" is not yet
 #'   supported)
+#'   Default is "axis-aligned".
 #' @param kmeansfitmethod character which must be "homogeneous-circular",
 #'  "heterogeneous-circular", or "general".
 #'   If "homogeneous-circular", the radii of k-spheres are identical.
@@ -19,8 +20,26 @@
 #'   If, "general", clustering with k-ellipses. The parameters to construct
 #'   the ellipses are optimized with generalized Lloyd algorithm, which is
 #'   modified for toroidal space. To see the detail, see the references.
+#' @param init determine the initial parameter of "kmeans" method,
+#'   for option "general". Must be "kmeans" or "hierarchical".
+#'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
+#'   method.
+#'   If "hierarchical", the initial parameters are obtained with hierarchical
+#'   clustering method.
+#'   Default is "kmeans".
+#' @param additional.condition boolean index.
+#'   If \code{TRUE}, a singular matrix will be altered to the scalar identity.
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
+#' @param THRESHOLD number of threshold for difference between updating and
+#'   updated parameters.
+#' @param maxiter the maximal number of iteration.
+#' @param verbose boolean index, which indicates whether display
+#'   additional details as to what the algorithm is doing or
+#'   how many loops are done. Moreover, if \code{additional.condition} is
+#'   \code{TRUE}, the warning message will be reported.
+#' @param kmax the maximal number of kappa. If estimated kappa is
+#'   larger than \code{kmax}, then put kappa as \code{kmax}.
 #' @return returns an \code{icp.torus} object, containing all values
 #'   to compute the conformity score.
 #' @export
@@ -62,7 +81,11 @@ icp.torus.score <- function(data, split.id = NULL,
                                                 "heterogeneous-circular",
                                                 "ellipsoids",
                                                 "general"),
-                            param = list(J = 4, concentration = 25)){
+                            init = c("kmeans", "hierarchical"),
+                            additional.condition = TRUE,
+                            param = list(J = 4, concentration = 25), kmax = 500,
+                            THRESHOLD = 1e-10, maxiter = 200,
+                            verbose = TRUE){
   # returns an icp.torus object, containing all values to compute the conformity score.
 
   # Use sample splitting to produce (inductive) conformal prediction sets
@@ -71,6 +94,11 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # param contains the number of components for mixture fitting
   #       and the concentration parameter.
+
+  if (is.null(method)) {method <- "all" }
+  if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
+  if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "omogeneous-circular" }
+  if (is.null(init)){ type <- "kmeans" }
 
   method <- match.arg(method)
   mixfitmethod <- match.arg(mixturefitmethod)
@@ -110,10 +138,10 @@ icp.torus.score <- function(data, split.id = NULL,
 
     if (mixturefitmethod != "Bayesian"){
       vm2mixfit <- EMsinvMmix(X1, J = param$J, parammat = EMsinvMmix.init(data, param$J),
-                              THRESHOLD = 1e-10,
+                              THRESHOLD = THRESHOLD, maxiter = maxiter,
                               type = mixturefitmethod,
-                              kmax = 500,
-                              verbose = TRUE)
+                              kmax = kmax,
+                              verbose = verbose)
       icp.torus$mixture$fit <- vm2mixfit
     } else {
       #vm2mixfit ## USE BAMBI
@@ -181,7 +209,11 @@ icp.torus.score <- function(data, split.id = NULL,
     # consider -R as ehat in von mises mixture approximation
     # where R is the notation in J. Shin (2019)
     sphere.param <- kmeans.kspheres(X1, centers = param$J,
-                                    type = kmeansfitmethod)
+                                    type = kmeansfitmethod,
+                                    init = init,
+                                    additional.condition = additional.condition,
+                                    THRESHOLD = THRESHOLD, maxiter = maxiter,
+                                    verbose = verbose)
 
     icp.torus$kmeans$spherefit <- sphere.param
 
