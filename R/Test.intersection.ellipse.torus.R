@@ -35,6 +35,8 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   i <- index[1]
   j <- index[2]
 
+  d <- ncol(ellipse.param$Sigmainv[[1]])
+
   # mean.1 <- matrix(c(ellipse.param$mu1[i], ellipse.param$mu2[i]),ncol = 1)
   mean.1 <- as.matrix(ellipse.param$mu[i, ])
   Sinv1 <- ellipse.param$Sigmainv[[i]]
@@ -54,14 +56,15 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   M.2 <- Sinv2 / c2.minus.t
 
 
-  shift <- matrix(0,ncol = 2, nrow = 9)
-  shift[,1] <- c(0,2*pi,-2*pi)
-  shift[,2] <- rep(c(0,2*pi,-2*pi), each = 3)
+  shift <- matrix(0,ncol = d, nrow = 3^d)
+  for (i in 1:d){
+  shift[,i] <- rep(c(0,2*pi,-2*pi), each = 3^(i-1))
+  }
 
 
   shift.id <- 1
   overlap <- FALSE
-  for(trials in 1:9){
+  for(trials in 1:3^d){
     overlap <- Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[shift.id,], M.2)
     ifelse(overlap, break, shift.id <- shift.id +1)
   }
