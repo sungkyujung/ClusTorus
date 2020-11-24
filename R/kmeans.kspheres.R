@@ -15,6 +15,21 @@
 #'   If, "general", clustering with k-ellipsoids. The parameters to construct
 #'   the ellipses are optimized with generalized Lloyd algorithm, which is
 #'   modified for toroidal space. To see the detail, see the references.
+#'   Default is "homogeneous-circluar".
+#' @param init determine the initial parameter for option "general". Must be
+#'   "kmeans" or "hierarchical".
+#'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
+#'   method.
+#'   If "hierarchical", the initial parameters are obtained with hierarchical
+#'   clustering method.
+#' @param additional.condition boolean index.
+#'   If \code{TRUE}, a singular matrix will be altered to the scalar identity.
+#' @param THRESHOLD number of threshold for difference between updating and
+#'   updated parameters.
+#' @param maxiter the maximal number of iteration.
+#' @param verbose boolean index, which indicates whether display
+#'   additional details as to what the algorithm is doing or
+#'   how many loops are done.
 #'
 #' @return returns a \code{sphere.param} object,
 #'   containing all values which determines the shape and
@@ -55,7 +70,8 @@ kmeans.kspheres <- function(data, centers = 10,
                                      "heterogeneous-circular",
                                      "ellipsoids",
                                      "general"),
-                            parammat = EMsinvMmix.init(data, centers),
+                            init = c("kmeans", "hierarchical"),
+                            additional.condition = TRUE,
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE){
 
@@ -64,7 +80,11 @@ kmeans.kspheres <- function(data, centers = 10,
 
   # type determines kmeans-fitting method. If "identical", the radii of
   # shperes are the same, and if not, the radii may be different.
+  if (is.null(type)){ type <- "homogeneous-circular" }
+  if (is.null(init)){ init <- "kmeans" }
+
   type <- match.arg(type)
+  init <- match.arg(init)
   d <- ncol(data)
   n <- nrow(data)
 
@@ -73,7 +93,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # Use extrinsic kmeans clustering for initial center points.
   # centers is given as a number, in default, but it may also be given
   # as a matrix which indicates the toroidal points.
-  kmeans.out <- kmeans.torus(data, centers = centers)
+  kmeans.out <- kmeans.torus(data, centers)
 
   centroid <- kmeans.out$centers
   J <- nrow(centroid)
@@ -111,6 +131,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # 3. kmeans to ellipsoids ----------------------------
   else if (type == "ellipsoids") {
 
+    cnt.singular <- 0
     for (j in 1:J){
 
       nj <- kmeans.out$size[j]
@@ -123,14 +144,23 @@ kmeans.kspheres <- function(data, centers = 10,
 
       S <- t(z) %*% z / nrow(z)
 
+      # additional assumption to S : axis-aligned
       if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
         S <- diag(diag(S))
+      }
+
+      # additional assumption to S : sphere
+      # only implemented when verbose == TRUE
+      if (additional.condition){
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          cnt.singular <- cnt.singular + 1
           S <- sum(S) / d * diag(d)
-          if (sum(is.na(S)) != 0 || sum(S) == 0){
-            S <- THRESHOLD * diag(d)
-          }
         }
+      }
+
+      # vanishing the ellipsoid even if the additional condition is given.
+      if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+        S <- THRESHOLD * diag(d)
       }
 
       sphere.param$Sigmainv[[j]] <- solve(S)
@@ -138,7 +168,12 @@ kmeans.kspheres <- function(data, centers = 10,
       # Step.5 -----------------------------------
       pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
                      THRESHOLD, sum(kmeans.out$membership == j) / n)
+      # update c's
+      sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
+    }
 
+    if (cnt.singular >= 1){
+      warning("Singular matrices are altered to the idenity.")
     }
   }
 
@@ -149,18 +184,65 @@ kmeans.kspheres <- function(data, centers = 10,
   else if (type == "general"){
     # Step.1 --------------------------------------------
     # initialize the parameters
-    sphere.param <- norm.appr.param(parammat)
-    J <- ncol(parammat)
+    if (init == "kmeans"){
+
+      for (j in 1:J){
+
+        nj <- kmeans.out$size[j]
+        pi_j <- nj / n
+
+        dat.j <- data[kmeans.out$membership == j, ]
+
+        # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+        z <- tor.minus(dat.j, sphere.param$mu[j, ])
+
+        S <- t(z) %*% z / nrow(z)
+
+        # additional assumption to S : axis-aligned
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- diag(diag(S))
+        }
+
+        # additional assumption to S : sphere
+        # only implemented when verbose == TRUE
+        if (additional.condition){
+          if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+            S <- sum(S) / d * diag(d)
+          }
+        }
+
+        # vanishing the ellipsoid even if the additional condition is given.
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- THRESHOLD * diag(d)
+        }
+
+        sphere.param$Sigmainv[[j]] <- solve(S)
+
+        # Step.5 -----------------------------------
+        pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
+                       THRESHOLD, sum(kmeans.out$membership == j) / n)
+
+        # update c's
+        sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
+
+      }
+
+    } else if (init == "hierarchical"){
+
+      parammat <- EMsinvMmix.init(data, J)
+      sphere.param <- norm.appr.param(parammat)
+    }
 
     # vectorize the sphere.param: this will be used for escaping loop
     param.seq <- unlist(sphere.param)
 
-    if(verbose){
+    if (verbose){
       cat("kmeans.kspheres: fitting parameters with option ",type, ", J =", J, "\n")
     }
 
     cnt <- 1
-   # cnt.singular <- 0
+    cnt.singular <- 0
+
     while(TRUE){
       cnt <- cnt + 1
 
@@ -211,15 +293,23 @@ kmeans.kspheres <- function(data, centers = 10,
         # evaluate the MLE of Sigma_j
         S <- t(z) %*% z / nrow(z)
 
+        # additional assumption to S : axis-aligned
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
           S <- diag(diag(S))
+        }
+
+        # additional assumption to S : sphere
+        # only implemented when verbose == TRUE
+        if (additional.condition){
           if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+            cnt.singular <- cnt.singular + 1
             S <- sum(S) / d * diag(d)
-            if (sum(is.na(S)) != 0 || sum(S) == 0){
-              S <- THRESHOLD * diag(d)
-            #  cnt.singular <- cnt.singular + 1
-            }
           }
+        }
+
+        # vanishing the ellipsoid even if the additional condition is given.
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- THRESHOLD * diag(d)
         }
 
         sphere.param$Sigmainv[[j]] <- solve(S)
@@ -241,9 +331,9 @@ kmeans.kspheres <- function(data, centers = 10,
         cat("\n")
         break}
     }
-   # if (cnt.singular >= 1){
-   #   cat("Warning : Singular matrices are altered to the idenity.")
-   #    cat("\n")}
+    if (cnt.singular >= 1){
+      warning("Singular matrices are altered to the idenity.")
+    }
   }
 
   return(sphere.param)
