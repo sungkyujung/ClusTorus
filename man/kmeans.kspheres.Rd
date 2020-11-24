@@ -8,7 +8,8 @@ kmeans.kspheres(
   data,
   centers = 10,
   type = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids", "general"),
-  parammat = EMsinvMmix.init(data, centers),
+  init = c("kmeans", "hierarchical"),
+  additional.condition = TRUE,
   THRESHOLD = 1e-10,
   maxiter = 200,
   verbose = TRUE
@@ -28,7 +29,27 @@ chosen as the initial centers.}
  If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
  If, "general", clustering with k-ellipsoids. The parameters to construct
  the ellipses are optimized with generalized Lloyd algorithm, which is
- modified for toroidal space. To see the detail, see the references.}
+ modified for toroidal space. To see the detail, see the references.
+ Default is "homogeneous-circluar".}
+
+\item{init}{determine the initial parameter for option "general". Must be
+"kmeans" or "hierarchical".
+If "kmeans", the initial parameters are obtained with extrinsic kmeans
+method.
+If "hierarchical", the initial parameters are obtained with hierarchical
+clustering method.}
+
+\item{additional.condition}{boolean index.
+If \code{TRUE}, a singular matrix will be altered to the scalar identity.}
+
+\item{THRESHOLD}{number of threshold for difference between updating and
+updated parameters.}
+
+\item{maxiter}{the maximal number of iteration.}
+
+\item{verbose}{boolean index, which indicates whether display
+additional details as to what the algorithm is doing or
+how many loops are done.}
 }
 \value{
 returns a \code{sphere.param} object,
