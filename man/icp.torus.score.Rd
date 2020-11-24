@@ -11,21 +11,28 @@ icp.torus.score(
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
   kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
     "general"),
-  param = list(J = 4, concentration = 25)
+  init = c("kmeans", "hierarchical"),
+  additional.condition = TRUE,
+  param = list(J = 4, concentration = 25),
+  kmax = 500,
+  THRESHOLD = 1e-10,
+  maxiter = 200,
+  verbose = TRUE
 )
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
+\item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
 
 \item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
 and 2(evaluation)}
 
 \item{method}{a string one of "all", "kde", "mixture", and "kmeans"
-which determines the model for clustering}
+which determines the model for clustering. Default is "all".}
 
 \item{mixturefitmethod}{a string one of "circular", "axis-aligned", "general",
 and "Bayesian" which determines the fitting method.("Bayesian" is not yet
-supported)}
+supported)
+Default is "axis-aligned".}
 
 \item{kmeansfitmethod}{character which must be "homogeneous-circular",
 "heterogeneous-circular", or "general".
@@ -36,8 +43,32 @@ supported)}
  the ellipses are optimized with generalized Lloyd algorithm, which is
  modified for toroidal space. To see the detail, see the references.}
 
+\item{init}{determine the initial parameter of "kmeans" method,
+for option "general". Must be "kmeans" or "hierarchical".
+If "kmeans", the initial parameters are obtained with extrinsic kmeans
+method.
+If "hierarchical", the initial parameters are obtained with hierarchical
+clustering method.
+Default is "kmeans".}
+
+\item{additional.condition}{boolean index.
+If \code{TRUE}, a singular matrix will be altered to the scalar identity.}
+
 \item{param}{the number of components (in \code{list} form) for mixture
 fitting and the concetnration parameter.}
+
+\item{kmax}{the maximal number of kappa. If estimated kappa is
+larger than \code{kmax}, then put kappa as \code{kmax}.}
+
+\item{THRESHOLD}{number of threshold for difference between updating and
+updated parameters.}
+
+\item{maxiter}{the maximal number of iteration.}
+
+\item{verbose}{boolean index, which indicates whether display
+additional details as to what the algorithm is doing or
+how many loops are done. Moreover, if \code{additional.condition} is
+\code{TRUE}, the warning message will be reported.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values
