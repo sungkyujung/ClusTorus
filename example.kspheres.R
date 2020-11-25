@@ -29,6 +29,7 @@ Example1 <- rbind(mvrnorm(n=70, Mu1, Sigma1),
                   mvrnorm(n=50, Mu3, Sigma3),
                   data.unif,
                   data.diamond)
+
 Example1 <- on.torus(Example1)
 label <- c(rep(1,70),rep(2,50),
            rep(3,50),
