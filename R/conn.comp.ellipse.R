@@ -38,12 +38,20 @@ conn.comp.ellipse <- function(ellipse.param, t){
 
   J <- length(ellipse.param$c)
   Adj.matrix <- matrix(0,nrow = J, ncol = J)
-  for (j in 1:(J-1)){
-    for (k in (j+1):J){
-      overlap <- Test.intersection.ellipse.torus(ellipse.param, index = c(j,k),t = t)
-      Adj.matrix[j,k] <- overlap
-      # Adj.matrix[k,j] <- overlap
-    }
+
+  combinations <- t(combn(1:J, 2))
+  # for (j in 1:(J-1)){
+  #   for (k in (j+1):J){
+  #     overlap <- Test.intersection.ellipse.torus(ellipse.param, index = c(j,k),t = t)
+  #     Adj.matrix[j,k] <- overlap
+  #     # Adj.matrix[k,j] <- overlap
+  #   }
+  # }
+  overlap.results <- purrr::map_int(1:nrow(combinations),
+                                    function(i) {Test.intersection.ellipse.torus(ellipse.param, index = combinations[i, ],t = t)})
+
+  for (i in 1:nrow(combinations)){
+    Adj.matrix[combinations[i, 1], combinations[i, 2]] <- overlap.results[i]
   }
 
   emptysetind <- vector(mode = "logical", length = J)
