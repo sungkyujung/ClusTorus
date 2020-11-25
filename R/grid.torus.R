@@ -14,7 +14,7 @@
 grid.torus <- function(d = 2 , grid.size = 100){
   # returns grid points on torus of size (grid.size) x (grid.size)
 
-  grid <- matrix(0, ncol = d, nrow = grid.size)
+  grid <- matrix(0, ncol = d, nrow = grid.size^d)
 
   Axis <- seq(0, 2 * pi, length = grid.size)
   for (i in 1:d){
