@@ -23,7 +23,7 @@
 #'                      1, 2, 3,
 #'                      0, 2, 4), nrow = 6, byrow =TRUE)
 #'
-#' elipse.param <- norm.appr.param(parammat)
+#' ellipse.param <- norm.appr.param(parammat)
 #'
 #' index <- c(1, 3)
 #' t <- 0.5
@@ -61,13 +61,27 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   shift[,i] <- rep(c(0,2*pi,-2*pi), each = 3^(i-1))
   }
 
+  # overlap <- FALSE
+  # # method 1 : using for loop ----------------
+  # for(trial in 1:3^d){
+  #   overlap <- Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[trial,], M.2)
+  #   if (overlap) {break}
+  # }
 
-  shift.id <- 1
-  overlap <- FALSE
-  for(trials in 1:3^d){
-    overlap <- Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[shift.id,], M.2)
-    ifelse(overlap, break, shift.id <- shift.id +1)
-  }
+  # return(overlap)
+
+  # method 2 : using Vectorize ----------------
+  # Test <- Vectorize(function(i) {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
+  #
+  # overlap <- sum(Test(1:3^d))
+  # return(overlap >= 1)
+
+  # method 3 : using purrr::map ---------------
+
+  overlap.results <- purrr::map_int(1:dim(shift)[1], function(i)
+    {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
+
+  overlap <- sum(overlap.results) >= 1
+
   return(overlap)
-
 }
