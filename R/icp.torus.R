@@ -281,9 +281,9 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
   cp <- list(Chat_kde = NULL, Chat_mix = NULL, Chat_max = NULL, Chat_e = NULL,
              Chat_kmeans = NULL,
              level = level,
-             phi = eval.point[, 1],
-             psi = eval.point[, 2])
+             eval.point = eval.point)
 
+  ialpha <- floor((n2 + 1) * level)
 
 
   if(!is.null(icp.torus$kde)){
@@ -292,12 +292,17 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     colnames(Chat_kde) <- level
 
     phat.grid <- kde.torus(icp.torus$kde$X1, eval.point, concentration = icp.torus$kde$concentration)
+
     for (i in 1:nalpha){
       ialpha <- floor((n2 + 1) * level[i])
 
       # indices for inclusion in Chat_kde
       Chat_kde[, i] <- phat.grid >= icp.torus$kde$score[ialpha]
     }
+
+    # scores_kde <- icp.torus$kde$score[ialpha]
+    # Chat_kde <- sweep(replicate(nalpha, phat.grid), 2, scores_kde, ">=")
+
     cp$Chat_kde <- Chat_kde
   }
 
@@ -325,6 +330,14 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
       Chat_e[, i]   <-    ehat  >= icp.torus$mixture$score_ellipse[ialpha]
     }
 
+    # scores_mix <- icp.torus$mixture$score[ialpha]
+    # scores_max <- icp.torus$mixture$score_max[ialpha]
+    # scores_e <- icp.torus$mixture$score_ellipse[ialpha]
+    #
+    # Chat_mix <- sweep(replicate(nalpha, phat_mix), 2, scores_mix, ">=")
+    # Chat_max <- sweep(replicate(nalpha, phat_max), 2, scores_max, ">=")
+    # Chat_e <- sweep(replicate(nalpha, ehat), 2, scores_e, ">=")
+
     cp$Chat_mix <- Chat_mix
     cp$Chat_max <- Chat_max
     cp$Chat_e <- Chat_e
@@ -340,6 +353,9 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
       ialpha <- floor((n2 + 1) * level[i])
       Chat_kmeans[, i] <- sphere >= icp.torus$kmeans$score_sphere[ialpha]
     }
+
+    # scores_sphere <- icp.torus$kmeans$score_sphere[ialpha]
+    # Chat_kmeans <- sweep(replicate(nalpha, sphere), 2, scores_sphere, ">=")
 
     cp$Chat_kmeans <- Chat_kmeans
 
