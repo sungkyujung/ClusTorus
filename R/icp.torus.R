@@ -293,15 +293,14 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
 
     phat.grid <- kde.torus(icp.torus$kde$X1, eval.point, concentration = icp.torus$kde$concentration)
 
-    for (i in 1:nalpha){
-      ialpha <- floor((n2 + 1) * level[i])
-
-      # indices for inclusion in Chat_kde
-      Chat_kde[, i] <- phat.grid >= icp.torus$kde$score[ialpha]
-    }
-
-    # scores_kde <- icp.torus$kde$score[ialpha]
-    # Chat_kde <- sweep(replicate(nalpha, phat.grid), 2, scores_kde, ">=")
+    # for (i in 1:nalpha){
+    #   ialpha <- floor((n2 + 1) * level[i])
+    #
+    #   # indices for inclusion in Chat_kde
+    #   Chat_kde[, i] <- phat.grid >= icp.torus$kde$score[ialpha]
+    # }
+    scores_kde <- icp.torus$kde$score[ialpha]
+    Chat_kde <- sweep(replicate(nalpha, phat.grid), 2, scores_kde, ">=")
 
     cp$Chat_kde <- Chat_kde
   }
@@ -322,21 +321,20 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     ehat <- do.call(pmax, as.data.frame(ehatj))
 
 
-    for (i in 1:nalpha){
-      ialpha <- floor((n2 + 1) * level[i])
-
-      Chat_mix[, i] <- phat_mix >= icp.torus$mixture$score[ialpha]
-      Chat_max[, i] <- phat_max >= icp.torus$mixture$score_max[ialpha]
-      Chat_e[, i]   <-    ehat  >= icp.torus$mixture$score_ellipse[ialpha]
-    }
-
-    # scores_mix <- icp.torus$mixture$score[ialpha]
-    # scores_max <- icp.torus$mixture$score_max[ialpha]
-    # scores_e <- icp.torus$mixture$score_ellipse[ialpha]
+    # for (i in 1:nalpha){
+    #   ialpha <- floor((n2 + 1) * level[i])
     #
-    # Chat_mix <- sweep(replicate(nalpha, phat_mix), 2, scores_mix, ">=")
-    # Chat_max <- sweep(replicate(nalpha, phat_max), 2, scores_max, ">=")
-    # Chat_e <- sweep(replicate(nalpha, ehat), 2, scores_e, ">=")
+    #   Chat_mix[, i] <- phat_mix >= icp.torus$mixture$score[ialpha]
+    #   Chat_max[, i] <- phat_max >= icp.torus$mixture$score_max[ialpha]
+    #   Chat_e[, i]   <-    ehat  >= icp.torus$mixture$score_ellipse[ialpha]
+    # }
+    scores_mix <- icp.torus$mixture$score[ialpha]
+    scores_max <- icp.torus$mixture$score_max[ialpha]
+    scores_e <- icp.torus$mixture$score_ellipse[ialpha]
+
+    Chat_mix <- sweep(replicate(nalpha, phat_mix), 2, scores_mix, ">=")
+    Chat_max <- sweep(replicate(nalpha, phat_max), 2, scores_max, ">=")
+    Chat_e <- sweep(replicate(nalpha, ehat), 2, scores_e, ">=")
 
     cp$Chat_mix <- Chat_mix
     cp$Chat_max <- Chat_max
@@ -349,13 +347,12 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     spherej <- ehat.eval(eval.point, icp.torus$kmeans$spherefit)
     sphere <- do.call(pmax, as.data.frame(spherej))
 
-    for (i in 1:nalpha){
-      ialpha <- floor((n2 + 1) * level[i])
-      Chat_kmeans[, i] <- sphere >= icp.torus$kmeans$score_sphere[ialpha]
-    }
-
-    # scores_sphere <- icp.torus$kmeans$score_sphere[ialpha]
-    # Chat_kmeans <- sweep(replicate(nalpha, sphere), 2, scores_sphere, ">=")
+    # for (i in 1:nalpha){
+    #   ialpha <- floor((n2 + 1) * level[i])
+    #   Chat_kmeans[, i] <- sphere >= icp.torus$kmeans$score_sphere[ialpha]
+    # }
+    scores_sphere <- icp.torus$kmeans$score_sphere[ialpha]
+    Chat_kmeans <- sweep(replicate(nalpha, sphere), 2, scores_sphere, ">=")
 
     cp$Chat_kmeans <- Chat_kmeans
 
