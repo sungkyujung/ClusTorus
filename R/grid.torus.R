@@ -18,7 +18,7 @@ grid.torus <- function(d = 2 , grid.size = 100){
 
   Axis <- seq(0, 2 * pi, length = grid.size)
   for (i in 1:d){
-    grid[,i] <- rep(c(0,2*pi,-2*pi), each = 10^(i-1))
+    grid[,i] <- rep(Axis, each = 10^(i-1))
   }
 
   return(grid)
