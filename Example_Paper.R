@@ -176,7 +176,7 @@ alphahat <- out[out.index,1]
 icp.torus <- l[[Jhat]]
 
 ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus())
-b <- data.frame(ia$phi,ia$psi, ia$Chat_mix == 1, ia$Chat_max == 1, ia$Chat_e == 1)
+b <- data.frame(ia$eval.point, ia$Chat_mix == 1, ia$Chat_max == 1, ia$Chat_e == 1)
 colnames(b) <- c("phi","psi","C_mix","C_max","C_e")
 head(b)
 
