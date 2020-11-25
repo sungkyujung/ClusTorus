@@ -141,7 +141,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   predicted.label[,2] <- predict_KMeans(cbind(cos(data.test),sin(data.test)) , kmeans.out$centroids)
 
   # Clustering by our method
-
+  # start <- Sys.time()
   # 1) Find alpha and J
   Jvec <- 3:35
   l <- list()
@@ -166,20 +166,26 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   N <- length(alphavec)
   out <- data.frame()
 
+  # end <- Sys.time()
+  # cat (end - start)
+  # cat("\n")
 
+  start <- Sys.time()
   for (j in Jvec){
     Mvec <- alphavec
-    start <- Sys.time()
     a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus())
-    end <- Sys.time()
     # for (i in 1:N){
     #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
     # }
     Mvec <- colSums(a$Chat_kmeans)/10000
 
     out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
+
   }
 
+  end <- Sys.time()
+  cat (end - start)
+  cat("\n")
 
   out.index <- which.min(out$criterion)
   out[out.index,]
@@ -189,7 +195,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   icp.torus <- l[[Jhat]]
 
   ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus())
-  b <- data.frame(ia$phi,ia$psi, ia$Chat_kmeans == 1)
+  b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
   colnames(b) <- c("phi","psi", "C_kmeans")
   head(b)
 
@@ -206,6 +212,9 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   # start <- Sys.time()
   c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
   # end <- Sys.time()
+
+  # cat (end - start)
+  # cat("\n")
   #c
   predicted.label[,3] <- c$kmeans$cluster.id.by.ehat
   predicted.label[,4] <- c$kmeans$cluster.id.outlier
@@ -247,7 +256,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
   ######################## Empirical coverage
   #
-
+  # start <- Sys.time()
 
   grid.test <- grid.torus()
   testing.n <- nrow(data)
@@ -290,15 +299,15 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
 
 
-
-
+  # end <- Sys.time()
+  # cat (end - start)
+  # cat("\n")
 
   ##########################
 
 
 
 
-  cat(end - start)
 
 
 
