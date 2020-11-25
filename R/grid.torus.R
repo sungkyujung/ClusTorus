@@ -2,6 +2,7 @@
 #'
 #' \code{grid.torus} returns an equally-spaced grid on torus.
 #'
+#' @param d number for dimension. Default is 2.
 #' @param grid.size number of grid for each axis. Default value is 100.
 #' @return returns (grid.size) x (grid.size) numeric matrix
 #'   which indicates the grid points on torus.
@@ -10,8 +11,15 @@
 #' \dontrun{
 #' grid.torus(grid.size = 50)
 #' }
-grid.torus <- function(grid.size = 100){
+grid.torus <- function(d = 2 , grid.size = 100){
   # returns grid points on torus of size (grid.size) x (grid.size)
+
+  grid <- matrix(0, ncol = d, nrow = grid.size)
+
   Axis <- seq(0, 2 * pi, length = grid.size)
-  return(cbind(rep(Axis, grid.size), rep(Axis, each=grid.size)))
+  for (i in 1:d){
+    grid[,i] <- rep(c(0,2*pi,-2*pi), each = 10^(i-1))
+  }
+
+  return(grid)
 }
