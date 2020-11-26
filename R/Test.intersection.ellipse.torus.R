@@ -55,33 +55,46 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   M.1 <- Sinv1 / c1.minus.t
   M.2 <- Sinv2 / c2.minus.t
 
+  a <- M.1[1, 1]
+  b <- M.2[1, 1]
 
-  shift <- matrix(0,ncol = d, nrow = 3^d)
-  for (i in 1:d){
-  shift[,i] <- rep(c(0,2*pi,-2*pi), each = 3^(i-1))
+  if ((sum(M.1/a) == d) && (sum(M.2/b) == d)){
+    mean.1 <- as.vector(mean.1)
+    mean.2 <- as.vector(mean.2)
+
+    center.dist <- sqrt(sum(ang.minus(mean.1, mean.2)^2))
+    radius.sum <- sqrt(1/a) + sqrt(1/b)
+
+    overlap <- center.dist <= radius.sum
+  } else {
+
+    shift <- matrix(0,ncol = d, nrow = 3^d)
+    for (i in 1:d){
+    shift[,i] <- rep(c(0,2*pi,-2*pi), each = 3^(i-1))
+    }
+
+    # overlap <- FALSE
+    # # method 1 : using for loop ----------------
+    # for(trial in 1:3^d){
+    #   overlap <- Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[trial,], M.2)
+    #   if (overlap) {break}
+    # }
+
+    # return(overlap)
+
+    # method 2 : using Vectorize ----------------
+    # Test <- Vectorize(function(i) {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
+    #
+    # overlap <- sum(Test(1:3^d))
+    # return(overlap >= 1)
+
+    # method 3 : using purrr::map ---------------
+
+    overlap.results <- purrr::map_int(1:dim(shift)[1], function(i)
+      {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
+
+    overlap <- sum(overlap.results) >= 1
   }
-
-  # overlap <- FALSE
-  # # method 1 : using for loop ----------------
-  # for(trial in 1:3^d){
-  #   overlap <- Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[trial,], M.2)
-  #   if (overlap) {break}
-  # }
-
-  # return(overlap)
-
-  # method 2 : using Vectorize ----------------
-  # Test <- Vectorize(function(i) {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
-  #
-  # overlap <- sum(Test(1:3^d))
-  # return(overlap >= 1)
-
-  # method 3 : using purrr::map ---------------
-
-  overlap.results <- purrr::map_int(1:dim(shift)[1], function(i)
-    {Test.intersection.ellipse(mean.1, M.1, mean.2 + shift[i, ], M.2)})
-
-  overlap <- sum(overlap.results) >= 1
 
   return(overlap)
 }

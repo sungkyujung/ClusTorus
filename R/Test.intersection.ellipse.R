@@ -166,6 +166,7 @@ Test.intersection.ellipse <- function(mean.1, M.1, mean.2, M.2){
 
   # testing codes 2-------------------------------------------------------
   # using the convex function given by Gilitschenski, et al. (2012)
+
   A.inv <- solve(M.1)
   B.inv <- solve(M.2)
 
