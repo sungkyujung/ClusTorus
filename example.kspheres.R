@@ -171,7 +171,6 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   # cat (end - start)
   # cat("\n")
 
-  start <- Sys.time()
   for (j in Jvec){
     Mvec <- alphavec
     a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus())
@@ -183,10 +182,6 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
     out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
 
   }
-
-  end <- Sys.time()
-  cat (end - start)
-  cat("\n")
 
   out.index <- which.min(out$criterion)
   out[out.index,]

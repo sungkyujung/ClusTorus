@@ -3,7 +3,7 @@ library(tidyverse)
 library(ClusterR)
 library(mclust)
 library(cowplot)
-library(ClusTorus)
+# library(ClusTorus)
 require(GGally)
 devtools::load_all()
 
@@ -260,7 +260,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
 # prespecified J and alpha ---------------------------------------------
 # type <- match.arg(type)
-type <- "general"
+type <- "he"
 
 # predetermine J, alpha
 Jhat <- 10
@@ -293,26 +293,26 @@ for (j in Jvec){
                             param = list(J = j))
 }
 
------------------
+# -----------------
 # testing for various J, alpha
-n2 <- l[[10]]$n2
-alphavec <- 1:floor(n2/2) / n2
-N <- length(alphavec)
+# n2 <- l[[10]]$n2
+# alphavec <- 1:floor(n2/2) / n2
+# N <- length(alphavec)
 out <- data.frame()
 
 # evaluating the Lebesgue measure
-for (j in Jvec){
-  Mvec <- alphavec
-  a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus(d = 7, grid.size = 10))
-  # for (i in 1:N){
-  #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
-  # }
-  Mvec <- colSums(a$Chat_kmeans)/10^7
-
-  out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
-
-}
-------------------
+# for (j in Jvec){
+#   Mvec <- alphavec
+#   a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus(d = 7, grid.size = 10))
+#   # for (i in 1:N){
+#   #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
+#   # }
+#   Mvec <- colSums(a$Chat_kmeans)/10^7
+#
+#   out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
+#
+# }
+# ------------------
 
 Jhat <- 10
 alphahat <- 0.05
@@ -323,7 +323,7 @@ out <- rbind(out, data.frame(alpha = alphahat, J = Jhat))
 #
 # Jhat <- out[out.index,2]
 # alphahat <- out[out.index,1]
-# icp.torus <- l[[Jhat]]
+icp.torus <- l[[Jhat]]
 
 # ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus(d = 7, grid.size = 10))
 # b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
@@ -341,21 +341,22 @@ for (j in 1:2){
   aa[j] <- adjustedRandIndex(predicted.label[,j],data.test.label)
 }
 
+
 # Actual run --------------------------------------------------------------
 
-J <- 5
-dat1.results.ho <- Example_paper_supp(J, dat1, dat1.test, type = "ho")
-dat1.results.he <- Example_paper_supp(J, dat1, dat1.test, type = "he")
-dat1.results.e <- Example_paper_supp(J, dat1, dat1.test, type = "e")
-dat1.results.ge <- Example_paper_supp(J, dat1, dat1.test, type = "g")
-J <- 2
-dat2.results.ho <- Example_paper_supp(J, dat2, dat2.test, type = "ho")
-dat2.results.he <- Example_paper_supp(J, dat2, dat2.test, type = "he")
-dat2.results.e <- Example_paper_supp(J, dat2, dat2.test, type = "e")
-dat2.results.ge <- Example_paper_supp(J, dat2, dat2.test, type = "g")
+# J <- 5
+# dat1.results.ho <- Example_paper_supp(J, dat1, dat1.test, type = "ho")
+# dat1.results.he <- Example_paper_supp(J, dat1, dat1.test, type = "he")
+# dat1.results.e <- Example_paper_supp(J, dat1, dat1.test, type = "e")
+# dat1.results.ge <- Example_paper_supp(J, dat1, dat1.test, type = "g")
+# J <- 2
+# dat2.results.ho <- Example_paper_supp(J, dat2, dat2.test, type = "ho")
+# dat2.results.he <- Example_paper_supp(J, dat2, dat2.test, type = "he")
+# dat2.results.e <- Example_paper_supp(J, dat2, dat2.test, type = "e")
+# dat2.results.ge <- Example_paper_supp(J, dat2, dat2.test, type = "g")
+aa
 
-GGally::ggpairs(dat1, aes(color = label))
-GGally::ggpairs()
+# GGally::ggpairs(dat1, aes(color = label))
 
 result.dat <- data.frame(data.test, membership = as.factor(c$kmeans$cluster.id.outlier)) %>%
   mutate(membership = ifelse(membership == max(c$kmeans$cluster.id.outlier), "out", membership))
