@@ -4,6 +4,7 @@ library(ClusterR)
 library(mclust)
 library(cowplot)
 library(ClusTorus)
+require(GGally)
 devtools::load_all()
 
 set.seed(20201)
@@ -67,7 +68,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   data.test.label <- data.test[,8]
   data.test <- data.test[,1:7]
 
-  # predicted.label <- matrix(NA, nrow = nrow(data), ncol =4)
+  predicted.label <- matrix(NA, nrow = nrow(data), ncol =2)
   # colnames(predicted.label) <- c("kmeans_naive","kmeans_amb","Proposal_ehat","Proposal_out")
   #
   # # Kmeans_naive
@@ -108,18 +109,21 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   # cat (end - start)
   # cat("\n")
 
-  start <- Sys.time()
-  for (j in Jvec){
-    Mvec <- alphavec
-    a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus(d = 7, grid.size = 10))
-    # for (i in 1:N){
-    #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
-    # }
-    Mvec <- colSums(a$Chat_kmeans)/10^7
-
-    out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
-
-  }
+  # start <- Sys.time()
+  # for (j in Jvec){
+  #   Mvec <- alphavec
+  #   a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus(d = 7, grid.size = 10))
+  #   # for (i in 1:N){
+  #   #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
+  #   # }
+  #   Mvec <- colSums(a$Chat_kmeans)/10^7
+  #
+  #   out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
+  #
+  # }
+  Jhat <- 10
+  alphahat <- 0.05
+  out <- rbind(out, data.frame(alpha = alphahat, J = Jhat))
 
   end <- Sys.time()
   cat (end - start)
@@ -147,19 +151,19 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
   #c <- cluster.assign.torus(data, icp.torus, level = alphahat)
   #c
-  # start <- Sys.time()
+  start <- Sys.time()
   c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
-  # end <- Sys.time()
+  end <- Sys.time()
 
-  # cat (end - start)
-  # cat("\n")
-  #c
-  predicted.label[,3] <- c$kmeans$cluster.id.by.ehat
-  predicted.label[,4] <- c$kmeans$cluster.id.outlier
+  cat (end - start)
+  cat("\n")
+  c
+  predicted.label[,1] <- c$kmeans$cluster.id.by.ehat
+  predicted.label[,2] <- c$kmeans$cluster.id.outlier
 
-  aa <- rep(0,4)
+  aa <- rep(0,2)
 
-  for (j in 1:4){
+  for (j in 1:2){
     aa[j] <- adjustedRandIndex(predicted.label[,j],data.test.label)
   }
 
@@ -254,6 +258,88 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
 }
 
+# prespecified J and alpha ---------------------------------------------
+# type <- match.arg(type)
+type <- "general"
+
+# predetermine J, alpha
+Jhat <- 10
+alphahat <- 0.05
+
+data <- dat1[, 1:7]
+data.test <- dat1.test
+
+data.test.label <- data.test[, 8]
+data.test <- data.test[, 1:7]
+
+predicted.label <- matrix(NA, nrow = nrow(data), ncol = 2)
+
+Jvec <- 3:35
+l <- list()
+
+# sample spliting; preparing data
+set.seed(2020)
+n <- nrow(data)
+split.id <- rep(2,n)
+split.id[ sample(n,floor(n/2)) ] <- 1
+
+# testing for each J
+for (j in Jvec){
+  l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
+                            method = "kmeans",
+                            kmeansfitmethod = type,
+                            init = "k",
+                            additional.condition = T,
+                            param = list(J = j))
+}
+
+-----------------
+# testing for various J, alpha
+n2 <- l[[10]]$n2
+alphavec <- 1:floor(n2/2) / n2
+N <- length(alphavec)
+out <- data.frame()
+
+# evaluating the Lebesgue measure
+for (j in Jvec){
+  Mvec <- alphavec
+  a<-icp.torus.eval(l[[j]], level = alphavec, eval.point = grid.torus(d = 7, grid.size = 10))
+  # for (i in 1:N){
+  #   Mvec[i] <- sum(a$Chat_kmeans[, i])/10000
+  # }
+  Mvec <- colSums(a$Chat_kmeans)/10^7
+
+  out <- rbind(out, data.frame(alpha = alphavec, J = j, mu = Mvec, criterion = alphavec +  Mvec))
+
+}
+------------------
+
+Jhat <- 10
+alphahat <- 0.05
+out <- rbind(out, data.frame(alpha = alphahat, J = Jhat))
+
+# out.index <- which.min(out$criterion)
+# out[out.index,]
+#
+# Jhat <- out[out.index,2]
+# alphahat <- out[out.index,1]
+# icp.torus <- l[[Jhat]]
+
+# ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus(d = 7, grid.size = 10))
+# b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
+# colnames(b) <- c("phi","psi", "C_kmeans")
+# head(b)
+
+c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
+
+predicted.label[,1] <- c$kmeans$cluster.id.by.ehat
+predicted.label[,2] <- c$kmeans$cluster.id.outlier
+
+aa <- rep(0,2)
+
+for (j in 1:2){
+  aa[j] <- adjustedRandIndex(predicted.label[,j],data.test.label)
+}
 
 # Actual run --------------------------------------------------------------
 
@@ -268,10 +354,13 @@ dat2.results.he <- Example_paper_supp(J, dat2, dat2.test, type = "he")
 dat2.results.e <- Example_paper_supp(J, dat2, dat2.test, type = "e")
 dat2.results.ge <- Example_paper_supp(J, dat2, dat2.test, type = "g")
 
+GGally::ggpairs(dat1, aes(color = label))
+GGally::ggpairs()
 
+result.dat <- data.frame(data.test, membership = as.factor(c$kmeans$cluster.id.outlier)) %>%
+  mutate(membership = ifelse(membership == max(c$kmeans$cluster.id.outlier), "out", membership))
 
-
-
+GGally::ggpairs(result.dat[, 1:7], aes(color = result.dat[, 8]))
 
 
 
