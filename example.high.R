@@ -363,8 +363,14 @@ result.dat <- data.frame(data.test, membership = as.factor(c$kmeans$cluster.id.o
 
 GGally::ggpairs(result.dat[, 1:7], aes(color = result.dat[, 8]))
 
+J <- 3
 
 
+kmeans.out<-KMeans_rcpp(cbind(cos(data),sin(data)),clusters = J)
+predicted.label1 <- predict_KMeans(cbind(cos(data.test),sin(data.test)) , kmeans.out$centroids)
+
+kmeans.out2 <- kmeans.torus(data, J)
+predicted.label2 <- predict.kmeans.torus(data.test, kmeans.out2)
 
 
 
