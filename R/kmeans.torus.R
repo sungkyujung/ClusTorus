@@ -65,7 +65,7 @@ kmeans.torus <- function(data, centers = 10,
 
   kmeans <- list(data = data, centers = NULL,
                  membership = NULL, totss = NULL, withinss = NULL,
-                 betweenss = NULL, size = NULL)
+                 betweenss = NULL, size = NULL, extrinsic.results = NULL)
 
   # case for centers given as points on toroidal space
   if(length(centers) > 1){
@@ -82,6 +82,8 @@ kmeans.torus <- function(data, centers = 10,
     kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centers,
                          iter.max = iter.max, nstart = nstart)
   }
+
+  kmeans$extrinsic.results <- kmeans.out
 
   # calculate kmeans centers on torus
   centroids <- kmeans.out$centers
@@ -111,7 +113,7 @@ kmeans.torus <- function(data, centers = 10,
     nj <- length(data[kmeans$membership == j, ])
     j.mean <- wtd.stat.ang(data[kmeans$membership == j, ], rep(1, nj) / nj)$Mean
 
-    
+
     kmeans$withinss[j] <- sum(tor.minus(data[kmeans$membership == j, ], j.mean)^2)
   }
 
