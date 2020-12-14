@@ -260,7 +260,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
 
 # prespecified J and alpha ---------------------------------------------
 # type <- match.arg(type)
-type <- "he"
+type <- "ho"
 
 # predetermine J, alpha
 Jhat <- 10
@@ -288,7 +288,7 @@ for (j in Jvec){
   l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
                             method = "kmeans",
                             kmeansfitmethod = type,
-                            init = "k",
+                            init = "h",
                             additional.condition = T,
                             param = list(J = j))
 }
@@ -329,8 +329,11 @@ icp.torus <- l[[Jhat]]
 # b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
 # colnames(b) <- c("phi","psi", "C_kmeans")
 # head(b)
-
+start <- Sys.time()
 c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
+end <- Sys.time()
+
+cat(end - start)
 
 predicted.label[,1] <- c$kmeans$cluster.id.by.ehat
 predicted.label[,2] <- c$kmeans$cluster.id.outlier
@@ -361,7 +364,11 @@ aa
 result.dat <- data.frame(data.test, membership = as.factor(c$kmeans$cluster.id.outlier)) %>%
   mutate(membership = ifelse(membership == max(c$kmeans$cluster.id.outlier), "out", membership))
 
-GGally::ggpairs(result.dat[, 1:7], aes(color = result.dat[, 8]))
+# GGally::ggpairs(result.dat[, 1:7], aes(color = result.dat[, 8]))
+K <- length(unique(result.dat[,8]))
+label <- as.factor(result.dat[, 8])
+pairs(result.dat[, 1:7], pch = 19, col = rainbow(K)[label], upper.panel = NULL)
+legend()
 
 J <- 3
 

@@ -206,7 +206,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   #c <- cluster.assign.torus(data, icp.torus, level = alphahat)
   #c
   # start <- Sys.time()
-  c <- cluster.assign.torus(data.test, icp.torus, level = alphahat)
+  c <- cluster.assign.torus(data.test, icp.torus, level = alphahat, intersection.plot = TRUE)
   # end <- Sys.time()
 
   # cat (end - start)
@@ -367,8 +367,8 @@ plot_grid(
 
 ggsave("./examples/Toy_Data2.png", width = 12, height = 16)
 
-dat1.results$Rand
-dat2.results$Rand
+# dat1.results$Rand
+# dat2.results$Rand
 
 l1<- dat1.results$coverage %>% ggplot(aes(1-alpha, coverage,color = Type, group = Type))  + geom_line() +
   geom_point() + geom_abline(slope = 1, intercept = 0)
