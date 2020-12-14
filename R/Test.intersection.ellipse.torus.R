@@ -55,9 +55,23 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   M.1 <- Sinv1 / c1.minus.t
   M.2 <- Sinv2 / c2.minus.t
 
+  # preparing for case 1
   a <- M.1[1, 1]
   b <- M.2[1, 1]
 
+  # preparing for case 2
+
+  r1 <- 1 / eigen(M.1)$values[d]
+  r2 <- 1 / eigen(M.2)$values[d]
+
+  # generate shifting vectors
+  shift <- matrix(0, ncol = d, nrow = 3^d)
+  for (i in 1:d){
+    shift[, i] <- rep(c(0, 2 * pi, -2 * pi), each = 3^(i - 1))
+  }
+
+
+  # case 1 : both ellipsoids are spheres
   if ((sum(M.1/a) == d) && (sum(M.2/b) == d)){
     mean.1 <- as.vector(mean.1)
     mean.2 <- as.vector(mean.2)
@@ -66,12 +80,26 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
     radius.sum <- sqrt(1/a) + sqrt(1/b)
 
     overlap <- center.dist <= radius.sum
-  } else {
 
-    shift <- matrix(0,ncol = d, nrow = 3^d)
-    for (i in 1:d){
-    shift[,i] <- rep(c(0,2*pi,-2*pi), each = 3^(i-1))
-    }
+    # case 2 : sum of the longest radii of ellipsoids are smaller than pi
+  } else if (sqrt(r1) + sqrt(r2) <= pi){
+    mean.1 <- as.vector(mean.1)
+    mean.2 <- as.vector(mean.2)
+
+    mu <- as.vector(ang.minus(mean.2, mean.1))
+    dist <- rowSums(sweep(shift, 2, mu)^2)
+    shift.ind <- which.min(dist)
+
+    overlap <- Test.intersection.ellipse(shift[shift.ind, ], M.1, mu, M.2)
+
+    # mean.1.shift <- sweep(shift, 2, mean.1, "+")
+    # shift.dist <- rowSums(sweep(mean.1.shift, 2, mean.2)^2)
+    # shift.ind <- which.min(shift.dist)
+    #
+    # overlap <- Test.intersection.ellipse(mean.1.shift[shift.ind], M.1, mean.2, M.2)
+
+    # general case
+  } else {
 
     # overlap <- FALSE
     # # method 1 : using for loop ----------------
