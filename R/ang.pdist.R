@@ -19,6 +19,7 @@
 ang.pdist <- function(data){
   # assuming that data are n x d angular data on [0, 2pi)^d
   # computes L2 angular distance
+  data <- on.torus(data)
 
   n <- nrow(data)
   d <- ncol(data)

@@ -16,6 +16,8 @@
 #' }
 ang.minus <- function(x,y){
   # x "minus" y if x and y are [0, 2*pi)
+  x <- on.torus(x)
+  y <- on.torus(y)
   t <- rbind(x - y, x - y + 2 * pi, x - y - 2 * pi)
 
   tind <- apply(abs(t), 2, which.min)
