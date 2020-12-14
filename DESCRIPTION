@@ -23,5 +23,5 @@ Depends:
 Imports: 
     BAMBI,
     igraph,
-    polynom,
-    purrr
+    purrr,
+    ggplot2
