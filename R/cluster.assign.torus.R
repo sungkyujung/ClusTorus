@@ -4,11 +4,14 @@
 #'   given \code{icp.torus} objects, which can be constructed with
 #'   \code{icp.torus.score}.
 #'
-#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}.
+#' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
 #' @param icp.torus an object containing all values to compute the conformity
 #'   score, which will be constructed with \code{icp.torus.score}.
 #' @param level either a scalar or a vector, or even \code{NULL}. Default value
 #'   is 0.1.
+#' @param intersection.plot boolean index. If \code{TRUE}, then plot the
+#'   intersections of given ellipsoids. It only supports for phi and psi coordinates.
+#'   Default is \code{TRUE}.
 #' @return clustering assignment for data, given icp.torus objects
 #' @export
 #' @references 'S. Jung, K. Park, and B. Kim (2020),
@@ -44,7 +47,7 @@
 #'
 #' cluster.assign.torus(data, icp.torus, level)
 #' }
-cluster.assign.torus <- function(data, icp.torus, level){
+cluster.assign.torus <- function(data, icp.torus, level = 0.1, intersection.plot = TRUE){
   # clustering by connected components of ellipses
   #
   # return clustering assignment for data, given icp.torus objects.
@@ -56,8 +59,11 @@ cluster.assign.torus <- function(data, icp.torus, level){
   # two options
   # one: every point is assigned to clusters 1:K by either (1)-(4) above
   # two: outliers are assigned to cluster K+1.
+  data <- on.torus(data)
+
   n2 <- icp.torus$n2
-  ialpha <- floor( (n2 + 1) * level)
+  ialpha <- ifelse((n2 + 1) * level < 1, 1, floor((n2 + 1) * level))
+
   cluster.obj <- list(kmeans = NULL, mixture = NULL)
   # For kmeans to kspheres --------------------------------------------------
 
@@ -74,6 +80,10 @@ cluster.assign.torus <- function(data, icp.torus, level){
     cluster.id1 <- cluster.obj$kmeans$componentid[maxj.id]
     cluster.obj$kmeans$cluster.id.by.ehat <- cluster.id1
 
+    # cluster.obj$kmeans$cluster.plot.ehat <- pairs(data, pch = 19,
+    #                                               col = rainbow(K)[cluster.id1],
+    #                                               upper.panel = NULL)
+
     partsum <- matrix(0, nrow = nrow(data), ncol = K)
     for(k in 1:K){
       ifelse(sum( cluster.obj$kmeans$componentid == k) > 1,
@@ -88,6 +98,13 @@ cluster.assign.torus <- function(data, icp.torus, level){
 
     cluster.id1[!(ehat >= icp.torus$kmeans$score_sphere[ialpha])] <- K+1
     cluster.obj$kmeans$cluster.id.outlier <- cluster.id1
+
+    # cluster.obj$kmeans$cluster.plot.outlier <- pairs(data, pch = 19,
+    #                                                  col = rainbow(K+1)[cluster.id1],
+    #                                                  upper.panel = NULL)
+    if (intersection.plot){
+       cluster.obj$kmeans$plot <- plot.ellipsoids(icp.torus$kmeans$spherefit, t)
+    }
   }
 
   # For max-ellipse ---------------------------------------------------------
@@ -130,6 +147,9 @@ cluster.assign.torus <- function(data, icp.torus, level){
     cluster.id1 <- cluster.obj$mixture$componentid[maxj.id]
     cluster.obj$mixture$cluster.id.by.Mah.dist <- cluster.id1
 
+    if (intersection.plot){
+      cluster.obj$mixture$plot <- plot.ellipsoids(icp.torus$mixture$ellipsefit, t)
+    }
   }
 
   return(cluster.obj)
