@@ -3,9 +3,9 @@
 #' \code{Test.intersection.ellipse} evaluates whether two ellipses
 #'   on R^2 intersect.
 #'
-#' @param mean.1,mean.2 2-dimensional vectors which indicate the
+#' @param mean.1,mean.2 d-dimensional vectors which indicate the
 #'   centers of each ellipse.
-#' @param M.1,M.2 2 x 2 matrices which determine the shape of
+#' @param M.1,M.2 d x d matrices which determine the shape of
 #'   each ellipse.
 #' @return If they intersect, then return \code{TRUE}. If not,
 #'   then return \code{FALSE}.
