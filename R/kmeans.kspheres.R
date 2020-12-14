@@ -93,11 +93,17 @@ kmeans.kspheres <- function(data, centers = 10,
   # Use extrinsic kmeans clustering for initial center points.
   # centers is given as a number, in default, but it may also be given
   # as a matrix which indicates the toroidal points.
-  kmeans.out <- kmeans.torus(data, centers)
+
+  # -------------- initializing ----------------
+  if (init == "kmeans"){
+    kmeans.out <- kmeans.torus(data, centers)
+  } else {
+    J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
+    kmeans.out <- hcluster.torus(data, J = centers)
+  }
 
   centroid <- kmeans.out$centers
   J <- nrow(centroid)
-  # -------------- initializing ----------------
 
   # 1. homogeneous spheres
   # In fact, the initialized parameters are for the identical case.
@@ -173,7 +179,7 @@ kmeans.kspheres <- function(data, centers = 10,
     }
 
     if (cnt.singular >= 1){
-      warning("Singular matrices are altered to the idenity.")
+      warning("Singular matrices are altered to the scaled idenity.")
     }
   }
 
@@ -184,53 +190,47 @@ kmeans.kspheres <- function(data, centers = 10,
   else if (type == "general"){
     # Step.1 --------------------------------------------
     # initialize the parameters
-    if (init == "kmeans"){
 
-      for (j in 1:J){
 
-        nj <- kmeans.out$size[j]
-        pi_j <- nj / n
+    for (j in 1:J){
 
-        dat.j <- data[kmeans.out$membership == j, ]
+      nj <- kmeans.out$size[j]
+      pi_j <- nj / n
 
-        # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
-        z <- tor.minus(dat.j, sphere.param$mu[j, ])
+      dat.j <- data[kmeans.out$membership == j, ]
 
-        S <- t(z) %*% z / nrow(z)
+      # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
+      z <- tor.minus(dat.j, sphere.param$mu[j, ])
 
-        # additional assumption to S : axis-aligned
-        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- diag(diag(S))
-        }
+      S <- t(z) %*% z / nrow(z)
 
-        # additional assumption to S : sphere
-        # only implemented when verbose == TRUE
-        if (additional.condition){
-          if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-            S <- sum(S) / d * diag(d)
-          }
-        }
-
-        # vanishing the ellipsoid even if the additional condition is given.
-        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- THRESHOLD * diag(d)
-        }
-
-        sphere.param$Sigmainv[[j]] <- solve(S)
-
-        # Step.5 -----------------------------------
-        pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
-                       THRESHOLD, sum(kmeans.out$membership == j) / n)
-
-        # update c's
-        sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
-
+      # additional assumption to S : axis-aligned
+      if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+        S <- diag(diag(S))
       }
 
-    } else if (init == "hierarchical"){
+      # additional assumption to S : sphere
+      # only implemented when verbose == TRUE
+      if (additional.condition){
+        if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+          S <- sum(S) / d * diag(d)
+        }
+      }
 
-      parammat <- EMsinvMmix.init(data, J)
-      sphere.param <- norm.appr.param(parammat)
+      # vanishing the ellipsoid even if the additional condition is given.
+      if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
+        S <- THRESHOLD * diag(d)
+      }
+
+      sphere.param$Sigmainv[[j]] <- solve(S)
+
+      # Step.5 -----------------------------------
+      pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
+                     THRESHOLD, sum(kmeans.out$membership == j) / n)
+
+      # update c's
+      sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
+
     }
 
     # vectorize the sphere.param: this will be used for escaping loop
@@ -251,7 +251,6 @@ kmeans.kspheres <- function(data, centers = 10,
       # Step.2 ------------------------------------
       # prepare w's which work like weights
       wmat <- matrix(0, n, J)
-
 
       ehatj <- ehat.eval(data, sphere.param)
       # maxj <- apply(ehatj, 1, which.max)
@@ -332,7 +331,7 @@ kmeans.kspheres <- function(data, centers = 10,
         break}
     }
     if (cnt.singular >= 1){
-      warning("Singular matrices are altered to the idenity.")
+      warning("Singular matrices are altered to the scaled idenity.")
     }
   }
 
