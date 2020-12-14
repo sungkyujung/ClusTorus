@@ -1,0 +1,122 @@
+#' Number of clusters for each ellipsoid numbers
+#'
+#' \code{cluster.assign.number} generates a table and a plot for the number of
+#'   eliipsoids vs the number of clusters.
+#'
+#' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
+#'   or \eqn{[-\pi, \pi)^d}
+#' @param Jmin minimum number of ellipsoids
+#' @param Jmax maximum number of ellipsoids
+#' @param level a scalar between \eqn{[0,1]}. Default value
+#'   is 0.05.
+#' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
+#'   and 2(evaluation)
+#' @param method character which must be "homogeneous-circular",
+#'  "heterogeneous-circular", or "general".
+#'   If "homogeneous-circular", the radii of k-spheres are identical.
+#'   If "heterogeneous-cricular", the radii of k-spheres may be different.
+#'   If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
+#'   If, "general", clustering with k-ellipses. The parameters to construct
+#'   the ellipses are optimized with generalized Lloyd algorithm, which is
+#'   modified for toroidal space. To see the detail, see the references.
+#' @param init determine the initial parameter of "kmeans" method,
+#'   for option "general". Must be "kmeans" or "hierarchical".
+#'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
+#'   method.
+#'   If "hierarchical", the initial parameters are obtained with hierarchical
+#'   clustering method.
+#'   Default is "kmeans".
+#' @param additional.condition boolean index.
+#'   If \code{TRUE}, a singular matrix will be altered to the scaled identity.
+#' @param THRESHOLD number for difference between updating and
+#'   updated parameters. Default is 1e-10.
+#' @param maxiter the maximal number of iteration. Default is 200.
+#' @param verbose boolean index, which indicates whether display
+#'   additional details as to what the algorithm is doing or
+#'   how many loops are done. Moreover, if \code{additional.condition} is
+#'   \code{TRUE}, the warning message will be reported.
+#'   Default is \code{FALSE}.
+#' @return an \code{output} object, containing a plot based on ggplot2 and
+#'   a \code{data.frame} for the number of clusters.
+#' @export
+#' @seealso \code{\link[ClusTorus]{kmeans.kspheres}}, \code{\link[ClusTorus]{icp.torus.score}}
+#' @references S. Jung, K. Park, and B. Kim (2020),
+#'   "Clustering on the torus by conformal prediction", and
+#'   Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+#'   "Predictive Clustering"
+#' @examples
+#' \dontrun{
+#' ## mean vectors
+#'
+#' Mu1 <- c(3, 0)
+#' Mu2 <- c(2, 2)
+#' Mu3 <- c(1, 4)
+#'
+#' ## covariance matrices
+#'
+#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#'
+#' ## 2-dimensional multivariate normal data wrapped with toroidal space
+#' require(MASS)
+#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#'               mvrnorm(n=50, Mu2, Sigma2),
+#'               mvrnorm(n=50, Mu3, Sigma3))
+#' data <- on.torus(data)
+#'
+#' cluster.assign.number(data)
+#' }
+#'
+cluster.assign.number <- function(data, Jmin = 3, Jmax = 35, level = 0.05,
+                                  split.id = NULL,
+                                  method = c("homogeneous-circular",
+                                             "heterogeneous-circular",
+                                             "ellipsoids",
+                                             "general"),
+                                  init = c("kmeans", "hierarchical"),
+                                  additional.condition = TRUE,
+                                  THRESHOLD = 1e-10, maxiter = 200,
+                                  verbose = FALSE){
+
+  if (Jmin > Jmax) {stop("Jmin must be less than Jmax.")}
+  if (level > 1 || level < 0) {stop("Level must be a non-negative number less than 1.")}
+  if (is.null(method)) { method <- "homogeneous-circular" }
+  if (is.null(init)) {init <- "kmeans" }
+  if (length(level) != 1 || !is.numeric(level)) {stop("Level must be a numeric value.")}
+
+  kmeansfitmethod <- match.arg(method)
+  init <- match.arg(init)
+
+  data <- as.matrix(data)
+  data <- on.torus(data)
+
+  output <- list(cluster.number = NULL, plot = NULL)
+  cluster.number <- rep(0, Jmax - Jmin)
+
+  for (J in Jmin:Jmax){
+    icp.torus <- icp.torus.score(data, split.id, method = "kmeans",
+                                 kmeansfitmethod = kmeansfitmethod,
+                                 init = init,
+                                 additional.condition = additional.condition,
+                                 param = list(J = J), THRESHOLD = THRESHOLD,
+                                 maxiter = maxiter,
+                                 verbose = verbose)
+
+    c <- cluster.assign.torus(data, icp.torus, level)
+
+    cluster.number[J - Jmin + 1] <- c$kmeans$ncluster
+  }
+
+  plot.data <- as.data.frame(cbind(Jmin:Jmax, cluster.number))
+  colnames(plot.data) <- c("J", "Number")
+  output$cluster.number <- plot.data
+
+  output$plot <- ggplot2::ggplot(plot.data, aes(x = J, y = Number)) +
+    ggplot2::geom_point(size = 2) + ggplot2::geom_line() +
+    ggplot2::labs(title = "Cluster Number Plot") +
+    xlab("Number of ellipsoids") +
+    ylab("Number of clusters")
+
+  return(output)
+}
