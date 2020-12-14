@@ -4,14 +4,16 @@
 #'   for computing the conformity score for specified methods.
 #'
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
+#'   or \eqn{[-\pi, \pi)^d}
 #' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
 #' @param method a string one of "all", "kde", "mixture", and "kmeans"
-#'   which determines the model for clustering. Default is "all".
+#'   which determines the model for clustering. Default is "all". Moreover, if
+#'   the dimension of data space is larger than 2, then automatically
+#'   "kmeans".
 #' @param mixturefitmethod a string one of "circular", "axis-aligned", "general",
-#'   and "Bayesian" which determines the fitting method.("Bayesian" is not yet
-#'   supported)
-#'   Default is "axis-aligned".
+#'   and "Bayesian" which determines the fitting mixture method.("Bayesian" is not yet
+#'   supported) Default is "axis-aligned".
 #' @param kmeansfitmethod character which must be "homogeneous-circular",
 #'  "heterogeneous-circular", or "general".
 #'   If "homogeneous-circular", the radii of k-spheres are identical.
@@ -28,11 +30,11 @@
 #'   clustering method.
 #'   Default is "kmeans".
 #' @param additional.condition boolean index.
-#'   If \code{TRUE}, a singular matrix will be altered to the scalar identity.
+#'   If \code{TRUE}, a singular matrix will be altered to the scaled identity.
 #' @param param the number of components (in \code{list} form) for mixture
 #'   fitting and the concetnration parameter.
-#' @param THRESHOLD number of threshold for difference between updating and
-#'   updated parameters.
+#' @param THRESHOLD number for difference between updating and
+#'   updated parameters. Default is 1e-10.
 #' @param maxiter the maximal number of iteration.
 #' @param verbose boolean index, which indicates whether display
 #'   additional details as to what the algorithm is doing or
@@ -100,9 +102,16 @@ icp.torus.score <- function(data, split.id = NULL,
   if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "omogeneous-circular" }
   if (is.null(init)){ type <- "kmeans" }
 
+  data <- on.torus(data)
+
   method <- match.arg(method)
   mixfitmethod <- match.arg(mixturefitmethod)
   kmeansfitmethod <- match.arg(kmeansfitmethod)
+
+  if (ncol(data) > 2 && method != "kmeans"){
+    warning("kde and mixture methods are not implemented for high dimensional case (>= 3)")
+    method <- "kmeans"
+  }
 
   # sample spliting; preparing data
   n <- nrow(data)
@@ -123,12 +132,14 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # 1. kde
   if (sum(method == c("kde", "all")) == 1){
+
     phat <- kde.torus(X1, X2, concentration = param$concentration)
     # phat.X2.sorted <- sort(phat)
 
     icp.torus$kde$concentration <- param$concentration
     icp.torus$kde$score <- sort(phat)
     icp.torus$kde$X1 <- X1
+
   }
 
   # 2. mixture fitting
