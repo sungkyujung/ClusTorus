@@ -7,10 +7,10 @@
 Test.intersection.ellipse(mean.1, M.1, mean.2, M.2)
 }
 \arguments{
-\item{mean.1, mean.2}{2-dimensional vectors which indicate the
+\item{mean.1, mean.2}{d-dimensional vectors which indicate the
 centers of each ellipse.}
 
-\item{M.1, M.2}{2 x 2 matrices which determine the shape of
+\item{M.1, M.2}{d x d matrices which determine the shape of
 each ellipse.}
 }
 \value{

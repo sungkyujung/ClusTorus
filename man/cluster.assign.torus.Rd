@@ -4,16 +4,20 @@
 \alias{cluster.assign.torus}
 \title{Clustering by connected components of ellipses}
 \usage{
-cluster.assign.torus(data, icp.torus, level)
+cluster.assign.torus(data, icp.torus, level = 0.1, intersection.plot = TRUE)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}.}
+\item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.}
 
 \item{icp.torus}{an object containing all values to compute the conformity
 score, which will be constructed with \code{icp.torus.score}.}
 
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
 is 0.1.}
+
+\item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
+intersections of given ellipsoids. It only supports for phi and psi coordinates.
+Default is \code{TRUE}.}
 }
 \value{
 clustering assignment for data, given icp.torus objects

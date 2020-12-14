@@ -32,7 +32,7 @@ parammat <- matrix(c(0.4, 0.3, 0.3,
                      1, 2, 3,
                      0, 2, 4), nrow = 6, byrow =TRUE)
 
-elipse.param <- norm.appr.param(parammat)
+ellipse.param <- norm.appr.param(parammat)
 
 index <- c(1, 3)
 t <- 0.5

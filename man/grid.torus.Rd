@@ -4,9 +4,11 @@
 \alias{grid.torus}
 \title{Grid on torus}
 \usage{
-grid.torus(grid.size = 100)
+grid.torus(d = 2, grid.size = 100)
 }
 \arguments{
+\item{d}{number for dimension. Default is 2.}
+
 \item{grid.size}{number of grid for each axis. Default value is 100.}
 }
 \value{
