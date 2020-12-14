@@ -21,17 +21,22 @@
 tor.minus <- function(data, mu){
   # data is n x d matrix of toroidal values, mu is a d-vector.
   # returns toroidal subtraction
-  if(is.vector(data)){ data <- t(as.matrix(data)) }
+  if(is.vector(data) || is.data.frame(data)){ data <- as.matrix(data) }
+  if(dim(data)[2] == 1) {data <- t(data)}
+  if(!is.vector(mu) && ncol(mu) == 1) {mu <- as.vector(mu)}
+  if(!is.numeric(data)) {stop("Invaild data : data must be numeric.")}
+  if(!is.numeric(mu)) {stop("Invaild data : mu must be numeric.")}
   # cbind(
   #  ang.minus(data[,1], mu[1]),
   #  ang.minus(data[,2], mu[2]))
 
   # for higher dimension -----------
-  # t(apply(data, 1, ang.minus, mu))
   tor <- ang.minus(data[,1], mu[1])
   d <- length(mu)
-  for (i in 2:d){
-    tor <- cbind(tor, ang.minus(data[,i], mu[i]))
+  if (d > 1){
+    for (i in 2:d){
+      tor <- cbind(tor, ang.minus(data[,i], mu[i]))
+    }
   }
   tor
 }
