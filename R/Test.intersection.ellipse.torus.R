@@ -38,12 +38,12 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
   d <- ncol(ellipse.param$Sigmainv[[1]])
 
   # mean.1 <- matrix(c(ellipse.param$mu1[i], ellipse.param$mu2[i]),ncol = 1)
-  mean.1 <- as.matrix(ellipse.param$mu[i, ])
+  mean.1 <- ellipse.param$mu[i, ]
   Sinv1 <- ellipse.param$Sigmainv[[i]]
   c1.minus.t <- ellipse.param$c[i] - t
 
   # mean.2 <- matrix(c(ellipse.param$mu1[j], ellipse.param$mu2[j]),ncol = 1)
-  mean.2 <- as.matrix(ellipse.param$mu[j, ])
+  mean.2 <- ellipse.param$mu[j, ]
   Sinv2 <- ellipse.param$Sigmainv[[j]]
   c2.minus.t <- ellipse.param$c[j] - t
 
@@ -73,8 +73,6 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
 
   # case 1 : both ellipsoids are spheres
   if ((sum(M.1/a) == d) && (sum(M.2/b) == d)){
-    mean.1 <- as.vector(mean.1)
-    mean.2 <- as.vector(mean.2)
 
     center.dist <- sqrt(sum(ang.minus(mean.1, mean.2)^2))
     radius.sum <- sqrt(1/a) + sqrt(1/b)
@@ -83,8 +81,6 @@ Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
 
     # case 2 : sum of the longest radii of ellipsoids are smaller than pi
   } else if (sqrt(r1) + sqrt(r2) <= pi){
-    mean.1 <- as.vector(mean.1)
-    mean.2 <- as.vector(mean.2)
 
     mu <- as.vector(ang.minus(mean.2, mean.1))
     dist <- rowSums(sweep(shift, 2, mu)^2)
