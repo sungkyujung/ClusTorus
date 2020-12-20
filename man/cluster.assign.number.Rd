@@ -8,7 +8,7 @@ cluster.assign.number(
   data,
   Jmin = 3,
   Jmax = 35,
-  level = 0.05,
+  level = 0.1,
   split.id = NULL,
   method = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids", "general"),
   init = c("kmeans", "hierarchical"),
@@ -27,7 +27,7 @@ or \eqn{[-\pi, \pi)^d}}
 \item{Jmax}{maximum number of ellipsoids}
 
 \item{level}{a scalar between \eqn{[0,1]}. Default value
-is 0.05.}
+is 0.1.}
 
 \item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
 and 2(evaluation)}

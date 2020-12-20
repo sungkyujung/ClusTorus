@@ -8,7 +8,7 @@
 #' @param Jmin minimum number of ellipsoids
 #' @param Jmax maximum number of ellipsoids
 #' @param level a scalar between \eqn{[0,1]}. Default value
-#'   is 0.05.
+#'   is 0.1.
 #' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
 #' @param method character which must be "homogeneous-circular",
@@ -68,7 +68,7 @@
 #' cluster.assign.number(data)
 #' }
 #'
-cluster.assign.number <- function(data, Jmin = 3, Jmax = 35, level = 0.05,
+cluster.assign.number <- function(data, Jmin = 3, Jmax = 35, level = 0.1,
                                   split.id = NULL,
                                   method = c("homogeneous-circular",
                                              "heterogeneous-circular",

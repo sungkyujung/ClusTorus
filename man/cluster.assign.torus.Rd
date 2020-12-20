@@ -4,7 +4,13 @@
 \alias{cluster.assign.torus}
 \title{Clustering by connected components of ellipses}
 \usage{
-cluster.assign.torus(data, icp.torus, level = 0.1, intersection.plot = TRUE)
+cluster.assign.torus(
+  data,
+  icp.torus,
+  level = 0.1,
+  intersection.plot = TRUE,
+  coord = c(1, 2)
+)
 }
 \arguments{
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.}
@@ -17,7 +23,9 @@ is 0.1.}
 
 \item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
 intersections of given ellipsoids. It only supports for phi and psi coordinates.
-Default is \code{TRUE}.}
+Default is \code{TRUE}.
+ @param coord a 2-vector for prespecifing the coordinates.
+Default value is c(1, 2).}
 }
 \value{
 clustering assignment for data, given icp.torus objects
