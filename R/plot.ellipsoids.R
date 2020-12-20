@@ -29,7 +29,8 @@
 #' }
 
 plot.ellipsoids <- function(ellipse.param, t, coord = c(1, 2)){
-  if(length(coord) != 2){stop("Invalid coordinates. coord must be a 2-dimensional numeric vector.")}
+  if(length(coord) != 2 | !is.numeric(coord))
+    {stop("Invalid coordinates. coord must be a 2-dimensional numeric vector.")}
 
   g2 <- ggplot2::ggplot()
   J <- length(ellipse.param$c)
