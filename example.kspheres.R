@@ -157,7 +157,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
     l[[j]] <- icp.torus.score(as.matrix(data), split.id = split.id,
                               method = "kmeans",
                               kmeansfitmethod = type,
-                              init = "h",
+                              init = "k",
                               additional.condition = T,
                               param = list(J = j))
   }
