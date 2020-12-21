@@ -126,7 +126,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # Prepare output
   icp.torus <- list(kde = NULL, mixture = NULL, kmeans = NULL,
-                    n2 = n2, split.id = split.id)
+                    n2 = n2, split.id = split.id, d = ncol(data))
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
@@ -283,7 +283,8 @@ icp.torus.score <- function(data, split.id = NULL,
 #' icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 #' }
 
-icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
+icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus(d = icp.torus$d,
+                                                                           grid.size = 100^(2/d))){
   # evaluates Chat_kde, Chat_mix, Chat_max, Chat_e.
   N <- nrow(eval.point)
 
