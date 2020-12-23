@@ -190,7 +190,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   alphahat <- out[out.index,1]
   icp.torus <- l[[Jhat]]
 
-  ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus())
+  ia <- icp.torus.eval(icp.torus, level = alphahat, eval.point = grid.torus(d = 2, grid.size = 100))
   b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
   colnames(b) <- c("phi","psi", "C_kmeans")
   head(b)
@@ -206,7 +206,8 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   #c <- cluster.assign.torus(data, icp.torus, level = alphahat)
   #c
   # start <- Sys.time()
-  c <- cluster.assign.torus(data.test, icp.torus, level = alphahat, intersection.plot = TRUE)
+  c <- cluster.assign.torus(data.test, icp.torus, level = alphahat, intersection.plot = TRUE,
+                            coord = t(combn(1:2, 2)))
   # end <- Sys.time()
 
   # cat (end - start)
@@ -254,7 +255,7 @@ Example_paper_supp <- function(J, dat1, dat1.test, type = c("homogeneous-circula
   #
   # start <- Sys.time()
 
-  grid.test <- grid.torus()
+  grid.test <- grid.torus(d = 2, grid.size = 100)
   testing.n <- nrow(data)
   data.test <-as.matrix(data.test)
   # given a  C, for each testing item, see if it is included in C.
