@@ -41,7 +41,7 @@ plot.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
 
   g2 <- ggplot2::ggplot()
   J <- length(ellipse.param$c)
-  theta <- seq(0, 2 * pi, length.out = 999)
+  theta <- seq(0, 2 * pi, length.out = 199)
   Z <- cbind(cos(theta), sin(theta))
 
   shift <- matrix(0, ncol = 2, nrow = 9)
