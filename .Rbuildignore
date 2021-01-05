@@ -19,3 +19,6 @@ routines.R
 routines_MISC.R
 example.kspheres.R
 example.high.R
+ARG.Rdata
+ILE.Rdata
+PISCES_data.txt
