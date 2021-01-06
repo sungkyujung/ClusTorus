@@ -4,7 +4,7 @@
 \alias{plot.ellipsoids}
 \title{Plot Ellipsoids on 2-dimensional Toroidal Space}
 \usage{
-\method{plot}{ellipsoids}(ellipse.param, t, coord = c(1, 2))
+\method{plot}{ellipsoids}(data, ellipse.param, t, coord = c(1, 2))
 }
 \arguments{
 \item{t}{a numeric value which determines the size of ellipses.}
