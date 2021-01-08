@@ -1,34 +1,34 @@
-#' Plot Ellipsoids on 2-dimensional Toroidal Space
-#'
-#' \code{plot.ellipsoids} generates a 2-dimensional plot for the given ellipsoids,
-#'   with prespecified coordinates.
-#'
-#' @param list which is consisting of mean of each angular
-#'   coordinate, inverse of each covariance matrix, and constant term
-#' @param t a numeric value which determines the size of ellipses.
-#' @param coord a 2-vector for prespecifing the coordinates.
-#'   Default value is c(1, 2).
-#' @return a ggplot2-based 2-dimensional plot with ellipses
-#' @export
-#' @seealso \code{\link[ClusTorus]{icp.torus.score}}, \code{\link[ClusTorus]{cluster.assign.torus}}
-#' @examples
-#' \dontrun{
-#' parammat <- matrix(c(0.4, 0.3, 0.3,
-#'                      20, 25, 25,
-#'                      30, 25, 20,
-#'                      1, 2, 3,
-#'                      1, 2, 3,
-#'                      0, 2, 4), nrow = 6, byrow =TRUE)
-#'
-#' ellipse.param <- norm.appr.param(parammat)
-#'
-#' coord <- c(1, 3)
-#' t <- 0.5
-#'
-#' plot.ellipsoids(ellipse.param, t, coord)
-#' }
+# Plot Ellipsoids on 2-dimensional Toroidal Space
+#
+# \code{ploting.ellipsoids} generates a 2-dimensional plot for the given ellipsoids,
+#   with prespecified coordinates.
+#
+# @param data data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
+# @param ellipse.param list which is consisting of mean of each angular
+#   coordinate, inverse of each covariance matrix, and constant term
+# @param t a numeric value which determines the size of ellipses.
+# @param coord a 2-vector for prespecifing the coordinates.
+#   Default value is c(1, 2).
+# @return a ggplot2-based 2-dimensional plot with ellipses
+# @seealso \code{\link[ClusTorus]{icp.torus.score}}, \code{\link[ClusTorus]{cluster.assign.torus}}
+# @examples
+# \dontrun{
+# parammat <- matrix(c(0.4, 0.3, 0.3,
+#                      20, 25, 25,
+#                      30, 25, 20,
+#                      1, 2, 3,
+#                      1, 2, 3,
+#                      0, 2, 4), nrow = 6, byrow =TRUE)
+#
+# ellipse.param <- norm.appr.param(parammat)
+#
+# coord <- c(1, 3)
+# t <- 0.5
+#
+# plot.ellipsoids(ellipse.param, t, coord)
+# }
 
-plot.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
+ploting.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
   if (is.vector(coord)) {coord <- t(as.matrix(coord))}
   if (ncol(coord) != 2 | !is.numeric(coord))
   {stop("Invalid coordinates: coord must be a n x 2-dimensional numeric vector/matrix.")}
@@ -64,8 +64,10 @@ plot.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
       R <- Mmhalf %*% t(Z)
       for( shift.id in 1:9){
         RR <- R + mu + shift[shift.id,]
-        g2 <- g2 + ggplot2::geom_polygon(aes(x = angle1, y = angle2),color = "blue",alpha = 0.1,
-                                        data = data.frame(angle1 = RR[1,],angle2 = RR[2,], value = 1))
+        plot.data <- data.frame(angle1 = RR[1,],angle2 = RR[2,], value = 1)
+        g2 <- g2 + ggplot2::geom_polygon(ggplot2::aes(x = plot.data$angle1, y = plot.data$angle2),
+                                         color = "blue",alpha = 0.1,
+                                         data = plot.data)
       }
     }
 
@@ -74,7 +76,7 @@ plot.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
       ggplot2::scale_y_continuous(breaks = c(0,1,2)*pi,
                          labels = c("0","pi","2pi")) +
       ggplot2::coord_cartesian(xlim = c(0, 2*pi), ylim = c(0, 2*pi), expand = FALSE) +
-      ggplot2::geom_point(aes(x = data[, x], y = data[, y]))
+      ggplot2::geom_point(ggplot2::aes(x = data[, x], y = data[, y]))
   }
 
   plot_list

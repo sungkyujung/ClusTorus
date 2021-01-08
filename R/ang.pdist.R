@@ -34,5 +34,5 @@ ang.pdist <- function(data){
     pdistmat[i, (i + 1):n] <- ad
     pdistmat[(i + 1):n, i] <- ad
   }
-  as.dist(pdistmat)
+  stats::as.dist(pdistmat)
 }

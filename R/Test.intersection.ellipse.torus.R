@@ -1,35 +1,34 @@
-#' Intersection of two ellipses on torus
-#'
-#' \code{Test.intersection.ellipse.torus} evaluates whether two ellipses
-#'   on torus intersect.
-#'
-#' @param ellipse.param list which is consisting of mean of each angular
-#'   coordinate, inverse of each covariance matrix, and constant terms
-#' @param index 2-dimensional vector which indicates the ellipses that
-#'   we will check.
-#' @param t a numeric value which determines the size of ellipses.
-#' @return If they intersect, then return \code{TRUE}. If not,
-#'   then return \code{FALSE}.
-#' @seealso \code{\link[ClusTorus]{Test.intersection.ellipse}}
-#' @references S. Jung, K. Park, B. Kim (2020), "Clustering on the torus
-#'   by conformal prediction"
-#' @export
-#' @examples
-#' \dontrun{
-#' parammat <- matrix(c(0.4, 0.3, 0.3,
-#'                      20, 25, 25,
-#'                      30, 25, 20,
-#'                      1, 2, 3,
-#'                      1, 2, 3,
-#'                      0, 2, 4), nrow = 6, byrow =TRUE)
-#'
-#' ellipse.param <- norm.appr.param(parammat)
-#'
-#' index <- c(1, 3)
-#' t <- 0.5
-#'
-#' Test.intersection.ellipse.torus(ellipse.param, index, t)
-#' }
+# Intersection of two ellipses on torus
+#
+# \code{Test.intersection.ellipse.torus} evaluates whether two ellipses
+#   on torus intersect.
+#
+# @param ellipse.param list which is consisting of mean of each angular
+#   coordinate, inverse of each covariance matrix, and constant terms
+# @param index 2-dimensional vector which indicates the ellipses that
+#   we will check.
+# @param t a numeric value which determines the size of ellipses.
+# @return If they intersect, then return \code{TRUE}. If not,
+#   then return \code{FALSE}.
+# @seealso \code{\link[ClusTorus]{Test.intersection.ellipse}}
+# @references S. Jung, K. Park, B. Kim (2020), "Clustering on the torus
+#   by conformal prediction"
+# @examples
+# \dontrun{
+# parammat <- matrix(c(0.4, 0.3, 0.3,
+#                      20, 25, 25,
+#                      30, 25, 20,
+#                      1, 2, 3,
+#                      1, 2, 3,
+#                      0, 2, 4), nrow = 6, byrow =TRUE)
+#
+# ellipse.param <- norm.appr.param(parammat)
+#
+# index <- c(1, 3)
+# t <- 0.5
+#
+# Test.intersection.ellipse.torus(ellipse.param, index, t)
+# }
 Test.intersection.ellipse.torus <- function(ellipse.param, index, t){
 
   i <- index[1]

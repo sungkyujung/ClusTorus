@@ -23,8 +23,9 @@ is 0.1.}
 
 \item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
 intersections of given ellipsoids. It only supports for phi and psi coordinates.
-Default is \code{TRUE}.
- @param coord a 2-vector for prespecifing the coordinates.
+Default is \code{TRUE}.}
+
+\item{coord}{a 2-vector for prespecifing the coordinates.
 Default value is c(1, 2).}
 }
 \value{

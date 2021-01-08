@@ -12,7 +12,7 @@
 #' @param intersection.plot boolean index. If \code{TRUE}, then plot the
 #'   intersections of given ellipsoids. It only supports for phi and psi coordinates.
 #'   Default is \code{TRUE}.
-#'    @param coord a 2-vector for prespecifing the coordinates.
+#' @param coord a 2-vector for prespecifing the coordinates.
 #'   Default value is c(1, 2).
 #' @return clustering assignment for data, given icp.torus objects
 #' @export
@@ -106,7 +106,7 @@ cluster.assign.torus <- function(data, icp.torus, level = 0.1, intersection.plot
     #                                                  col = rainbow(K+1)[cluster.id1],
     #                                                  upper.panel = NULL)
     if (intersection.plot){
-       cluster.obj$kmeans$plot <- plot.ellipsoids(data, icp.torus$kmeans$spherefit, t, coord)
+       cluster.obj$kmeans$plot <- ploting.ellipsoids(data, icp.torus$kmeans$spherefit, t, coord)
     }
   }
 
@@ -151,7 +151,7 @@ cluster.assign.torus <- function(data, icp.torus, level = 0.1, intersection.plot
     cluster.obj$mixture$cluster.id.by.Mah.dist <- cluster.id1
 
     if (intersection.plot){
-      cluster.obj$mixture$plot <- plot.ellipsoids(data, icp.torus$mixture$ellipsefit, t, coord)
+      cluster.obj$mixture$plot <- ploting.ellipsoids(data, icp.torus$mixture$ellipsefit, t, coord)
     }
   }
 

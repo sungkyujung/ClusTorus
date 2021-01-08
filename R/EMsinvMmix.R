@@ -1,81 +1,80 @@
-#' Fitting mixtures of bivariate von Mises
-#'
-#' \code{EMsinvMmix} returns fitted parameters of J-mixture of
-#'   bivariate sine von Mises.
-#'
-#' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
-#' @param J number of components of mixture density
-#' @param parammat 6 x J parameter data with the following components:
-#'
-#'   \code{parammat[1, ]} : the weights for each von Mises sine density
-#'
-#'   \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises
-#'   sine density for n = 1, 2, 3
-#'
-#'   \code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises
-#'    sine density for m = 1, 2
-#' @return returns approximated parameters for bivariate normal
-#' distribution with \code{list}:
-#'
-#'   \code{list$Sigmainv[j]} : approximated covariance matrix for
-#'   j-th bivariate normal distribution, approximation of the j-th von Mises.
-#'
-#'   \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^-1} for
-#'   j-th bivariate normal distribution, approximation of the j-th von Mises.
-#' @param THRESHOLD number of threshold for difference between updating and
-#'   updated parameters.
-#' @param maxiter the maximal number of iteration.
-#' @param type a string one of "circular", "axis-aligned", "general",
-#'   and "Bayesian" which determines the fitting method.
-#' @param kmax the maximal number of kappa. If estimated kappa is
-#'   larger than \code{kmax}, then put kappa as \code{kmax}.
-#' @param verbose boolean index, which indicates whether display
-#'   additional details as to what the algorithm is doing or
-#'   how many loops are done.
-#' @details This algorithm is based on ECME algorithm. That is,
-#'   constructed with E - step and M - step and M - step
-#'   maximizes the parameters with given \code{type}.
-#'
-#'   If \code{type == "circular"}, then the mixture density is
-#'   just a product of two independent von Mises.
-#'
-#'   If \code{type == "axis-aligned"}, then the mixture density is
-#'   the special case of \code{type == "circular"}: only need to
-#'   take care of the common concentration parameter.
-#'
-#'   If\code{type == "general"}, then the fitting the mixture
-#'   density is more complicated than before, check the detail of
-#'   the reference article.
-#'
-#' @references 'S. Jung, K. Park, and B. Kim (2020),
-#'   "Clustering on the torus by conformal prediction"
-#' @seealso \code{\link[ClusTorus]{EMsinvMmix.init}}
-#' @export
-#' @examples
-#' \dontrun{
-#' ## mean vectors
-#'
-#' Mu1 <- c(3, 0)
-#' Mu2 <- c(2, 2)
-#' Mu3 <- c(1, 4)
-#'
-#' ## covariance matrices
-#'
-#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-#'
-#' ## 2-dimensional multivariate normal data wrapped with toroidal space
-#' require(MASS)
-#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-#'               mvrnorm(n=50, Mu2, Sigma2),
-#'               mvrnorm(n=50, Mu3, Sigma3))
-#' data <- on.torus(data)
-#'
-#' EMsinvMmix(data, J = 3, parammat = EMsinvMmix.init(data, J),
-#'            THRESHOLD = 1e-10, maxiter = 200,
-#'            type = "general", kmax = 500, verbose = TRUE)
-#' }
+# Fitting mixtures of bivariate von Mises
+#
+# \code{EMsinvMmix} returns fitted parameters of J-mixture of
+#   bivariate sine von Mises.
+#
+# @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
+# @param J number of components of mixture density
+# @param parammat 6 x J parameter data with the following components:
+#
+#   \code{parammat[1, ]} : the weights for each von Mises sine density
+#
+#   \code{parammat[n + 1, ]} : \eqn{\kappa_n} for each von Mises
+#   sine density for n = 1, 2, 3
+#
+#   \code{parammat[m + 4, ]} : \eqn{\mu_m} for each von Mises
+#    sine density for m = 1, 2
+# @return returns approximated parameters for bivariate normal
+# distribution with \code{list}:
+#
+#   \code{list$Sigmainv[j]} : approximated covariance matrix for
+#   j-th bivariate normal distribution, approximation of the j-th von Mises.
+#
+#   \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^-1} for
+#   j-th bivariate normal distribution, approximation of the j-th von Mises.
+# @param THRESHOLD number of threshold for difference between updating and
+#   updated parameters.
+# @param maxiter the maximal number of iteration.
+# @param type a string one of "circular", "axis-aligned", "general",
+#   and "Bayesian" which determines the fitting method.
+# @param kmax the maximal number of kappa. If estimated kappa is
+#   larger than \code{kmax}, then put kappa as \code{kmax}.
+# @param verbose boolean index, which indicates whether display
+#   additional details as to what the algorithm is doing or
+#   how many loops are done.
+# @details This algorithm is based on ECME algorithm. That is,
+#   constructed with E - step and M - step and M - step
+#   maximizes the parameters with given \code{type}.
+#
+#   If \code{type == "circular"}, then the mixture density is
+#   just a product of two independent von Mises.
+#
+#   If \code{type == "axis-aligned"}, then the mixture density is
+#   the special case of \code{type == "circular"}: only need to
+#   take care of the common concentration parameter.
+#
+#   If\code{type == "general"}, then the fitting the mixture
+#   density is more complicated than before, check the detail of
+#   the reference article.
+#
+# @references 'S. Jung, K. Park, and B. Kim (2020),
+#   "Clustering on the torus by conformal prediction"
+# @seealso \code{\link[ClusTorus]{EMsinvMmix.init}}
+# @examples
+# \dontrun{
+# ## mean vectors
+#
+# Mu1 <- c(3, 0)
+# Mu2 <- c(2, 2)
+# Mu3 <- c(1, 4)
+#
+# ## covariance matrices
+#
+# Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
+# Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
+# Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
+#
+# ## 2-dimensional multivariate normal data wrapped with toroidal space
+# require(MASS)
+# data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
+#               mvrnorm(n=50, Mu2, Sigma2),
+#               mvrnorm(n=50, Mu3, Sigma3))
+# data <- on.torus(data)
+#
+# EMsinvMmix(data, J = 3, parammat = EMsinvMmix.init(data, J),
+#            THRESHOLD = 1e-10, maxiter = 200,
+#            type = "general", kmax = 500, verbose = TRUE)
+# }
 EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
                        THRESHOLD = 1e-10, maxiter = 200,
                        type = c("circular", "axis-aligned", "general"),
@@ -200,7 +199,7 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
       # by maximizing the observed data log-likelihood
 
       initialkappas <- c(parammat[2,],parammat[3,])
-      a<- optim(par =  initialkappas,
+      a<- stats::optim(par =  initialkappas,
                 fn = function(kappas){
                   sum( BAMBI::dvmsinmix(data,kappa1 = kappas[1:J],
                                         kappa2 = kappas[(J+1):(2*J)],
@@ -219,7 +218,7 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
       # Step (d) Update lambdas
       # compute the bounds for lambdas
       lbound <- sqrt(parammat[2,]*parammat[3,])
-      a <- optim(par = parammat[4,],
+      a <- stats::optim(par = parammat[4,],
                  fn = function(kappa3){
                    sum( BAMBI::dvmsinmix(data,kappa1 = parammat[2,],
                                          kappa2 = parammat[3,],

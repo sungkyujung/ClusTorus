@@ -1,29 +1,27 @@
-#' Intersection of two ellipses on R^2
-#'
-#' \code{Test.intersection.ellipse} evaluates whether two ellipses
-#'   on R^2 intersect.
-#'
-#' @param mean.1,mean.2 d-dimensional vectors which indicate the
-#'   centers of each ellipse.
-#' @param M.1,M.2 d x d matrices which determine the shape of
-#'   each ellipse.
-#' @return If they intersect, then return \code{TRUE}. If not,
-#'   then return \code{FALSE}.
-#' @export
-#' @references We use the efficient algorithm given by
-#'  David Eberly (2019), "Intersection of Ellipses",
-#'  Geometric Tools, Redmond WA 98052
-#' @seealso \code{\link[ClusTorus]{Test.intersection.ellipse.torus}}
-#' @export
-#' @examples
-#' \dontrun{
-#' mean.1 <- c(1, 0)
-#' mean.2 <- c(0, 2)
-#' M.1 <- diag(c(3, 4))
-#' M.2 <- matrix(c(5, 2, 2, 1), nrow = 2, byrow = TRUE)
-#'
-#' Test.intersection.ellipse(mean.1, M.1, mean.2, M.2)
-#' }
+# Intersection of two ellipses on R^2
+#
+# \code{Test.intersection.ellipse} evaluates whether two ellipses
+#   on R^2 intersect.
+#
+# @param mean.1,mean.2 d-dimensional vectors which indicate the
+#   centers of each ellipse.
+# @param M.1,M.2 d x d matrices which determine the shape of
+#   each ellipse.
+# @return If they intersect, then return \code{TRUE}. If not,
+#   then return \code{FALSE}.
+# @references We use the efficient algorithm given by
+#  David Eberly (2019), "Intersection of Ellipses",
+#  Geometric Tools, Redmond WA 98052
+# @seealso \code{\link[ClusTorus]{Test.intersection.ellipse.torus}}
+# @examples
+# \dontrun{
+# mean.1 <- c(1, 0)
+# mean.2 <- c(0, 2)
+# M.1 <- diag(c(3, 4))
+# M.2 <- matrix(c(5, 2, 2, 1), nrow = 2, byrow = TRUE)
+#
+# Test.intersection.ellipse(mean.1, M.1, mean.2, M.2)
+# }
 Test.intersection.ellipse <- function(mean.1, M.1, mean.2, M.2){
   #
   #
@@ -173,7 +171,7 @@ Test.intersection.ellipse <- function(mean.1, M.1, mean.2, M.2){
   K <- function(s){
     1 - t(mean.2 - mean.1) %*% solve(A.inv / (1 - s) + B.inv / s) %*% (mean.2 - mean.1)
   }
-  Ks <- optimize(K, c(0.00001, 0.99999))$objective
+  Ks <- stats::optimize(K, c(0.00001, 0.99999))$objective
 
   if (Ks < 0){
     Ind.Overlap <- 0

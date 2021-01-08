@@ -108,11 +108,6 @@ icp.torus <- icp.torus.score(data, method = "all",
 }
 \references{
 S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction", and
-  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
+  "Clustering on the torus by conformal prediction"
   "Predictive Clustering"
-}
-\seealso{
-\code{\link[ClusTorus]{EMsinvMmix}}, \code{\link[BAMBI]{dvmsinmix}},
-  \code{\link[ClusTorus]{centers.torus}}
 }

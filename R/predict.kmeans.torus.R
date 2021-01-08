@@ -1,6 +1,6 @@
 #' Prediction for Extrinsic Kmeans Clustering
 #'
-#' \code{predict.kmeans.torus} predicts the cluster for each
+#' \code{pred.kmeans.torus} predicts the cluster for each
 #'   data point.
 #'
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
@@ -42,16 +42,16 @@
 #' kmeans <- kmeans.torus(data.train, centers = 3,
 #'              iter.max = 100, nstart = 1)
 #'
-#' predict.kmeans.torus(data.test, kmeans)
+#' pred.kmeans.torus(data.test, kmeans)
 #' }
-predict.kmeans.torus <- function(data, kmeans){
+pred.kmeans.torus <- function(data, kmeans){
   data <- on.torus(data)
 
   extrinsic.results <- kmeans$extrinsic.results
   extrinsic.data <- cbind(cos(data), sin(data))
 
-  predict.kmeans <- apply(extrinsic.data, 1, function(r)
+  pred.kmeans <- apply(extrinsic.data, 1, function(r)
     {which.min(colSums((t(extrinsic.results$centers) - r)^2))})
 
-  return(predict.kmeans)
+  return(pred.kmeans)
 }

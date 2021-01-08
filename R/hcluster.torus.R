@@ -1,11 +1,11 @@
-hcluster.torus <- function(data, J = 4, hc = hclust(ang.pdist(data))){
+hcluster.torus <- function(data, J = 4, hc = stats::hclust(ang.pdist(data))){
 
   # hierarchical clustering for the data
   # this function will not be exported: only use for initialzing method for kmeans.kspheres
   n <- nrow(data)
   d <- ncol(data)
 
-  membership <- cutree(hc, J)
+  membership <- stats::cutree(hc, J)
 
   # -------- initializing ---------------
   hcluster <- list(data = data, centers = NULL,

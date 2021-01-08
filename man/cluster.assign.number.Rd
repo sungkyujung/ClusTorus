@@ -104,5 +104,5 @@ S. Jung, K. Park, and B. Kim (2020),
   "Predictive Clustering"
 }
 \seealso{
-\code{\link[ClusTorus]{kmeans.kspheres}}, \code{\link[ClusTorus]{icp.torus.score}}
+\code{\link[ClusTorus]{icp.torus.score}}
 }

@@ -1,45 +1,44 @@
-#' Connected components of given ellipses
-#'
-#' \code{conn.comp.ellipse} investigates how many connected
-#'   components exist and which ellipses are included in
-#'   each connected component.
-#'
-#' @param ellipse.param list which is consisting of mean of each angular
-#'   coordinate, inverse of each covariance matrix, and constant term.
-#'
-#' @param t a numeric value which determines the size of ellipses.
-#' @return a \code{list} which contains two components:
-#'
-#'   \code{componentid} indicates which connected component
-#'   the ellipse belongs to.
-#'   \code{ncluster} indicates the number of clusters, i.e.,
-#'   the number of connected components.
-#' @export
-#' @references 'S. Jung, K. Park, and B. Kim (2020),
-#'   "Clustering on the torus by conformal prediction"
-#' @examples
-#' \dontrun{
-#'
-#' parammat <- matrix(c(0.4, 0.3, 0.3,
-#'                      20, 25, 25,
-#'                      30, 25, 20,
-#'                      1, 2, 3,
-#'                      1, 2, 3,
-#'                      0, 2, 4), nrow = 6, byrow =TRUE)
-#'
-#' ellipse.param <- norm.appr.param(parammat)
-#'
-#' t <- 0.5
-#'
-#' conn.comp.ellipse(ellipse.param, t)
-#' }
+# Connected components of given ellipses
+#
+# \code{conn.comp.ellipse} investigates how many connected
+#   components exist and which ellipses are included in
+#   each connected component.
+#
+# @param ellipse.param list which is consisting of mean of each angular
+#   coordinate, inverse of each covariance matrix, and constant term.
+#
+# @param t a numeric value which determines the size of ellipses.
+# @return a \code{list} which contains two components:
+#
+#   \code{componentid} indicates which connected component
+#   the ellipse belongs to.
+#   \code{ncluster} indicates the number of clusters, i.e.,
+#   the number of connected components.
+# @references 'S. Jung, K. Park, and B. Kim (2020),
+#   "Clustering on the torus by conformal prediction"
+# @examples
+# \dontrun{
+#
+# parammat <- matrix(c(0.4, 0.3, 0.3,
+#                      20, 25, 25,
+#                      30, 25, 20,
+#                      1, 2, 3,
+#                      1, 2, 3,
+#                      0, 2, 4), nrow = 6, byrow =TRUE)
+#
+# ellipse.param <- norm.appr.param(parammat)
+#
+# t <- 0.5
+#
+# conn.comp.ellipse(ellipse.param, t)
+# }
 
 conn.comp.ellipse <- function(ellipse.param, t){
 
   J <- length(ellipse.param$c)
   Adj.matrix <- matrix(0,nrow = J, ncol = J)
 
-  combinations <- t(combn(1:J, 2))
+  combinations <- t(utils::combn(1:J, 2))
   # for (j in 1:(J-1)){
   #   for (k in (j+1):J){
   #     overlap <- Test.intersection.ellipse.torus(ellipse.param, index = c(j,k),t = t)
