@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster.assign.torus.R
 \name{cluster.assign.torus}
 \alias{cluster.assign.torus}
-\title{Clustering by connected components of ellipses}
+\title{Clustering by connected components of ellipsoids}
 \usage{
 cluster.assign.torus(
   data,
@@ -22,14 +22,13 @@ score, which will be constructed with \code{icp.torus.score}.}
 is 0.1.}
 
 \item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
-intersections of given ellipsoids. It only supports for phi and psi coordinates.
-Default is \code{TRUE}.}
+intersections of given ellipsoids. Default is \code{TRUE}.}
 
 \item{coord}{a 2-vector for prespecifing the coordinates.
 Default value is c(1, 2).}
 }
 \value{
-clustering assignment for data, given icp.torus objects
+clustering assignment for data, given \code{icp.torus} objects
 }
 \description{
 \code{cluster.assign.torus} returns clustering assignment for data
@@ -67,9 +66,7 @@ cluster.assign.torus(data, icp.torus, level)
 }
 \references{
 'S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction" and
-  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
-  "Predictive Clustering"
+  "Clustering on the torus by conformal prediction"
 }
 \seealso{
 \code{\link[ClusTorus]{icp.torus.score}}

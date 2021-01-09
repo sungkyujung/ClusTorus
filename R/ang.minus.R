@@ -1,4 +1,4 @@
-#' Augular subtraction
+#' Angular subtraction
 #'
 #' \code{ang.minus} computes element-wise angular subtraction defined as
 #' \deqn{x -  y := Arg(exp(i(x-y)))}

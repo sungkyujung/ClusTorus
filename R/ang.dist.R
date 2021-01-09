@@ -3,7 +3,7 @@
 #' \code{ang.dist} computes element-wise angular distance between
 #'  two angular values in \eqn{[0,2\pi)}.
 #'
-#' @param x,y angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}
+#' @param x,y angular data(both scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @return angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @export
 #' @examples

@@ -1,19 +1,21 @@
 Package: ClusTorus
 Type: Package
-Title: Clustering on the torus by conformal prediction
+Title: Clustering on the Torus by Conformal Prediction
 Description: Provides various tools and options for clustering
   angular based data such as protein structures. The package 
-  especially implements clustering algorithm with conformal 
+  especially implements clustering algorithm under conformal 
   prediction framework, whose conformity score is based on 
-  multivariate von Mises sine distribution.
+  multivariate von Mises sine distribution. Moreover, the package
+  also provides some basic data handling tools for angular data.
 Version: 0.0.1.0
 Authors@R: 
-  c(person("Sungkyu", "Jung", email = "sungkyu@snu.ac.kr", role = c("cph")),
+  c(person("Sungkyu", "Jung", email = "sungkyu@snu.ac.kr", role = c("aut","cph")),
     person("Seungki", "Hong", email = "skgaboja@snu.ac.kr", role = c("aut", "cre")))
-License: MIT + file LICENSE
+License:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+URL: <https://github.com/sungkyujung/ClusTorus>
 BugReports: <https://github.com/sungkyujung/ClusTorus/issues>
 Depends: 
     R (>= 3.6.0)

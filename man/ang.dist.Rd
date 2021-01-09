@@ -7,7 +7,7 @@
 ang.dist(x, y)
 }
 \arguments{
-\item{x, y}{angular data(scalar or vector) whose elements are in \eqn{[0, 2\pi)}}
+\item{x, y}{angular data(both scalar or vector) whose elements are in \eqn{[0, 2\pi)}}
 }
 \value{
 angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}

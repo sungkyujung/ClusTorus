@@ -2,7 +2,7 @@
 % Please edit documentation in R/ang.minus.R
 \name{ang.minus}
 \alias{ang.minus}
-\title{Augular subtraction}
+\title{Angular subtraction}
 \usage{
 ang.minus(x, y)
 }
