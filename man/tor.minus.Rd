@@ -28,6 +28,10 @@ mu <- c(pi/2, pi/2)
 tor.minus(data, mu)
 }
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}
 \seealso{
 \code{\link{ang.minus}}
 }

@@ -34,3 +34,7 @@ list which is consisting of the following components:
   wtd.stat.ang(data, w)
 }
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}

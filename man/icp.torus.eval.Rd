@@ -54,6 +54,10 @@ icp.torus <- icp.torus.score(data, method = "all",
 icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 }
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}
 \seealso{
 \code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
 }

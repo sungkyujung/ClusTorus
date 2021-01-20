@@ -65,8 +65,12 @@ cluster.assign.torus(data, icp.torus, level)
 }
 }
 \references{
-'S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction"
+S. Jung, K. Park, and B. Kim (2021),
+  "Clustering on the torus by conformal prediction",
+
+  I. Gilitschenski and U. D. Hanebeck,
+  "A robust computational test for overlap of
+  two arbitrary-dimensional ellipsoids in fault-detection of Kalman filters"
 }
 \seealso{
 \code{\link[ClusTorus]{icp.torus.score}}

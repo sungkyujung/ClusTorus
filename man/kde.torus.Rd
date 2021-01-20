@@ -29,6 +29,10 @@ data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
 kde.torus(data)
 }
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}
 \seealso{
 \code{\link{grid.torus}}
 }

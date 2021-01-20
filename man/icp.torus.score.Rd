@@ -109,5 +109,4 @@ icp.torus <- icp.torus.score(data, method = "all",
 \references{
 S. Jung, K. Park, and B. Kim (2020),
   "Clustering on the torus by conformal prediction"
-  "Predictive Clustering"
 }

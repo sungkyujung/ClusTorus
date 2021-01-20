@@ -6,6 +6,8 @@
 #' @param x,y angular data(both scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @return angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}
 #' @export
+#' @references S. Jung, K. Park, and B. Kim (2020),
+#'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{
 #' x <- c(pi/3, 0)

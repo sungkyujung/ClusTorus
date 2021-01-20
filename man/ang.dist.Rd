@@ -24,3 +24,7 @@ y <- c(pi/4, pi/2)
 ang.dist(x, y)
 }
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}

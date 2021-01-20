@@ -47,7 +47,6 @@
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2020),
 #'   "Clustering on the torus by conformal prediction"
-#'   "Predictive Clustering"
 #' @examples
 #' \dontrun{
 #' ## mean vectors
@@ -252,6 +251,8 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   conformal prediction sets for each given level.
 #' @export
 #' @seealso \code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
+#' @references S. Jung, K. Park, and B. Kim (2020),
+#'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{
 #' ## mean vectors

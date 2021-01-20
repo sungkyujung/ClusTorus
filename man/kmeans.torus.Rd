@@ -63,9 +63,7 @@ kmeans.torus(data, centers = 3,
 }
 \references{
 'S. Jung, K. Park, and B. Kim (2020),
-  "Clustering on the torus by conformal prediction", and
-  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
-  "Predictive Clustering"
+  "Clustering on the torus by conformal prediction"
 }
 \seealso{
 \code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}

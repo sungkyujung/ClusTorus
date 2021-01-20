@@ -98,6 +98,10 @@ cluster.assign.number(data)
 }
 
 }
+\references{
+S. Jung, K. Park, and B. Kim (2020),
+  "Clustering on the torus by conformal prediction"
+}
 \seealso{
 \code{\link[ClusTorus]{icp.torus.score}}
 }
