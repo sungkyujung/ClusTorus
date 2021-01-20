@@ -245,7 +245,7 @@ kmeans.kspheres <- function(data, centers = 10,
     while(TRUE){
       cnt <- cnt + 1
 
-      if(verbose){if (cnt %% 2 == 0){cat(".")}}
+      if(verbose){if (cnt %% 5 == 0){cat(".")}}
 
       # Step.2 ------------------------------------
       # prepare w's which work like weights
@@ -325,8 +325,10 @@ kmeans.kspheres <- function(data, centers = 10,
                   na.rm = TRUE)
 
       if (cnt >= maxiter | diff < THRESHOLD){
-        cat("Done")
-        cat("\n")
+        if(verbose){
+          cat("Done")
+          cat("\n")
+        }
         break}
     }
     if (cnt.singular >= 1){

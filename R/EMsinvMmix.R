@@ -255,8 +255,10 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
     diff <- sum( (param.seq[nrow(param.seq),] - param.seq[nrow(param.seq)-1,])^2, na.rm = TRUE )
     # cat(cnt >= maxiter | diff < THRESHOLD)
     if(cnt >= maxiter | diff < THRESHOLD){
-      cat("Done")
-      cat("\n")
+      if(verbose){
+        cat("Done")
+        cat("\n")
+      }
       break}
 
   }
