@@ -24,3 +24,7 @@ Imports:
     igraph,
     purrr,
     ggplot2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
