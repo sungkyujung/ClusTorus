@@ -2,9 +2,9 @@ Package: ClusTorus
 Type: Package
 Title: Clustering on the Torus by Conformal Prediction
 Description: Provides various tools and options for clustering
-  angular based data such as protein structures. The package 
-  especially implements clustering algorithm under conformal 
-  prediction framework, whose conformity score is based on 
+  angle based data such as protein structures. The package 
+  especially implements clustering algorithms under conformal 
+  prediction framework, whose conformity scores are based on 
   multivariate von Mises sine distribution. Moreover, the package
   also provides some basic data handling tools for angular data.
 Version: 0.0.1.0
