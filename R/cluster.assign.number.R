@@ -94,28 +94,29 @@ cluster.assign.number <- function(data, Jmin = 3, Jmax = 35, level = 0.1,
   output <- list(cluster.number = NULL, plot = NULL, icp.torus.objects = NULL)
   cluster.number <- rep(0, Jmax - Jmin)
 
-  for (J in Jmin:Jmax){
+  for (j in Jmin:Jmax){
     icp.torus <- icp.torus.score(data, split.id, method = "kmeans",
                                  kmeansfitmethod = kmeansfitmethod,
                                  init = init,
                                  additional.condition = additional.condition,
-                                 param = list(J = J), THRESHOLD = THRESHOLD,
+                                 param = list(J = j), THRESHOLD = THRESHOLD,
                                  maxiter = maxiter,
                                  verbose = verbose)
 
-    output$icp.torus.objects[[J]] <- icp.torus
+    output$icp.torus.objects[[j]] <- icp.torus
 
     c <- cluster.assign.torus(data, icp.torus, level)
 
-    cluster.number[J - Jmin + 1] <- c$kmeans$ncluster
+    cluster.number[j - Jmin + 1] <- c$kmeans$ncluster
   }
 
   plot.data <- as.data.frame(cbind(Jmin:Jmax, cluster.number))
   colnames(plot.data) <- c("J", "Number")
   output$cluster.number <- plot.data
 
-  output$plot <- ggplot2::ggplot(plot.data, ggplot2::aes(x = J, y = Number)) +
-    ggplot2::geom_point(size = 2) + ggplot2::geom_line() +
+  output$plot <- ggplot2::ggplot() +
+    ggplot2::geom_point(ggplot2::aes(x = .data$J, y = .data$Number),
+                        data = plot.data, size = 2) + ggplot2::geom_line() +
     ggplot2::labs(title = "Cluster Number Plot") +
     ggplot2::xlab("Number of ellipsoids") +
     ggplot2::ylab("Number of clusters")

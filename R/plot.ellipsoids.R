@@ -64,8 +64,8 @@ ploting.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
       R <- Mmhalf %*% t(Z)
       for( shift.id in 1:9){
         RR <- R + mu + shift[shift.id,]
-        plot.data <- data.frame(angle1 = RR[1,],angle2 = RR[2,], value = 1)
-        g2 <- g2 + ggplot2::geom_polygon(ggplot2::aes(x = angle1, y = angle2),
+        plot.data <- data.frame(angle1 = RR[1,], angle2 = RR[2,], value = 1)
+        g2 <- g2 + ggplot2::geom_polygon(ggplot2::aes(x = .data$angle1, y = .data$angle2),
                                          color = "blue",alpha = 0.1,
                                          data = plot.data)
       }

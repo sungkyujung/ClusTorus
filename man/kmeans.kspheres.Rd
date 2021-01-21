@@ -91,6 +91,5 @@ S. Jung, K. Park, and B. Kim (2021),
   "Predictive Clustering"
 }
 \seealso{
-\code{\link[ClusTorus]{ehat.eval}},
-  \code{\link[ClusTorus]{kmeans.torus}}
+\code{\link[ClusTorus]{kmeans.torus}}
 }

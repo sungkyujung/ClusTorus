@@ -35,7 +35,7 @@
 #'   containing all values which determines the shape and
 #'   location of spheres.
 #' @export
-#' @seealso \code{\link[ClusTorus]{ehat.eval}},
+#' @seealso
 #'   \code{\link[ClusTorus]{kmeans.torus}}
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction", and
