@@ -40,8 +40,6 @@ Data description is from \url{http://www.rcsb.org/ligand/ILE}.
   Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
   "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
   Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
-
-  The
 }
 \seealso{
 Description of the angluar information is from the 'value'
