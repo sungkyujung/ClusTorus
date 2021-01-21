@@ -11,7 +11,7 @@
 #'   each cluster. See  \code{\link[ClusTorus]{kmeans.torus}}
 #' @return a vector whose elements indicate the labels of predicted clusters.
 #' @export
-#' @references 'S. Jung, K. Park, and B. Kim (2020),
+#' @references 'S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @seealso \code{\link[ClusTorus]{kmeans.torus}}
 #' @examples

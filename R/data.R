@@ -36,3 +36,36 @@
 #'   part of \code{\link[bio3d]{torsion.pdb}}.
 "SARS_CoV_2"
 
+#' ILE: Structure of the Isoleucine
+#'
+#' An isomer of leucine, essential branched-chain aliphatic amino acid found in many proteins.
+#'
+#' @format This list contains the following components:
+#' \describe{
+#'   \item{\code{tbl}}{a numeric matrix of psi, phi, and chi torsion
+#'     angles.}
+#' }
+#' @details
+#'   ILE data is generated with collection of different pdb files. To select adequate protein
+#'   data, we use PISCES server. (the method is introduced in articles of references.)
+#'   To select high-quality protein data, we use several benchmarks:
+#'   resolution : 1.6A(angstrom) or better,
+#'   R-factor : 0.22 or better,
+#'   Sequence percentage identity: <= 25%.
+#'   Then, we select ILE only angular data for each protein data. To see the detail code, visit
+#'   \url{https://github.com/sungkyujung/ClusTorus}
+#' @source This data is extracted from PISCES server \url{http://dunbrack.fccc.edu/pisces/}
+#' @references Data description is from \url{http://www.rcsb.org/ligand/ILE}.
+#'
+#'   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
+#'   "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306
+#'   \url{https://doi.org/10.1186/1471-2105-11-306} and
+#'
+#'   Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
+#'   "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
+#'   Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
+#'
+#'   The
+#' @seealso Description of the angluar information is from the 'value'
+#'   part of \code{\link[bio3d]{torsion.pdb}}.
+"ILE"

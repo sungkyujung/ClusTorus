@@ -45,7 +45,7 @@
 #' @return returns an \code{icp.torus} object, containing all values
 #'   to compute the conformity score.
 #' @export
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{
@@ -251,7 +251,7 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   conformal prediction sets for each given level.
 #' @export
 #' @seealso \code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{

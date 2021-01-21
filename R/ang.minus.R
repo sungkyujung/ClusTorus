@@ -7,7 +7,7 @@
 #' @return returns a scalar or a vector whose elements are in
 #'   \eqn{[-\pi, \pi)}.
 #' @export
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{

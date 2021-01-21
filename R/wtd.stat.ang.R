@@ -13,7 +13,7 @@
 #'
 #'   \code{R} mean resultant length
 #' @export
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{

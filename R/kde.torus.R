@@ -10,7 +10,7 @@
 #' @return \code{kde.torus} returns N-dimensional vector of kdes evaluated at eval.point
 #' @export
 #' @seealso \code{\link{grid.torus}}
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \dontrun{

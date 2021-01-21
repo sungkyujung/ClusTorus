@@ -55,7 +55,7 @@ icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 }
 }
 \references{
-S. Jung, K. Park, and B. Kim (2020),
+S. Jung, K. Park, and B. Kim (2021),
   "Clustering on the torus by conformal prediction"
 }
 \seealso{

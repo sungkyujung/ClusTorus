@@ -12,7 +12,7 @@
 #'   If \code{level} is a vector, return the above and prediction set indices
 #'   for each value of level.
 #' @seealso \code{\link{kde.torus}}, \code{\link{grid.torus}}
-#' @references S. Jung, K. Park, and B. Kim (2020),
+#' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @export
 #' @examples

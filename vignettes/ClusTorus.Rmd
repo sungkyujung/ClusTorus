@@ -2,7 +2,7 @@
 title: "Introduction to ClusTorus"
 author: "Seungki Hong"
 date: "1/21/2021"
-output: rmarkdown::html_vignette
+output: html_document
 vignette: >
   %\VignetteIndexEntry{Introduction to ClusTorus}
   %\VignetteEngine{knitr::rmarkdown}
