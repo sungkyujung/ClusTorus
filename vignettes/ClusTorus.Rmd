@@ -16,18 +16,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 ClusTorus is a package for clustering angular data, especially for protein structure data. ClusTorus provides various clustering algorithms designed with conformal prediction framework, which can deal with the outliers. The package suggests various methods for fitting the algorithms, and some of them will be introduced soon. The package also provides some simple tools for handling angluar data, such as angular subtraction, computing angular distance, etc. Now, check how to use ClusTorus briefly.
 
 ## Data Loading and Handling
 
 ClusTorus provides a protein structure data of SARS-CoV-2, which provoked the recent pandemic situation with COVID-19. With this data, we will introduce how to load the data and how to use data handling tools of ClusTorus. Since SARS-CoV-2 data is originally extracted from protein data bank, it contains various information for describing protein structure. For our purpose, we will only use `SARS_CoV_2$tbl`, which only contains angluar information of the data. Moreover, for simplicity, we will only use backbone-chain angles, that is, $\phi$ and $\psi$ columns.
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning = FALSE}
 library(ClusTorus)
 library(tidyverse)
 
 data <- SARS_CoV_2$tbl
+data <- data.frame(data, id = rownames(data)) %>%
+  separate(id,into = c(',','position','type','rest'))
+data <- data %>% select(-",")
+
+data <- data[(data$type == "B"), ]
 data <- na.omit(data[, 1:2])
 head(data)
 ```
@@ -64,10 +68,10 @@ for (j in Jvec){
 ```
 
 
-The list `l` contains the `icp.torus` objects, which consist of fitted parameters for generating clusters, by varying the hypterparameter $J$. That is, These objects are optimally fitted ingredients for generating clusters for given $J$. By specifying the significance level, we can get the clusters. But, how to generate optimal clusters? One may think that the hyperparameter which generates the cluster of the minimum volume/area will be the optimum for given significance level. For dealing with such volume/area based hyperparameter searching, ClusTorus provides `icp.torus.eval` function, which generates boolean matrices for indicating the inclusion of pre-specified evaluation points for given significance level(s). You need to know that the result also changes by varying $\alpha$. Thus, we need to carefully choose $\alpha$ for better performance under pre-specified hyperparameter-choosing criterion. But, for simplicity, we will assume that the significance level $\alpha$ is given with $0.05$. Then, we can simply get the results by using pre-obtained `icp.torus` objects as below:
+The list `l` contains the `icp.torus` objects, which consist of fitted parameters for generating clusters, by varying the hypterparameter $J$. That is, These objects are optimally fitted ingredients for generating clusters for given $J$. By specifying the significance level, we can get the clusters. But, how to generate optimal clusters? One may think that the hyperparameter which generates the cluster of the minimum volume/area will be the optimum for given significance level. For dealing with such volume/area based hyperparameter searching, ClusTorus provides `icp.torus.eval` function, which generates boolean matrices for indicating the inclusion of pre-specified evaluation points for given significance level(s). You need to know that the result also changes by varying $\alpha$. Thus, we need to carefully choose $\alpha$ for better performance under pre-specified hyperparameter-choosing criterion. But, for simplicity, we will assume that the significance level $\alpha$ is given with $0.1$. Then, we can simply get the results by using pre-obtained `icp.torus` objects as below:
 
 ```{r}
-alpha <- 0.05
+alpha <- 0.1
 out <- data.frame()
 
 for (j in Jvec){
