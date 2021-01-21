@@ -22,3 +22,4 @@ example.high.R
 ARG.Rdata
 ILE.Rdata
 PISCES_data.txt
+^LICENSE\.md$
