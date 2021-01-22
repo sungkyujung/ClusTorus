@@ -20,7 +20,7 @@
 #'   \code{list$Sigmainv[j]} : approximated covariance matrix for
 #'   j-th bivariate normal distribution, approximation of the j-th von Mises.
 #'
-#'   \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^-1} for
+#'   \code{list$c[j]} : approximated \eqn{|2\pi\Sigma|^{-1}} for
 #'   j-th bivariate normal distribution, approximation of the j-th von Mises.
 #' @param THRESHOLD number of threshold for difference between updating and
 #'   updated parameters.

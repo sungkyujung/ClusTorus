@@ -3,23 +3,8 @@
 
 .gitignore
 .Rhistory
-README.md
 .DS_Store
 ^data-raw$
-coronavirus.R
-coronavirus2.R
-coronavirusdata.RData
-Demo.Rmd
-Example_Paper.R
-Example_Paper_2_inspection_of_coverage_kde.R
-Example_Paper_3_Figure4.R
-Example_Paper_4_intersection.R
-plot_clustering.R
-routines.R
-routines_MISC.R
-example.kspheres.R
-example.high.R
-ARG.Rdata
-ILE.Rdata
-PISCES_data.txt
 ^LICENSE\.md$
+^\.Rhistory$
+^\.RData$
