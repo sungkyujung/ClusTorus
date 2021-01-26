@@ -8,3 +8,4 @@
 ^LICENSE\.md$
 ^\.Rhistory$
 ^\.RData$
+^README\.md$

@@ -11,7 +11,7 @@ Description: Provides various tools of for clustering multivariate angular
   estimate, multivariate von Mises mixtures, and naive k-means clusters. 
   Moreover, the package provides some basic data handling tools for 
   angular data.
-Version: 0.0.0.9000
+Version: 0.0.1
 License: GPL-3
 Authors@R: 
   c(person("Sungkyu", "Jung", email = "sungkyu@snu.ac.kr", role = c("aut","cph")),
