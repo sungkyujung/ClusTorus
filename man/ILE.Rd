@@ -35,7 +35,7 @@ Data description is from \url{http://www.rcsb.org/ligand/ILE}.
 
   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
   "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306
-  \url{https://doi.org/10.1186/1471-2105-11-306} and
+  \doi{https://doi.org/10.1186/1471-2105-11-306} and
 
   Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
   "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
