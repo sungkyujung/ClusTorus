@@ -63,7 +63,7 @@
 #'
 #'   Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
 #'   "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
-#'   Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
+#'   Journal of Applied Statistics, 39:11, 2475-2492, DOI: \doi{10.1080/02664763.2012.719221}
 #'
 #' @seealso Description of the angluar information is from the 'value'
 #'   part of \code{\link[bio3d]{torsion.pdb}}.
