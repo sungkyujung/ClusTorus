@@ -25,14 +25,12 @@ list which is consisting of the following components:
   mean resultant length.
 }
 \examples{
-\dontrun{
-  data <- matrix(c(pi/3, pi/3, pi/2,
-                   pi, pi/4, pi/2,
-                   0, pi/3, pi/6),
-                 ncol = 3, byrow = TRUE)
-  w <- c(0.3, 0.3, 0.4)
-  wtd.stat.ang(data, w)
-}
+data <- matrix(c(pi/3, pi/3, pi/2,
+                 pi, pi/4, pi/2,
+                 0, pi/3, pi/6),
+               ncol = 3, byrow = TRUE)
+w <- c(0.3, 0.3, 0.4)
+wtd.stat.ang(data, w)
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

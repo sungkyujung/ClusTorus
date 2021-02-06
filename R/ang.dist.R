@@ -9,12 +9,10 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
 #' x <- c(pi/3, 0)
 #' y <- c(pi/4, pi/2)
 #'
 #' ang.dist(x, y)
-#'}
 ang.dist <- function(x,y){
   # dist(x,y) if x and y are [0, 2*pi]
   apply((rbind( abs(x - y),

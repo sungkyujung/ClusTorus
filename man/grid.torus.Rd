@@ -19,7 +19,5 @@ returns (grid.size) x (grid.size) numeric matrix
 \code{grid.torus} returns an equally-spaced grid on torus.
 }
 \examples{
-\dontrun{
-grid.torus(grid.size = 50)
-}
+grid.torus(d = 2, grid.size = 100)
 }

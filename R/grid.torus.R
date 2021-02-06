@@ -8,9 +8,7 @@
 #'   which indicates the grid points on torus.
 #' @export
 #' @examples
-#' \dontrun{
-#' grid.torus(grid.size = 50)
-#' }
+#' grid.torus(d = 2, grid.size = 100)
 grid.torus <- function(d = 2 , grid.size = 100){
   # returns grid points on torus of size (grid.size) x (grid.size)
 

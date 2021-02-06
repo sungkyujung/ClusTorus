@@ -12,13 +12,9 @@
 #'   "Clustering on the torus by conformal prediction"
 #' @export
 #' @examples
-#' \dontrun{
-#' data <- matrix(c(pi/3, pi/4, pi/2, pi/2),
-#'                ncol = 2, byrow = TRUE)
-#' mu <- c(pi/2, pi/2)
-#'
-#' tor.minus(data, mu)
-#' }
+#' data <- ILE[1:200, 1:2]
+#' Mu1 <- c(4.5, 3)
+#' tor.minus(data, Mu1)
 
 tor.minus <- function(data, mu){
   # data is n x d matrix of toroidal values, mu is a d-vector.

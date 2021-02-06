@@ -7,11 +7,10 @@
 #' @return d-dimensional radian-unit angular data on \eqn{[0, 2\pi)^d}.
 #' @export
 #' @examples
-#' \dontrun{
-#' x <- matrix(c(10/3 * pi, 5/4 * pi), ncol = 2, byrow = TRUE)
+#' data <- SARS_CoV_2$tbl[1:200, 1:2]
+#' data <- data * pi / 180
 #'
-#' on.torus(x)
-#' }
+#' on.torus(data)
 on.torus <- function(x){
 #  y <- x - 2 * pi * floor(x/2/pi + 1/2) # for [-pi, pi)^2
   y <- x - 2 * pi * floor(x/2/pi)

@@ -48,28 +48,12 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
-#' ## mean vectors
-#'
-#' Mu1 <- c(3, 0)
-#' Mu2 <- c(2, 2)
-#' Mu3 <- c(1, 4)
-#'
-#' ## covariance matrices
-#'
-#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-#'
-#' ## 2-dimensional multivariate normal data wrapped with toroidal space
-#' require(MASS)
-#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-#'               mvrnorm(n=50, Mu2, Sigma2),
-#'               mvrnorm(n=50, Mu3, Sigma3))
-#' data <- on.torus(data)
+#' \donttest{
+#' data <- ILE[1:200, 1:2]
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
 #'                              mixturefitmethod = "general",
+#'                              kmeansfitmethod = "general",
 #'                              param = list(J = 4, concentration = 25))
 #' }
 icp.torus.score <- function(data, split.id = NULL,
@@ -92,6 +76,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # param contains the number of components for mixture fitting
   #       and the concentration parameter.
+  if (!is.matrix(data)) {data <- as.matrix(data)}
 
   if (is.null(method)) {method <- "all" }
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
@@ -254,25 +239,8 @@ icp.torus.score <- function(data, split.id = NULL,
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
-#' ## mean vectors
-#'
-#' Mu1 <- c(3, 0)
-#' Mu2 <- c(2, 2)
-#' Mu3 <- c(1, 4)
-#'
-#' ## covariance matrices
-#'
-#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-#'
-#' ## 2-dimensional multivariate normal data wrapped with toroidal space
-#' require(MASS)
-#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-#'               mvrnorm(n=50, Mu2, Sigma2),
-#'               mvrnorm(n=50, Mu3, Sigma3))
-#' data <- on.torus(data)
+#' \donttest{
+#' data <- ILE[1:200, 1:2]
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
 #'                              mixturefitmethod = "general",

@@ -17,12 +17,10 @@ angular data (scalar or vector) whose elements are in \eqn{[0, 2\pi)}
  two angular values in \eqn{[0,2\pi)}.
 }
 \examples{
-\dontrun{
 x <- c(pi/3, 0)
 y <- c(pi/4, pi/2)
 
 ang.dist(x, y)
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

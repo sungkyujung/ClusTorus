@@ -50,29 +50,12 @@
 #' @references 'S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
-#' ## mean vectors
+#' \donttest{
+#' data <- ILE[1:200, 1:2]
 #'
-#' Mu1 <- c(3, 0)
-#' Mu2 <- c(2, 2)
-#' Mu3 <- c(1, 4)
-#'
-#' ## covariance matrices
-#'
-#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-#'
-#' ## 2-dimensional multivariate normal data wrapped with toroidal space
-#' require(MASS)
-#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-#'               mvrnorm(n=50, Mu2, Sigma2),
-#'               mvrnorm(n=50, Mu3, Sigma3))
-#' data <- on.torus(data)
-#'
-#' EMsinvMmix(data, J = 3, parammat = EMsinvMmix.init(data, J),
+#' EMsinvMmix(data, J = 3,
 #'            THRESHOLD = 1e-10, maxiter = 200,
-#'            type = "general", kmax = 500, verbose = TRUE)
+#'            type = "general", kmax = 500, verbose = FALSE)
 #' }
 EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
                        THRESHOLD = 1e-10, maxiter = 200,
@@ -88,6 +71,8 @@ EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
   # initialize
   # maxiter <- 100
   # THRESHOLD <- 1e-10
+  if (!is.matrix(data)) {data <- as.matrix(data)}
+
   type <- match.arg(type)
   n <- nrow(data)
   param.seq <- as.vector(parammat)
@@ -286,8 +271,6 @@ sinvM.ECMEb <- function(wstat, kappa1, kappa2, lambda, mu1, mu2, THRESHOLD = 1e-
     diffb <- norm(mu1c - mu1) + norm(mu2c - mu2)
     r <- r + 1
     if(r >= 100 || diffb < THRESHOLD){
-      cat("Done")
-      cat("\n")
       break}
     mu1 <- mu1c
     mu2 <- mu2c

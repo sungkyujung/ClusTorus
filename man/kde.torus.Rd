@@ -22,12 +22,9 @@ von Mises distribution. Default value is 25.}
 \code{kde.torus} returns a kde using independent bivariate von mises kernel.
 }
 \examples{
-\dontrun{
-data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
-               nrow = 2, byrow = TRUE)
+data <- ILE[1:200, 1:2]
 
 kde.torus(data)
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

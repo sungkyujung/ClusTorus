@@ -10,14 +10,12 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
 #' data <- matrix(c(pi/3, pi/3, pi/2,
 #'                  pi, pi/4, pi/2,
 #'                  0, pi/3, pi/6),
 #'                ncol = 3, byrow = TRUE)
 #'
 #' ang.pdist(data)
-#' }
 ang.pdist <- function(data){
   # assuming that data are n x d angular data on [0, 2pi)^d
   # computes L2 angular distance

@@ -16,13 +16,9 @@
 #'   "Clustering on the torus by conformal prediction"
 #' @export
 #' @examples
-#' \dontrun{
-#' data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
-#'                nrow = 2, byrow = TRUE)
-#'
+#' data <- ILE[1:200, 1:2]
 #' cp.torus.kde(data, eval.point = grid.torus(),
 #'              level = 0.05, concentration = 25)
-#' }
 
 cp.torus.kde <- function(data, eval.point = grid.torus(),
                          level= 0.1,
@@ -31,6 +27,7 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
   # level can be either a scalar or a vector, or even null.
   # if level is null, return kde at eval.point and at data points.
   # if level is a vector, return the above and Prediction set indices for each value of level.
+  if (!is.matrix(data)) {data <- as.matrix(data)}
 
   N <- nrow(eval.point)
   n <- nrow(data)

@@ -20,13 +20,9 @@ angular subtraction bewtween n x d toroidal data and
   a d dimensional vector.
 }
 \examples{
-\dontrun{
-data <- matrix(c(pi/3, pi/4, pi/2, pi/2),
-               ncol = 2, byrow = TRUE)
-mu <- c(pi/2, pi/2)
-
-tor.minus(data, mu)
-}
+data <- ILE[1:200, 1:2]
+Mu1 <- c(4.5, 3)
+tor.minus(data, Mu1)
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

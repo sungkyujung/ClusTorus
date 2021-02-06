@@ -17,14 +17,12 @@ ang.pdist(data)
 \code{ang.pdist} computes pairwise angular distances matrix.
 }
 \examples{
-\dontrun{
 data <- matrix(c(pi/3, pi/3, pi/2,
                  pi, pi/4, pi/2,
                  0, pi/3, pi/6),
                ncol = 3, byrow = TRUE)
 
 ang.pdist(data)
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

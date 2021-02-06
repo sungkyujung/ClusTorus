@@ -10,12 +10,10 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
 #' x <- c(pi/2, 0)
 #' y <- c(pi, pi/3)
 #'
 #' ang.minus(x, y)
-#' }
 ang.minus <- function(x,y){
   # x "minus" y if x and y are [0, 2*pi)
   x <- on.torus(x)

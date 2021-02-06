@@ -13,12 +13,9 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
-#' \dontrun{
-#' data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
-#'                nrow = 2, byrow = TRUE)
+#' data <- ILE[1:200, 1:2]
 #'
 #' kde.torus(data)
-#' }
 
 kde.torus <- function(data, eval.point = grid.torus(),
                       concentration = 25){
@@ -26,6 +23,7 @@ kde.torus <- function(data, eval.point = grid.torus(),
   # evaluated at eval.point, a N x 2 matrix of points on torus
   # returns N-vector of kdes evaluated at eval.point
   # used in cp.torus.kde()
+  if (!is.matrix(data)) {data <- as.matrix(data)}
 
   n <- nrow(data)
   N <- nrow(eval.point)

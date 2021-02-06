@@ -18,12 +18,10 @@ returns a scalar or a vector whose elements are in
 \deqn{x -  y := Arg(exp(i(x-y)))}
 }
 \examples{
-\dontrun{
 x <- c(pi/2, 0)
 y <- c(pi, pi/3)
 
 ang.minus(x, y)
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

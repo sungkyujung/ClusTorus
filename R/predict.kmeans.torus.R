@@ -15,35 +15,16 @@
 #'   "Clustering on the torus by conformal prediction"
 #' @seealso \code{\link[ClusTorus]{kmeans.torus}}
 #' @examples
-#' \dontrun{
-#' ## mean vectors
-#'
-#' Mu1 <- c(3, 0)
-#' Mu2 <- c(2, 2)
-#' Mu3 <- c(1, 4)
-#'
-#' ## covariance matrices
-#'
-#' Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-#' Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-#' Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-#'
-#' ## 2-dimensional multivariate normal data wrapped with toroidal space
-#' require(MASS)
-#' data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-#'               mvrnorm(n=50, Mu2, Sigma2),
-#'               mvrnorm(n=50, Mu3, Sigma3))
-#' data <- on.torus(data)
+#' data <- ILE[1:200, 1:2]
 #'
 #' split.id <- sample(1:2, nrow(data), replace = TRUE)
 #' data.train <- data[split.id == 1, ]
 #' data.test <- data[split.id == 2, ]
 #'
-#' kmeans <- kmeans.torus(data.train, centers = 3,
+#' kmeans <- kmeans.torus(data.train, centers = 2,
 #'              iter.max = 100, nstart = 1)
 #'
 #' pred.kmeans.torus(data.test, kmeans)
-#' }
 pred.kmeans.torus <- function(data, kmeans){
   data <- on.torus(data)
 

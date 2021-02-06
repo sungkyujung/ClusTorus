@@ -61,28 +61,9 @@ returns a \code{sphere.param} object,
   which are derived by k-means clustering on torus.
 }
 \examples{
-\dontrun{
-## mean vectors
-
-Mu1 <- c(3, 0)
-Mu2 <- c(2, 2)
-Mu3 <- c(1, 4)
-
-## covariance matrices
-
-Sigma1 <- matrix(c(0.1, 0.05, 0.05, 0.2), 2, 2)
-Sigma2 <- matrix(c(0.1, 0, 0, 0.01), 2, 2)
-Sigma3 <- matrix(c(0.01, 0, 0, 0.1), 2, 2)
-
-## 2-dimensional multivariate normal data wrapped with toroidal space
-require(MASS)
-data <- rbind(mvrnorm(n=70, Mu1, Sigma1),
-              mvrnorm(n=50, Mu2, Sigma2),
-              mvrnorm(n=50, Mu3, Sigma3))
-data <- on.torus(data)
+data <- ILE[1:200, 1:2]
 
 kmeans.kspheres(data, centers = 3, type = "general")
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

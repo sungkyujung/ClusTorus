@@ -30,13 +30,9 @@ If \code{level} is \code{NULL}, then return kde at \code{eval.point}
   (TRUE if in the set) using kernel density estimation as conformity score.
 }
 \examples{
-\dontrun{
-data <- matrix(c(pi/3, pi/3, pi/2, pi/4),
-               nrow = 2, byrow = TRUE)
-
+data <- ILE[1:200, 1:2]
 cp.torus.kde(data, eval.point = grid.torus(),
              level = 0.05, concentration = 25)
-}
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

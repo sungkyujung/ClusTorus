@@ -17,9 +17,8 @@ d-dimensional radian-unit angular data on \eqn{[0, 2\pi)^d}.
   to be on \eqn{[0, 2\pi)^d}.
 }
 \examples{
-\dontrun{
-x <- matrix(c(10/3 * pi, 5/4 * pi), ncol = 2, byrow = TRUE)
+data <- SARS_CoV_2$tbl[1:200, 1:2]
+data <- data * pi / 180
 
-on.torus(x)
-}
+on.torus(data)
 }
