@@ -5,11 +5,13 @@ This R package provides R functions to perform clustering multivariate angular d
 
 A part of the functions and data sets in this package was used to develop an unpublished paper "Clustering on the torus by conformal prediction" by Jung, Park and Kim. 
 
-CRAN released version is not available now.
-
-Install the development version from GitHub with:
+# Installation
 
 ```r
+# install from CRAN
+install.packages("ClusTorus")
+
+# development version is available via this code:
 # install.packages("devtools")
 devtools::install_github("sungkyujung/ClusTorus")
 ```
@@ -17,5 +19,3 @@ If you also want to install the vignettes, then use the code:
 ```r
 devtools::install_github("sungkyujung/ClusTorus", build_vignettes = TRUE)
 ```
-
-Your R version must be equal to, or larger than 3.6.0
