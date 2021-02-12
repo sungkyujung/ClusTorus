@@ -5,7 +5,7 @@ This R package provides R functions to perform clustering multivariate angular d
 
 A part of the functions and data sets in this package was used to develop an unpublished paper "Clustering on the torus by conformal prediction" by Jung, Park and Kim. 
 
-# Installation
+## Installation
 
 ```r
 # install from CRAN
