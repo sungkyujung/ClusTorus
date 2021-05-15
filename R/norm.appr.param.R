@@ -58,7 +58,7 @@ norm.appr.param <- function(parammat){
 
     ellipse.param$Sigmainv[[j]] <-
       matrix(c(kap1, rep(lamb, 2), kap2), nrow = 2)
-    ellipse.param$c[j] <- 2 * log(pi_j * (kap1 * kap2 - lamb^2))
+    ellipse.param$c[j] <- log(pi_j^2 * (kap1 * kap2 - lamb^2))
   }
 
   return(ellipse.param)
