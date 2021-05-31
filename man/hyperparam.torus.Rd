@@ -126,5 +126,7 @@ hyperparam.torus(data, icp.torus.objects, option = "risk")
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction"
+  "Clustering on the torus by conformal prediction",
+  Akaike (1974), "A new look at the statistical model identification",
+  Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
 }

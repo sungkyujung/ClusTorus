@@ -92,7 +92,5 @@ icp.torus <- icp.torus.score(data, method = "all",
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction",
-  Akaike (1974), "A new look at the statistical model identification",
-  Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
+  "Clustering on the torus by conformal prediction"
 }
