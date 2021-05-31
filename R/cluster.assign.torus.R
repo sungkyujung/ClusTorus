@@ -7,12 +7,13 @@
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
 #' @param icp.torus an object containing all values to compute the conformity
 #'   score, which will be constructed with \code{icp.torus.score}.
-#' @param level either a scalar or a vector, or even \code{NULL}. Default value
+#' @param level a scalar in \eqn{[0,1]}. Default value
 #'   is 0.1.
 #' @param intersection.plot boolean index. If \code{TRUE}, then plot the
 #'   intersections of given ellipsoids. Default is \code{TRUE}.
 #' @param coord a 2-vector for prespecifing the coordinates.
-#'   Default value is c(1, 2).
+#'   Default value is \code{NULL} and automatically generates all combinations
+#'   of coordinates.
 #' @return clustering assignment for data, given \code{icp.torus} objects
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2021),
@@ -31,7 +32,7 @@
 #'
 #' cluster.assign.torus(data, icp.torus, level)
 cluster.assign.torus <- function(data, icp.torus, level = 0.1, intersection.plot = TRUE,
-                                 coord = c(1, 2)){
+                                 coord = NULL){
   # clustering by connected components of ellipses
   #
   # return clustering assignment for data, given icp.torus objects.
@@ -44,6 +45,9 @@ cluster.assign.torus <- function(data, icp.torus, level = 0.1, intersection.plot
   # one: every point is assigned to clusters 1:K by either (1)-(4) above
   # two: outliers are assigned to cluster K+1.
   data <- on.torus(data)
+  if (is.null(coord)){
+    coord <- t(utils::combn(ncol(data), 2))
+  }
 
   n2 <- icp.torus$n2
   ialpha <- ifelse((n2 + 1) * level < 1, 1, floor((n2 + 1) * level))

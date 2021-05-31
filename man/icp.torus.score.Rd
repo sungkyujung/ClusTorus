@@ -57,7 +57,7 @@ Default is "kmeans".}
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
 
 \item{param}{the number of components (in \code{list} form) for mixture
-fitting and the concetnration parameter.}
+fitting and the concentration parameter.}
 
 \item{kmax}{the maximal number of kappa. If estimated kappa is
 larger than \code{kmax}, then put kappa as \code{kmax}.}
@@ -65,7 +65,7 @@ larger than \code{kmax}, then put kappa as \code{kmax}.}
 \item{THRESHOLD}{number for difference between updating and
 updated parameters. Default is 1e-10.}
 
-\item{maxiter}{the maximal number of iteration.}
+\item{maxiter}{the maximal number of iteration. Default is 200.}
 
 \item{verbose}{boolean index, which indicates whether display
 additional details as to what the algorithm is doing or
@@ -92,5 +92,7 @@ icp.torus <- icp.torus.score(data, method = "all",
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction"
+  "Clustering on the torus by conformal prediction",
+  Akaike (1974), "A new look at the statistical model identification",
+  Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
 }

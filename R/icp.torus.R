@@ -32,10 +32,10 @@
 #' @param additional.condition boolean index.
 #'   If \code{TRUE}, a singular matrix will be altered to the scaled identity.
 #' @param param the number of components (in \code{list} form) for mixture
-#'   fitting and the concetnration parameter.
+#'   fitting and the concentration parameter.
 #' @param THRESHOLD number for difference between updating and
 #'   updated parameters. Default is 1e-10.
-#' @param maxiter the maximal number of iteration.
+#' @param maxiter the maximal number of iteration. Default is 200.
 #' @param verbose boolean index, which indicates whether display
 #'   additional details as to what the algorithm is doing or
 #'   how many loops are done. Moreover, if \code{additional.condition} is
@@ -46,7 +46,9 @@
 #'   to compute the conformity score.
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction"
+#'   "Clustering on the torus by conformal prediction",
+#'   Akaike (1974), "A new look at the statistical model identification",
+#'   Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
 #' @examples
 #' \donttest{
 #' data <- ILE[1:200, 1:2]
@@ -81,7 +83,7 @@ icp.torus.score <- function(data, split.id = NULL,
   if (is.null(method)) {method <- "all" }
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
   if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "omogeneous-circular" }
-  if (is.null(init)){ type <- "kmeans" }
+  if (is.null(init)){ type <- "hierarchical" }
 
   data <- on.torus(data)
 
@@ -197,6 +199,8 @@ icp.torus.score <- function(data, split.id = NULL,
   # 3. kmeans to kspheres
   if (sum(method == c("kmeans", "all")) == 1){
     # implement extrinsic kmeans clustering for find the centers
+
+    icp.torus$kmeans$fittingmethod <- kmeansfitmethod
 
     # consider -R as ehat in von mises mixture approximation
     # where R is the notation in J. Shin (2019)

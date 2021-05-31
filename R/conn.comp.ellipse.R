@@ -55,7 +55,8 @@ conn.comp.ellipse <- function(ellipse.param, t){
 
   emptysetind <- vector(mode = "logical", length = J)
   for (j in 1:J){
-    ifelse( ellipse.param$c[j] - t <= 0 , emptysetind[j] <- TRUE, emptysetind[j] <- FALSE)
+    ifelse( (ellipse.param$c[j] - t <= 0) || (det(ellipse.param$Sigmainv[[j]]) >= 1e+10) ,
+            emptysetind[j] <- TRUE, emptysetind[j] <- FALSE)
   }
   Graph <- igraph::graph_from_adjacency_matrix(Adj.matrix)
   comp <- igraph::components(Graph)$membership

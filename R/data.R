@@ -68,3 +68,43 @@
 #' @seealso Description of the angluar information is from the 'value'
 #'   part of \code{\link[bio3d]{torsion.pdb}}.
 "ILE"
+
+#' toydata1: Labelled Data for 5 Clusters
+#'
+#' Artificially generated data on the 2 dimensional torus
+#'
+#' @format This \code{data.frame} contains the following components:
+#' \describe{
+#'   \item{\code{phi}}{column for the first angle}
+#'   \item{\code{psi}}{column for the second angle}
+#'   \item{\code{label}}{column for the clustering membership}
+#' }
+#' @details
+#'   toydata1 is an artificial data generated from a mixture of 5 clusters,
+#'   where three clusters are sampled from bivariate normal distributions
+#'   and the other two are each sampled from the uniform distribution on a rectangle.
+#'
+#' @references This simulation data is from S. Jung, K. Park, B. Kim (2022)
+#'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
+"toydata1"
+
+#' toydata2: Labelled Data for 3 Clusters
+#'
+#' Artificially generated data on the 2 dimensional torus
+#'
+#' @format This \code{data.frame} contains the following components:
+#' \describe{
+#'   \item{\code{phi}}{column for the first angle}
+#'   \item{\code{psi}}{column for the second angle}
+#'   \item{\code{label}}{column for the clustering membership}
+#' }
+#' @details
+#'   toydata2 is an artificial data generated from a mixture of 3 clusters,
+#'   where the first cluster is sampled from a spherical normal distribution,
+#'   the second cluster is from the uniform distribution on a large “L”-shaped region,
+#'   and the third cluster of size 50 is sampled from the uniform distribution on the
+#'   entire 2-dimensional torus.
+#'
+#' @references This simulation data is from S. Jung, K. Park, B. Kim (2022)
+#'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
+"toydata2"

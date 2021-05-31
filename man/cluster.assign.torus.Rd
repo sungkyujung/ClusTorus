@@ -9,7 +9,7 @@ cluster.assign.torus(
   icp.torus,
   level = 0.1,
   intersection.plot = TRUE,
-  coord = c(1, 2)
+  coord = NULL
 )
 }
 \arguments{
@@ -18,14 +18,15 @@ cluster.assign.torus(
 \item{icp.torus}{an object containing all values to compute the conformity
 score, which will be constructed with \code{icp.torus.score}.}
 
-\item{level}{either a scalar or a vector, or even \code{NULL}. Default value
+\item{level}{a scalar in \eqn{[0,1]}. Default value
 is 0.1.}
 
 \item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
 intersections of given ellipsoids. Default is \code{TRUE}.}
 
 \item{coord}{a 2-vector for prespecifing the coordinates.
-Default value is c(1, 2).}
+Default value is \code{NULL} and automatically generates all combinations
+of coordinates.}
 }
 \value{
 clustering assignment for data, given \code{icp.torus} objects

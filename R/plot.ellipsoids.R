@@ -34,12 +34,12 @@ ploting.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
   {stop("Invalid coordinates: coord must be a n x 2-dimensional numeric vector/matrix.")}
 
   d <- ncol(data)
+  angle.names <- colnames(data)
   if (max(coord) > d | min(coord) < 1)
   {stop("Invalid coordinates: Out of dimensionality.")}
 
   plot_list <- list()
 
-  g2 <- ggplot2::ggplot()
   J <- length(ellipse.param$c)
   theta <- seq(0, 2 * pi, length.out = 199)
   Z <- cbind(cos(theta), sin(theta))
@@ -49,34 +49,38 @@ ploting.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){
   shift[, 2] <- rep(c(0, 2 * pi, -2 * pi), each = 3)
 
   for (i in 1:nrow(coord)){
-    x <- coord[i, 1]
-    y <- coord[i, 2]
+    plot_list[[i]] <- local({
+      i <- i
+      ang1 <- coord[i, 1]
+      ang2 <- coord[i, 2]
+      g2 <- ggplot2::ggplot()
 
-    for (j in 1:J){
-      mu <- ellipse.param$mu[j, c(x, y)]
-      Sinv <- ellipse.param$Sigmainv[[j]][c(x, y), c(x, y)]
-      c.minus.t <- ellipse.param$c[j] - t
+      for (j in 1:J){
+        mu <- ellipse.param$mu[j, c(ang1, ang2)]
+        Sinv <- ellipse.param$Sigmainv[[j]][c(ang1, ang2), c(ang1, ang2)]
+        c.minus.t <- ellipse.param$c[j] - t
 
-      if (c.minus.t <= 0) {next}
+        if (c.minus.t <= 0) {next}
 
-      M <- eigen(Sinv/c.minus.t)
-      Mmhalf <- M$vectors %*% diag( sqrt(1/M$values) ) %*% t(M$vectors)
-      R <- Mmhalf %*% t(Z)
-      for( shift.id in 1:9){
-        RR <- R + mu + shift[shift.id,]
-        plot.data <- data.frame(angle1 = RR[1,], angle2 = RR[2,], value = 1)
-        g2 <- g2 + ggplot2::geom_polygon(ggplot2::aes(x = .data$angle1, y = .data$angle2),
-                                         color = "blue",alpha = 0.1,
-                                         data = plot.data)
+        M <- eigen(Sinv/c.minus.t)
+        Mmhalf <- M$vectors %*% diag( sqrt(1/M$values) ) %*% t(M$vectors)
+        R <- Mmhalf %*% t(Z)
+        for( shift.id in 1:9){
+          RR <- R + mu + shift[shift.id,]
+          plot.data <- data.frame(angle1 = RR[1,], angle2 = RR[2,], value = 1)
+          g2 <- g2 + ggplot2::geom_polygon(ggplot2::aes(x = .data$angle1, y = .data$angle2),
+                                           color = "blue",alpha = 0.1,
+                                           data = plot.data) +
+            ggplot2::xlab(angle.names[ang1]) + ggplot2::ylab(angle.names[ang2])
+        }
       }
-    }
-
-    plot_list[[i]] <- g2 + ggplot2::scale_x_continuous(breaks = c(0,1,2)*pi,
-                         labels = c("0","pi", "2pi")) +
-      ggplot2::scale_y_continuous(breaks = c(0,1,2)*pi,
-                         labels = c("0","pi","2pi")) +
-      ggplot2::coord_cartesian(xlim = c(0, 2*pi), ylim = c(0, 2*pi), expand = FALSE) +
-      ggplot2::geom_point(ggplot2::aes(x = data[, x], y = data[, y]))
+      g2 <- g2 + ggplot2::scale_x_continuous(breaks = c(0,1,2)*pi,
+                           labels = c("0","pi", "2pi")) +
+        ggplot2::scale_y_continuous(breaks = c(0,1,2)*pi,
+                           labels = c("0","pi","2pi")) +
+        ggplot2::coord_cartesian(xlim = c(0, 2*pi), ylim = c(0, 2*pi), expand = FALSE) +
+        ggplot2::geom_point(ggplot2::aes(x = data[, ang1], y = data[, ang2]))
+    })
   }
 
   plot_list
