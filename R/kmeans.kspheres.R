@@ -107,7 +107,7 @@ kmeans.kspheres <- function(data, centers = 10,
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
       sigma_j <- ifelse(kmeans.out$size[j] <= 1,
-                        1e-50, kmeans.out$withinss[j] / (nj * d))
+                        1e-6, kmeans.out$withinss[j] / (nj * d))
 
       sphere.param$c[j] <- 2 * log(pi_j) - d * log(sigma_j)
       sphere.param$Sigmainv[[j]] <- diag(d) / sigma_j
@@ -146,14 +146,14 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # vanishing the ellipsoid even if the additional condition is given.
       if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-        S <- THRESHOLD * diag(d)
+        S <- 1e-6 * diag(d)
       }
 
       sphere.param$Sigmainv[[j]] <- solve(S)
 
       # Step.5 -----------------------------------
       pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
-                     THRESHOLD, sum(kmeans.out$membership == j) / n)
+                     1e-6, sum(kmeans.out$membership == j) / n)
       # update c's
       sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
     }
@@ -199,14 +199,14 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # vanishing the ellipsoid even if the additional condition is given.
       if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-        S <- THRESHOLD * diag(d)
+        S <- 1e-6 * diag(d)
       }
 
       sphere.param$Sigmainv[[j]] <- solve(S)
 
       # Step.5 -----------------------------------
       pi_j <- ifelse(sum(kmeans.out$membership == j) == 0,
-                     THRESHOLD, sum(kmeans.out$membership == j) / n)
+                     1e-6, sum(kmeans.out$membership == j) / n)
 
       # update c's
       sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
@@ -288,13 +288,13 @@ kmeans.kspheres <- function(data, centers = 10,
 
         # vanishing the ellipsoid even if the additional condition is given.
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- THRESHOLD * diag(d)
+          S <- 1e-6 * diag(d)
         }
 
         sphere.param$Sigmainv[[j]] <- solve(S)
 
         # Step.5 -----------------------------------
-        pi_j <- ifelse(sum(wmat[, j]) == 0, THRESHOLD, sum(wmat[, j]) / n)
+        pi_j <- ifelse(sum(wmat[, j]) == 0, 1e-6, sum(wmat[, j]) / n)
 
         # update c's
         sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
