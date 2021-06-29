@@ -100,12 +100,13 @@ c_mix <- cluster.assign.torus(data, icp.torus.mix, level = alpha)
 c_kmeans <- cluster.assign.torus(data, icp.torus.kmeans, level = alpha)
 ```
 
-If there are some difficulties for evaluating such volume or for implementing your hyperparameter-choosing criterion, ClusTorus alternatively suggests the function `cluster.assign.number`, which generates the table of the number of modes/ellipsoids $J$ and the generated cluster number for given $J$. Moreover, for visual check, it also provides the visualization of the table. You may guess the true cluster number as the most frequent generated cluster number. For computational efficiency and the purpose of this function, it only provides method options of "kmeansfitmethod" of `icp.torus.score`. However, since this suggestion is not sophisticatedly(that is, mathematically) designed, you need to be careful to use this method. `cluster.assign.number` can be used as below:
+If there are some difficulties for evaluating such volume or for implementing your hyperparameter-choosing criterion, ClusTorus alternatively suggests the function `hyperparam.torus`, which suggests two hyperparameters $J$ and $\alpha$. For the choice of $J$, there are several options such as "elbow", "risk", "AIC" and "BIC". The option "elbow" is actually the volume based criterion, which is already described above. "risk" is the criterion based on the sum of the conformity scores which are evaluated under the inductive conformal prediction framework, that is, evaluated with the function `icp.torus.score`. "AIC" and "BIC" are well-known information criteria, proposed by Akaike (1974) and Schwarz (1978) respectively. These options can be designated with the argument `option`. The function `hyperparam.torus` generates `data.frame` objects for $J$ versus the evaluated criterion and for $\alpha$ versus the number of resultant clusters. It also generates `icp.torus` object based on the selected $J$.
 
 ```{r}
-cluster.num <- cluster.assign.number(data, Jmin = 3, Jmax = 35, method = "homogeneous-circular")
-cluster.num$plot
-cluster.num$cluster.number %>% group_by(Number) %>% count()
+output <- hyperparam.torus(data, icp.torus.objects = l, option = "risk")
+output$IC.results
+output$alpha.results
+output$optim$hyperparam
 ```
 
 
