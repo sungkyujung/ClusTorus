@@ -106,9 +106,13 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
     }
     split.id <- icp.torus.objects[[Jvec[1]]]$split.id
 
-    if(!is.null(icp.torus.objects[[Jvec[1]]]$mixture)) {method <- "mixture"}
-    else if(!is.null(icp.torus.objects[[Jvec[1]]]$kmeans)) {method <- "kmeans"}
-    else {method <- "kde"}
+    if(!is.null(icp.torus.objects[[Jvec[1]]]$mixture)) {
+      method <- "mixture"
+      mixturefitmethod <- icp.torus.objects[[Jvec[1]]]$mixture$fittingmethod
+    } else if(!is.null(icp.torus.objects[[Jvec[1]]]$kmeans)) {
+      method <- "kmeans"
+      kmeansfitmethod <- icp.torus.objects[[Jvec[1]]]$kmeans$fittingmethod
+    } else {method <- "kde"}
   }
 
   # d : dimension
@@ -255,7 +259,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
     Jhat <- results.J$Jhat
     icp.torus <- results.J$icp.torus
 
-    results.alpha <- hyperparam.alpha(icp.torus, alphavec = alphavec)
+    results.alpha <- hyperparam.alpha(icp.torus, alphavec = alphavec, alpha.lim = alpha.lim)
     output$alpha.results <- results.alpha$alpha.results
     alphahat <- results.alpha$alphahat
 

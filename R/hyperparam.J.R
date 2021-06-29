@@ -77,15 +77,25 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
       k <- d + 2
     } else {k <- (d + 1)*(d + 2)/2}
     for (j in Jvec){
+
+      # counting the singular matrices
+      nsingular <- 0
       if (is.null(icp.torus.objects[[j]])) {next}
-      # approximated likelihood for normal approximation
+      # approximated 2 * log-likelihood for normal approximation
       sum.conformity.scores <- sum(icp.torus.objects[[j]]$kmeans$score_sphere)
 
-      # evaluating log-likelihood for AIC/BIC
+      # evaluating 2 * log-likelihood for AIC/BIC
       if (option != "risk") {
         X1 <- data[split.id == 1, ]
+        n2 <- nrow(X1)
         ehatj <- ehat.eval(X1, icp.torus.objects[[j]]$kmeans$spherefit)
         sum.conformity.scores <- sum(do.call(pmax, as.data.frame(ehatj)))
+
+        for (jj in 1:j){
+          if(icp.torus.objects[[j]]$kmeans$spherefit$Sigmainv[[jj]][1, 1] == 1e+6){
+            nsingular <- nsingular + 1
+          }
+        }
       }
 
       # penalty for risk/AIC/BIC
@@ -93,7 +103,9 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
                         ifelse(option == "BIC", log(n2), 0))
 
       # evaluate risk/AIC/BIC
-      criterion <- - sum.conformity.scores / 2 + n2 * d * log(2 * pi) + k * j * penalty
+      # nsingular term corrects the conformity score for the singular matrices
+      criterion <- - sum.conformity.scores + 2 * n2 * d * log(2 * pi) + k * j * penalty +
+        ifelse(option != "risk", nsingular * (log(1e+6^(d - 2))), 0)
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
     }
 
@@ -120,6 +132,7 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
       # evaluating log-likelihood for AIC/BIC
       if (option != "risk") {
         X1 <- data[split.id == 1, ]
+        n2 <- nrow(X1)
         phat <- BAMBI::dvmsinmix(X1, kappa1 = icp.torus.objects[[j]]$mixture$fit$parammat[2, ],
                                  kappa2 = icp.torus.objects[[j]]$mixture$fit$parammat[3, ],
                                  kappa3 = icp.torus.objects[[j]]$mixture$fit$parammat[4, ],
@@ -134,7 +147,7 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
                         ifelse(option == "BIC", log(n2), 0))
 
       # evaluate risk/AIC/BIC
-      criterion <- - sum.conformity.scores + k * j * penalty
+      criterion <- - 2 * sum.conformity.scores + k * j * penalty
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
     }
 
