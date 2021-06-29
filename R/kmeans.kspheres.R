@@ -13,23 +13,23 @@
 #'   If "heterogeneous-circular", the radii of k-spheres may be different.
 #'   If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
 #'   If, "general", clustering with k-ellipsoids. The parameters to construct
-#'   the ellipses are optimized with generalized Lloyd algorithm, which is
-#'   modified for toroidal space. To see the detail, see the references.
-#'   Default is "homogeneous-circluar".
+#'   the ellipses are optimized with elliptical k-means algorithm, which is
+#'   modified for toroidal space. See references for the detail.
+#'   Default is "homogeneous-circular".
 #' @param init determine the initial parameter for option "general". Must be
 #'   "kmeans" or "hierarchical".
 #'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
 #'   method.
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
-#'   clustering method.
+#'   clustering method. Default is "hierarchical".
 #' @param additional.condition boolean index.
 #'   If \code{TRUE}, a singular matrix will be altered to the scalar identity.
 #' @param THRESHOLD number of threshold for difference between updating and
-#'   updated parameters.
-#' @param maxiter the maximal number of iteration.
+#'   updated parameters. Default is 1e-10.
+#' @param maxiter the maximal number of iteration. Default is 200.
 #' @param verbose boolean index, which indicates whether display
 #'   additional details as to what the algorithm is doing or
-#'   how many loops are done.
+#'   how many loops are done. Default is \code{TRUE}.
 #'
 #' @return returns a \code{sphere.param} object,
 #'   containing all values which determines the shape and
@@ -61,7 +61,7 @@ kmeans.kspheres <- function(data, centers = 10,
   # type determines kmeans-fitting method. If "identical", the radii of
   # shperes are the same, and if not, the radii may be different.
   if (is.null(type)){ type <- "homogeneous-circular" }
-  if (is.null(init)){ init <- "kmeans" }
+  if (is.null(init)){ init <- "hierarchical" }
 
   type <- match.arg(type)
   init <- match.arg(init)
@@ -90,7 +90,6 @@ kmeans.kspheres <- function(data, centers = 10,
   # sphere.param$mu1 <- centroid[, 1]
   # sphere.param$mu2 <- centroid[, 2]
   sphere.param$mu <- centroid
-
   sphere.param$c <- rep(0, J)
 
   for(j in 1:J){
@@ -278,7 +277,7 @@ kmeans.kspheres <- function(data, centers = 10,
         }
 
         # additional assumption to S : sphere
-        # only implemented when verbose == TRUE
+        # only implemented when additional.condition == TRUE
         if (additional.condition){
           if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
             cnt.singular <- cnt.singular + 1
@@ -316,6 +315,5 @@ kmeans.kspheres <- function(data, centers = 10,
       warning("Singular matrices are altered to the scaled idenity.")
     }
   }
-
   return(sphere.param)
 }

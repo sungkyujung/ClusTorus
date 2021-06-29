@@ -28,28 +28,28 @@ chosen as the initial centers.}
  If "heterogeneous-circular", the radii of k-spheres may be different.
  If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
  If, "general", clustering with k-ellipsoids. The parameters to construct
- the ellipses are optimized with generalized Lloyd algorithm, which is
- modified for toroidal space. To see the detail, see the references.
- Default is "homogeneous-circluar".}
+ the ellipses are optimized with elliptical k-means algorithm, which is
+ modified for toroidal space. See references for the detail.
+ Default is "homogeneous-circular".}
 
 \item{init}{determine the initial parameter for option "general". Must be
 "kmeans" or "hierarchical".
 If "kmeans", the initial parameters are obtained with extrinsic kmeans
 method.
 If "hierarchical", the initial parameters are obtained with hierarchical
-clustering method.}
+clustering method. Default is "hierarchical".}
 
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scalar identity.}
 
 \item{THRESHOLD}{number of threshold for difference between updating and
-updated parameters.}
+updated parameters. Default is 1e-10.}
 
-\item{maxiter}{the maximal number of iteration.}
+\item{maxiter}{the maximal number of iteration. Default is 200.}
 
 \item{verbose}{boolean index, which indicates whether display
 additional details as to what the algorithm is doing or
-how many loops are done.}
+how many loops are done. Default is \code{TRUE}.}
 }
 \value{
 returns a \code{sphere.param} object,

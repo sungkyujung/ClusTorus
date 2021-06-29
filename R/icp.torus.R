@@ -80,7 +80,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   if (is.null(method)) {method <- "all" }
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
-  if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "omogeneous-circular" }
+  if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "homogeneous-circular" }
   if (is.null(init)){ type <- "hierarchical" }
 
   data <- on.torus(data)
