@@ -28,7 +28,7 @@ returns a \code{cp} object with the boolean values which
 }
 \examples{
 \donttest{
-data <- ILE[1:200, 1:2]
+data <- toydata1[, 1:2]
 
 icp.torus <- icp.torus.score(data, method = "all",
                              mixturefitmethod = "general",

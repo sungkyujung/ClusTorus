@@ -28,11 +28,11 @@ returns a list object which contains a \code{data.frame} for
 }
 \examples{
 \donttest{
-data <- ILE[1:2000, ]
+data <- toydata2[, 1:2]
 n <- nrow(data)
 split.id <- rep(2, n)
 split.id[sample(n, floor(n/2))] <- 1
-Jvec <- 20:50
+Jvec <- 3:35
 icp.torus.objects <- list()
 for (j in Jvec){
   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",

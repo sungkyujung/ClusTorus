@@ -82,7 +82,7 @@ returns an \code{icp.torus} object, containing all values
 }
 \examples{
 \donttest{
-data <- ILE[1:200, 1:2]
+data <- toydata1[, 1:2]
 
 icp.torus <- icp.torus.score(data, method = "all",
                              mixturefitmethod = "general",

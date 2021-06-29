@@ -37,7 +37,7 @@ clustering assignment for data, given \code{icp.torus} objects
   \code{icp.torus.score}.
 }
 \examples{
-data <- ILE[1:200, 1:2]
+data <- toydata1[, 1:2]
 icp.torus <- icp.torus.score(data, method = "kmeans",
                              kmeansfitmethod = "general",
                              param = list(J = 4, concentration = 25))
