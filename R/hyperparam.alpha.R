@@ -18,7 +18,7 @@
 #'  \code{\link[ClusTorus]{icp.torus.score}}
 #' @examples
 #' \donttest{
-#' data <- ILE[1:2000, ]
+#' data <- toydata2[, 1:2]
 #' n <- nrow(data)
 #' split.id <- rep(2, n)
 #' split.id[sample(n, floor(n/2))] <- 1

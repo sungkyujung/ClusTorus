@@ -49,7 +49,7 @@
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \donttest{
-#' data <- ILE[1:200, 1:2]
+#' data <- toydata1[, 1:2]
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
 #'                              mixturefitmethod = "general",
@@ -242,7 +242,7 @@ icp.torus.score <- function(data, split.id = NULL,
 #'   "Clustering on the torus by conformal prediction"
 #' @examples
 #' \donttest{
-#' data <- ILE[1:200, 1:2]
+#' data <- toydata1[, 1:2]
 #'
 #' icp.torus <- icp.torus.score(data, method = "all",
 #'                              mixturefitmethod = "general",
