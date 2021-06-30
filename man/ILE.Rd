@@ -43,6 +43,6 @@ Data description is from \url{https://www.rcsb.org/ligand/ILE}.
 }
 \seealso{
 Description of the angluar information is from the 'value'
-  part of \code{\link[bio3d]{torsion.pdb}}.
+  part of \code{torsion.pdb} in the package \code{bio3d}.
 }
 \keyword{datasets}

@@ -48,6 +48,6 @@ Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
 }
 \seealso{
 Description of the angluar information is from the 'value'
-  part of \code{\link[bio3d]{torsion.pdb}}.
+  part of \code{torsion.pdb} in the package \code{bio3d}.
 }
 \keyword{datasets}

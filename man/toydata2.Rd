@@ -26,7 +26,7 @@ toydata2 is an artificial data generated from a mixture of 3 clusters,
   entire 2-dimensional torus.
 }
 \references{
-This simulation data is from S. Jung, K. Park, B. Kim (2022)
+This simulation data is from S. Jung, K. Park, B. Kim (2021)
   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
 }
 \keyword{datasets}

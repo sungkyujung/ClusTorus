@@ -24,7 +24,7 @@ toydata1 is an artificial data generated from a mixture of 5 clusters,
   and the other two are each sampled from the uniform distribution on a rectangle.
 }
 \references{
-This simulation data is from S. Jung, K. Park, B. Kim (2022)
+This simulation data is from S. Jung, K. Park, B. Kim (2021)
   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
 }
 \keyword{datasets}

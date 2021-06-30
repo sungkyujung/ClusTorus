@@ -33,7 +33,7 @@
 #'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
 #'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
 #' @seealso Description of the angluar information is from the 'value'
-#'   part of \code{\link[bio3d]{torsion.pdb}}.
+#'   part of \code{torsion.pdb} in the package \code{bio3d}.
 "SARS_CoV_2"
 
 #' ILE: Structure of the Isoleucine
@@ -66,7 +66,7 @@
 #'   Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
 #'
 #' @seealso Description of the angluar information is from the 'value'
-#'   part of \code{\link[bio3d]{torsion.pdb}}.
+#'   part of \code{torsion.pdb} in the package \code{bio3d}.
 "ILE"
 
 #' toydata1: Labelled Data for 5 Clusters
@@ -84,7 +84,7 @@
 #'   where three clusters are sampled from bivariate normal distributions
 #'   and the other two are each sampled from the uniform distribution on a rectangle.
 #'
-#' @references This simulation data is from S. Jung, K. Park, B. Kim (2022)
+#' @references This simulation data is from S. Jung, K. Park, B. Kim (2021)
 #'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
 "toydata1"
 
@@ -105,6 +105,6 @@
 #'   and the third cluster of size 50 is sampled from the uniform distribution on the
 #'   entire 2-dimensional torus.
 #'
-#' @references This simulation data is from S. Jung, K. Park, B. Kim (2022)
+#' @references This simulation data is from S. Jung, K. Park, B. Kim (2021)
 #'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
 "toydata2"
