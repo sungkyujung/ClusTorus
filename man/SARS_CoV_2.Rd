@@ -32,7 +32,7 @@ This list contains the following components:
 }
 \source{
 This data can be downloaded in
-  \url{http://www.rcsb.org/structure/6VXX}, or with using R package
+  \url{https://www.rcsb.org/structure/6VXX}, or with using R package
   \code{bio3d}.
 }
 \usage{

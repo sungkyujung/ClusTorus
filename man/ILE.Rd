@@ -31,7 +31,7 @@ ILE data is generated with collection of different pdb files. To select adequate
   \url{https://github.com/sungkyujung/ClusTorus}
 }
 \references{
-Data description is from \url{http://www.rcsb.org/ligand/ILE}.
+Data description is from \url{https://www.rcsb.org/ligand/ILE}.
 
   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
   "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306

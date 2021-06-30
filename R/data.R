@@ -27,7 +27,7 @@
 #'     angles.}
 #' }
 #' @source This data can be downloaded in
-#'   \url{http://www.rcsb.org/structure/6VXX}, or with using R package
+#'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
 #'   \code{bio3d}.
 #' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
 #'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
@@ -55,7 +55,7 @@
 #'   Then, we select ILE only angular data for each protein data. To see the detail code, visit
 #'   \url{https://github.com/sungkyujung/ClusTorus}
 #' @source This data is extracted from PISCES server \url{http://dunbrack.fccc.edu/pisces/}
-#' @references Data description is from \url{http://www.rcsb.org/ligand/ILE}.
+#' @references Data description is from \url{https://www.rcsb.org/ligand/ILE}.
 #'
 #'   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
 #'   "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306
