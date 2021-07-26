@@ -27,23 +27,28 @@ or \eqn{[-\pi, \pi)^d}}
 \item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
 and 2(evaluation)}
 
-\item{method}{a string one of "all", "kde", "mixture", and "kmeans"
-which determines the model for clustering. Default is "all". Moreover, if
-the dimension of data space is larger than 2, then automatically
-"kmeans".}
+\item{method}{A string. One of "all", "kde", "mixture", and "kmeans" which
+determines the model or estimation methods. If "kde", the model is based
+on the kernel density estimates. It supports the kde-based conformity score
+only. If "mixutre", the model is based on the von Mises mixture, fitted
+with an EM algorithm. It supports the von Mises mixture and its variants
+based conformity scores. If "kmeans", the model is also based on the von
+Mises mixture, but the parameter estimation is implemented with the
+elliptical k-means algorithm illustrated in Appendix. It supports the
+log-max-mixture based conformity score only. Default is "all". If the
+dimension of data space is greater than 2, only "kmeans" is supported.}
 
-\item{mixturefitmethod}{a string one of "circular", "axis-aligned", "general",
-and "Bayesian" which determines the fitting mixture method.("Bayesian" is not yet
-supported) Default is "axis-aligned".}
+\item{mixturefitmethod}{A string. One of "circular", "axis-aligned", and
+"general" which determines the constraint of the EM fitting. Default is
+"axis-aligned". This argument only works for \code{method = "mixture"}.}
 
-\item{kmeansfitmethod}{character which must be "homogeneous-circular",
-"heterogeneous-circular", or "general".
- If "homogeneous-circular", the radii of k-spheres are identical.
- If "heterogeneous-cricular", the radii of k-spheres may be different.
- If "ellipsoids", cluster with k-ellipsoids without optimized parameters.
- If, "general", clustering with k-ellipses. The parameters to construct
- the ellipses are optimized with generalized Lloyd algorithm, which is
- modified for toroidal space. To see the detail, see the references.}
+\item{kmeansfitmethod}{A string. One of "general", ellipsoids",
+"heterogeneous-circular" or "homogeneous-circular". If "general", the
+elliptical k-means algorithm with no constraint is used. If "ellipsoids",
+only the one iteration of the algorithm is used. If"heterogeneous-circular",
+the same as above, but with the constraint that ellipsoids must be spheres.
+If "homogeneous-circular", the same as above but the radii of the spheres are
+identical. This argument only works for method = "kmeans".}
 
 \item{init}{determine the initial parameter of "kmeans" method,
 for option "general". Must be "kmeans" or "hierarchical".
@@ -56,8 +61,8 @@ Default is "kmeans".}
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
 
-\item{param}{the number of components (in \code{list} form) for mixture
-fitting and the concentration parameter.}
+\item{param}{the number of components for mixture fitting and the concentration
+parameter in the form of \code{list(J=j, concentration=k)}.}
 
 \item{kmax}{the maximal number of kappa. If estimated kappa is
 larger than \code{kmax}, then put kappa as \code{kmax}.}

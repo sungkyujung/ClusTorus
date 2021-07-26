@@ -58,7 +58,7 @@ for (j in Jvec){
 ```
 
 
-The list `l` contains the `icp.torus` objects, which consist of fitted parameters for generating clusters, by varying the hypterparameter $J$. That is, These objects are optimally fitted ingredients for generating clusters for given $J$. By specifying the significance level, we can get the clusters. But, how to generate optimal clusters/conformal prediction sets? One may think that the hyperparameter which generates the cluster/prediction set of the minimum volume/area will be the optimum for given significance level. The other may think that we can choose the number of mixture components $J$ by using information criteria such as AIC or BIC. These approaches are implemented in the function `hyperparam.torus`; the main arguments of `hyperparam.torus` is `data`, `icp.torus.objects`, and `option`. Analogously, the argument `data` is for the data. `icp.torus.objects` is for the list object whose elements are `icp.torus` objects, such as the list `l` generated above. The argument `option`, which is the most important argument, is for the hyperparameter selection criterion. If `option = "elbow"`, then `hyperparam.torus` selects $J$ and $\alpha$ based on the volume based criterion mentioned above. If `option = "AIC"` or `option = "BIC"`, then `hyperparam.torus` selects $J$ based on the designated information criterion, and selects the most stable $\alpha$ in the sense of the number of generated clusters. If `option = "risk"`, then it chooses $J$ which minimizes the sum of the conformity scores and analogously choose the stable $\alpha$. We will use `option = "risk"` in this case, and the following codes show the criterion results($J$ versus the evaluated criterion), $\alpha$ results($\alpha$ versus the number of clusters), and chosen $J$ and $\alpha$.
+The list `l` contains the `icp.torus` objects, which consist of fitted parameters for generating clusters, by varying the hypterparameter $J$. That is, these objects are optimally fitted ingredients for generating clusters for given $J$. By specifying the significance level, we can get the clusters. But, how to generate optimal clusters/conformal prediction sets? One may think that the hyperparameter which generates the cluster/prediction set of the minimum volume/area will be the optimum for given significance level. The other may think that we can choose the number of mixture components $J$ by using information criteria such as AIC or BIC. These approaches are implemented in the function `hyperparam.torus`; the main arguments of `hyperparam.torus` is `data`, `icp.torus.objects`, and `option`. Analogously, the argument `data` is analogously for the data. `icp.torus.objects` is for the list object whose elements are `icp.torus` objects, such as the list `l` generated above. The argument `option`, which is the most important argument, is for the hyperparameter selection criterion. If `option = "elbow"`, then `hyperparam.torus` selects $J$ and $\alpha$ based on the volume based criterion as mentioned above. If `option = "AIC"` or `option = "BIC"`, then `hyperparam.torus` selects $J$ based on the designated information criterion, and selects the most stable $\alpha$ in the sense of the number of generated clusters. If `option = "risk"`, then it chooses $J$ which minimizes the sum of the conformity scores and analogously choose the stable $\alpha$. We will use `option = "risk"` in this case, and the following codes show the criterion results($J$ versus the evaluated criterion), $\alpha$ results($\alpha$ versus the number of clusters), and chosen $J$ and $\alpha$.
 
 ```{r}
 output <- hyperparam.torus(data[, 1:2], icp.torus.objects = l, option = "risk")
@@ -67,7 +67,7 @@ output$alpha.results
 output$optim$hyperparam
 ```
 
-`hyperparam.torus` also provides the selected model; that is, since `icp.torus.score` is the function for the model fitting, `hyperparam.torus` selects the model of the chosen $J$. `output$optim$icp.torus` is the model, and we will generate the resultant clusters with it.
+`hyperparam.torus` also provides the selected model; that is, since `icp.torus.score` is the function for the model fitting, `hyperparam.torus` selects the model of the chosen $J$. `output$optim$icp.torus` is the selected model, and we will generate the resulting clusters with it.
 
 ```{r}
 icp.torus.kmeans <- output$optim$icp.torus
@@ -95,10 +95,8 @@ g1 <- ggplot(data = result.dat.kmeans, aes(phi,psi, color = membership)) + geom_
 g1
 ```
 
-It seems that the resultant clusters perform well compared to the original cluster assignments. 
+It seems that the resulting clusters perform satisfactory compared to the original cluster assignments. 
 
 If you clearly follow the examples, it will be relatively easy to use the other options for the argument `method = "kde"` or `method = "mixture"` of the model fitting function `icp.torus.score`, and for the argument `option = "AIC"`, `option = "BIC"`, `option = "elbow"` of the hyperparameter selecting function `hyperparam.torus`. You may need the detailed manual. In the package manual, concrete examples and descriptions for the functions and their arguments are listed. Please check the package manual and see the details.
-
-
 
 
