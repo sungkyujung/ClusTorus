@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-ClusTorus is a package for clustering angular data, especially for protein structure data. ClusTorus provides various clustering algorithms designed with conformal prediction framework, which can deal with the outliers. The package suggests various methods for fitting the algorithms, and some of them will be introduced soon. The package also provides some simple tools for handling angluar data, such as angular subtraction, computing angular distance, etc. Now, check how to use ClusTorus briefly.
+ClusTorus is a package for clustering multivariate angular data, especially for protein structure data. ClusTorus provides various clustering algorithms designed with the conformal prediction framework, which can deal with the outliers. The package suggests various methods for fitting the algorithms, and some of them will be introduced soon. The package also provides some simple tools for handling angluar data, such as angular subtraction, computing angular distance, etc. Now, check how to use ClusTorus briefly.
 
 ## Data Loading and Handling
 
@@ -34,11 +34,11 @@ data %>% ggplot(aes(x = phi, y = psi, color = label)) + geom_point() +
   scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))+
   ggtitle('Data set 2 with true labels')
 ```
-ClusTorus provides the function `on.torus`, which converts the radian scale data to be on $[0, 2\pi)^d$, where $d$ means the number of dimension. In this case, the provided dataset is already converted to be on $[0, 2\pi)^d$, and thus we don't need to use `on.torus`.
+ClusTorus provides the function `on.torus`, which converts the radian scale data to be on $[0, 2\pi)^d$, where $d$ means the number of dimension. In this case, the provided dataset is already on $[0, 2\pi)^d$, and thus we don't need to use `on.torus`.
 
 ## Clustering with Various Options
 
-Now, we are ready to implement clustering algorithms to the data. ClusTorus provides various options for clustering/constructing prediction set, but we will provide only the case "kmeans - general". On the other hand, we need to choose hyperparameters: the number of modes or ellipsoids $J$ and the significance level $\alpha$. Before choosing the hyperparameter, we will implement the model fitting function `icp.torus.score` with various hyperparameter options, first.
+Now, we are ready to implement clustering algorithms to the data. ClusTorus provides various options for clustering/constructing prediction set, but we will provide only the case for "kmeans - general". We need to choose hyperparameters: the number of modes or ellipsoids $J$ and the significance level $\alpha$. Before choosing the hyperparameter, we will implement the model fitting function `icp.torus.score` with various hyperparameter options, first.
 
 ```{r, warning = FALSE}
 set.seed(2021)
