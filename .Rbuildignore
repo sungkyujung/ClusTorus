@@ -9,3 +9,5 @@
 ^\.Rhistory$
 ^\.RData$
 ^README\.md$
+^doc$
+^Meta$

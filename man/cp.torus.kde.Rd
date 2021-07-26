@@ -7,10 +7,10 @@
 cp.torus.kde(data, eval.point = grid.torus(), level = 0.1, concentration = 25)
 }
 \arguments{
-\item{data}{n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}}
+\item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
 
-\item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
-\code{grid.torus}.}
+\item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^d}. Default input is
+\code{NULL}, which represents the fine grid points on \eqn{[0, 2\pi)^d}.}
 
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
 is 0.1.}
