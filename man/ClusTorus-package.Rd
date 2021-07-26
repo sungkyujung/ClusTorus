@@ -4,7 +4,7 @@
 \name{ClusTorus-package}
 \alias{ClusTorus}
 \alias{ClusTorus-package}
-\title{ClusTorus: Clustering on the Torus by Conformal Prediction}
+\title{ClusTorus: Prediction and Clustering on the Torus by Conformal Prediction}
 \description{
 Provides various tools of for clustering multivariate angular 
   data on the torus. The package provides angular 

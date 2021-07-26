@@ -1,6 +1,6 @@
 Package: ClusTorus
 Type: Package
-Title: Clustering on the Torus by Conformal Prediction
+Title: Prediction and Clustering on the Torus by Conformal Prediction
 Description: Provides various tools of for clustering multivariate angular 
   data on the torus. The package provides angular 
   adaptations of usual clustering methods such as the k-means 
