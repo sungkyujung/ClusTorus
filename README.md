@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/ClusTorus)](https://cran.r-project.org/package=ClusTorus)
 <!-- badges: end -->
-Clustering on The Torus by Conformal Prediction
+Prediction and Clustering on The Torus by Conformal Prediction
 
 This R package provides R functions to perform clustering multivariate angular data of any dimension on general tori. 
 
