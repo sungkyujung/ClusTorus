@@ -9,7 +9,7 @@ EMsinvMmix(
   J = 4,
   parammat = EMsinvMmix.init(data, J),
   THRESHOLD = 1e-10,
-  maxiter = 200,
+  maxiter = 100,
   type = c("circular", "axis-aligned", "general"),
   kmax = 500,
   verbose = TRUE

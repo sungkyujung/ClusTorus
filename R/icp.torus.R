@@ -5,18 +5,19 @@
 #'
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #'   or \eqn{[-\pi, \pi)^d}
-#' @param split.id a n-dimensinal vector consisting of values 1 (estimation)
+#' @param split.id a n-dimensional vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
-#' @param method A string. One of "all", "kde", "mixture", and "kmeans" which
+#' @param method A string. One of "kde", "mixture", and "kmeans" which
 #'   determines the model or estimation methods. If "kde", the model is based
 #'   on the kernel density estimates. It supports the kde-based conformity score
-#'   only. If "mixutre", the model is based on the von Mises mixture, fitted
+#'   only. If "mixture", the model is based on the von Mises mixture, fitted
 #'   with an EM algorithm. It supports the von Mises mixture and its variants
 #'   based conformity scores. If "kmeans", the model is also based on the von
 #'   Mises mixture, but the parameter estimation is implemented with the
 #'   elliptical k-means algorithm illustrated in Appendix. It supports the
-#'   log-max-mixture based conformity score only. Default is "all". If the
+#'   log-max-mixture based conformity score only. If the
 #'   dimension of data space is greater than 2, only "kmeans" is supported.
+#'   Default is \code{method = "kmeans"}.
 #' @param mixturefitmethod A string. One of "circular", "axis-aligned", and
 #'   "general" which determines the constraint of the EM fitting. Default is
 #'   "axis-aligned". This argument only works for \code{method = "mixture"}.
@@ -36,7 +37,10 @@
 #'   Default is "kmeans".
 #' @param additional.condition boolean index.
 #'   If \code{TRUE}, a singular matrix will be altered to the scaled identity.
-#' @param param the number of components for mixture fitting and the concentration
+#' @param J the number of components for \code{method = c("mixture", "kmeans")}.
+#'   Default is \code{J = 4}.
+#' @param concentration the concentration parameter for \code{method = "kde"}.
+#'   Default is \code{concentration = 25}.
 #'   parameter in the form of \code{list(J=j, concentration=k)}.
 #' @param THRESHOLD number for difference between updating and
 #'   updated parameters. Default is 1e-10.
@@ -56,21 +60,26 @@
 #' \donttest{
 #' data <- toydata1[, 1:2]
 #'
-#' icp.torus <- icp.torus.score(data, method = "all",
+#' icp.torus <- icp.torus.score(data, method = "kmeans",
 #'                              mixturefitmethod = "general",
 #'                              kmeansfitmethod = "general",
-#'                              param = list(J = 4, concentration = 25))
+#'                              J = 4, concentration = 25)
 #' }
 icp.torus.score <- function(data, split.id = NULL,
-                            method = c("all", "kde", "mixture", "kmeans"),
+                            method = c("kde", "mixture", "kmeans"),
                             mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
                             kmeansfitmethod = c("homogeneous-circular",
                                                 "heterogeneous-circular",
                                                 "ellipsoids",
                                                 "general"),
                             init = c("kmeans", "hierarchical"),
+                            iter.max = 10, nstart = 1,
+                            kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
+                                                 "MacQueen"), trace=FALSE,
+                            hclust.method = "complete",
+                            members = NULL,
                             additional.condition = TRUE,
-                            param = list(J = 4, concentration = 25), kmax = 500,
+                            J = 4, concentration = 25, kmax = 500,
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE){
   # returns an icp.torus object, containing all values to compute the conformity score.
@@ -83,7 +92,7 @@ icp.torus.score <- function(data, split.id = NULL,
   #       and the concentration parameter.
   if (!is.matrix(data)) {data <- as.matrix(data)}
 
-  if (is.null(method)) {method <- "all" }
+  if (is.null(method)) {method <- "kmeans" }
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
   if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "homogeneous-circular" }
   if (is.null(init)){ type <- "hierarchical" }
@@ -91,7 +100,7 @@ icp.torus.score <- function(data, split.id = NULL,
   data <- on.torus(data)
 
   method <- match.arg(method)
-  mixfitmethod <- match.arg(mixturefitmethod)
+  mixturefitmethod <- match.arg(mixturefitmethod)
   kmeansfitmethod <- match.arg(kmeansfitmethod)
 
   if (ncol(data) > 2 && method != "kmeans"){
@@ -111,35 +120,34 @@ icp.torus.score <- function(data, split.id = NULL,
   n2 <- nrow(X2)
 
   # Prepare output
-  icp.torus <- list(kde = NULL, mixture = NULL, kmeans = NULL,
-                    n2 = n2, split.id = split.id, d = ncol(data))
+  icp.torus <- list(n2 = n2, split.id = split.id, d = ncol(data))
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
   # 1. kde
-  if (sum(method == c("kde", "all")) == 1){
-
-    phat <- kde.torus(X1, X2, concentration = param$concentration)
+  if (method == "kde"){
+    icp.torus$method <- "kde"
+    phat <- kde.torus(X1, X2, concentration = concentration)
     # phat.X2.sorted <- sort(phat)
 
-    icp.torus$kde$concentration <- param$concentration
-    icp.torus$kde$score <- sort(phat)
-    icp.torus$kde$X1 <- X1
+    icp.torus$concentration <- concentration
+    icp.torus$score <- sort(phat)
+    icp.torus$X1 <- X1
 
   }
 
   # 2. mixture fitting
-  if (sum(method == c("mixture", "all")) == 1){
-
-    icp.torus$mixture$fittingmethod <- mixturefitmethod
+  if (method == "mixture"){
+    icp.torus$method <- "mixture"
+    icp.torus$fittingmethod <- mixturefitmethod
 
     if (mixturefitmethod != "Bayesian"){
-      vm2mixfit <- EMsinvMmix(X1, J = param$J, parammat = EMsinvMmix.init(data, param$J),
+      vm2mixfit <- EMsinvMmix(X1, J = J, parammat = EMsinvMmix.init(data, J),
                               THRESHOLD = THRESHOLD, maxiter = maxiter,
                               type = mixturefitmethod,
                               kmax = kmax,
                               verbose = verbose)
-      icp.torus$mixture$fit <- vm2mixfit
+      icp.torus$fit <- vm2mixfit
     } else {
       #vm2mixfit ## USE BAMBI
       stop("Bayesian not yet implemented")
@@ -152,7 +160,7 @@ icp.torus.score <- function(data, split.id = NULL,
                              mu1 = vm2mixfit$parammat[5, ],
                              mu2 = vm2mixfit$parammat[6, ],
                              pmix = vm2mixfit$parammat[1, ], log = FALSE)
-    icp.torus$mixture$score <- sort(phat)
+    icp.torus$score <- sort(phat)
 
 
     # compute phat_max(X2)
@@ -168,7 +176,7 @@ icp.torus.score <- function(data, split.id = NULL,
     #   ) * vm2mixfit$parammat[1,j]
     # }
     # icp.torus$mixture$score_max <- sort(apply(phatj, 1, max))
-    icp.torus$mixture$score_max <- sort(do.call(pmax, as.data.frame(phatj)))
+    icp.torus$score_max <- sort(do.call(pmax, as.data.frame(phatj)))
 
     # compute parameters for ellipses and phat_e(X2)
     ellipse.param <- norm.appr.param(vm2mixfit$parammat)
@@ -184,7 +192,7 @@ icp.torus.score <- function(data, split.id = NULL,
     #     matrix(c(kap1, rep(lamb,2), kap2), nrow = 2)
     #   ellipse.param$c[j] <- 2*log(pi_j * (kap1*kap2 - lamb^2) )
     # }
-    icp.torus$mixture$ellipsefit <- ellipse.param
+    icp.torus$ellipsefit <- ellipse.param
 
     ehatj <- ehat.eval(X2, ellipse.param)
     # ehatj <- matrix(0,nrow = n2,ncol = param$J)
@@ -195,34 +203,37 @@ icp.torus.score <- function(data, split.id = NULL,
     #   ehatj[,j] <- -apply(cbind(A,z), 1, function(a){a[1]*a[3]+a[2]*a[4]}) + ellipse.param$c[j]
     # }
     # icp.torus$mixture$score_ellipse <- sort(apply(ehatj, 1, max))
-    icp.torus$mixture$score_ellipse <- sort(do.call(pmax, as.data.frame(ehatj)))
+    icp.torus$score_ellipse <- sort(do.call(pmax, as.data.frame(ehatj)))
 
   }
 
   # 3. kmeans to kspheres
-  if (sum(method == c("kmeans", "all")) == 1){
+  if (method == "kmeans"){
     # implement extrinsic kmeans clustering for find the centers
-
-    icp.torus$kmeans$fittingmethod <- kmeansfitmethod
+    icp.torus$method <- "kmeans"
+    icp.torus$fittingmethod <- kmeansfitmethod
 
     # consider -R as ehat in von mises mixture approximation
     # where R is the notation in J. Shin (2019)
-    sphere.param <- kmeans.kspheres(X1, centers = param$J,
+    ellipse.param <- kmeans.kspheres(X1, centers = J,
                                     type = kmeansfitmethod,
                                     init = init,
+                                    iter.max = iter.max, nstart = nstart,
+                                    kmeans.algorithm = kmeans.algorithm, trace = trace,
+                                    hclust.method = hclust.method,
+                                    members = members,
                                     additional.condition = additional.condition,
                                     THRESHOLD = THRESHOLD, maxiter = maxiter,
                                     verbose = verbose)
 
-    icp.torus$kmeans$spherefit <- sphere.param
+    icp.torus$ellipsefit <- ellipse.param
 
-    spherej <- ehat.eval(X2, sphere.param)
+    ellipsej <- ehat.eval(X2, ellipse.param)
     # icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
-    icp.torus$kmeans$score_sphere <- sort(do.call(pmax, as.data.frame(spherej)))
+    icp.torus$score_ellipse <- sort(do.call(pmax, as.data.frame(ellipsej)))
 
   }
-
-  return(icp.torus)
+  return(structure(icp.torus, class = "icp.torus"))
 
 }
 
@@ -249,33 +260,29 @@ icp.torus.score <- function(data, split.id = NULL,
 #' \donttest{
 #' data <- toydata1[, 1:2]
 #'
-#' icp.torus <- icp.torus.score(data, method = "all",
+#' icp.torus <- icp.torus.score(data, method = "kmeans",
 #'                              mixturefitmethod = "general",
-#'                              param = list(J = 4, concentration = 25))
+#'                              J = 4, concentration = 25)
 #'
 #' icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 #' }
-
 icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
   # evaluates Chat_kde, Chat_mix, Chat_max, Chat_e.
+  stopifnot(class(icp.torus) == "icp.torus")
   N <- nrow(eval.point)
 
   n2 <- icp.torus$n2
   nalpha <- length(level)
-  cp <- list(Chat_kde = NULL, Chat_mix = NULL, Chat_max = NULL, Chat_e = NULL,
-             Chat_kmeans = NULL,
-             level = level,
-             eval.point = eval.point)
+  cp <- list(level = level, eval.point = eval.point)
 
   ialpha <- floor((n2 + 1) * level)
 
-
-  if(!is.null(icp.torus$kde)){
-
+  if(icp.torus$method == "kde"){
+    cp$method <- "kde"
     Chat_kde <- matrix(0, nrow = N, ncol = nalpha)
     colnames(Chat_kde) <- level
 
-    phat.grid <- kde.torus(icp.torus$kde$X1, eval.point, concentration = icp.torus$kde$concentration)
+    phat.grid <- kde.torus(icp.torus$X1, eval.point, concentration = icp.torus$concentration)
 
     # for (i in 1:nalpha){
     #   ialpha <- floor((n2 + 1) * level[i])
@@ -283,21 +290,22 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     #   # indices for inclusion in Chat_kde
     #   Chat_kde[, i] <- phat.grid >= icp.torus$kde$score[ialpha]
     # }
-    scores_kde <- icp.torus$kde$score[ialpha]
+    scores_kde <- icp.torus$score[ialpha]
     Chat_kde <- sweep(replicate(nalpha, phat.grid), 2, scores_kde, ">=")
 
     cp$Chat_kde <- Chat_kde
   }
 
-  if(!is.null(icp.torus$mixture)){
+  if(icp.torus$method == "mixture"){
+    cp$method <- "mixture"
     Chat_mix <- matrix(0, nrow = N, ncol = nalpha)
     colnames(Chat_mix) <- level
 
     Chat_max <- Chat_mix
     Chat_e <- Chat_mix
 
-    phatj <- phat.eval(eval.point, icp.torus$mixture$fit$parammat)
-    ehatj <- ehat.eval(eval.point, icp.torus$mixture$ellipsefit)
+    phatj <- phat.eval(eval.point, icp.torus$fit$parammat)
+    ehatj <- ehat.eval(eval.point, icp.torus$ellipsefit)
     phat_mix <- rowSums(phatj)
     # phat_max <- apply(phatj, 1, max)
     # ehat <- apply(ehatj, 1, max)
@@ -312,9 +320,9 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     #   Chat_max[, i] <- phat_max >= icp.torus$mixture$score_max[ialpha]
     #   Chat_e[, i]   <-    ehat  >= icp.torus$mixture$score_ellipse[ialpha]
     # }
-    scores_mix <- icp.torus$mixture$score[ialpha]
-    scores_max <- icp.torus$mixture$score_max[ialpha]
-    scores_e <- icp.torus$mixture$score_ellipse[ialpha]
+    scores_mix <- icp.torus$score[ialpha]
+    scores_max <- icp.torus$score_max[ialpha]
+    scores_e <- icp.torus$score_ellipse[ialpha]
 
     Chat_mix <- sweep(replicate(nalpha, phat_mix), 2, scores_mix, ">=")
     Chat_max <- sweep(replicate(nalpha, phat_max), 2, scores_max, ">=")
@@ -325,24 +333,23 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     cp$Chat_e <- Chat_e
   }
 
-  if(!is.null(icp.torus$kmeans)){
+  if(icp.torus$method == "kmeans"){
+    cp$method <- "kmeans"
     Chat_kmeans <- matrix(0, nrow = N, ncol = nalpha)
 
-    spherej <- ehat.eval(eval.point, icp.torus$kmeans$spherefit)
-    sphere <- do.call(pmax, as.data.frame(spherej))
+    ellipsej <- ehat.eval(eval.point, icp.torus$ellipsefit)
+    ellipse <- do.call(pmax, as.data.frame(ellipsej))
 
     # for (i in 1:nalpha){
     #   ialpha <- floor((n2 + 1) * level[i])
     #   Chat_kmeans[, i] <- sphere >= icp.torus$kmeans$score_sphere[ialpha]
     # }
-    scores_sphere <- icp.torus$kmeans$score_sphere[ialpha]
-    Chat_kmeans <- sweep(replicate(nalpha, sphere), 2, scores_sphere, ">=")
+    scores_ellipse <- icp.torus$score_ellipse[ialpha]
+    Chat_kmeans <- sweep(replicate(nalpha, ellipse), 2, scores_ellipse, ">=")
 
     cp$Chat_kmeans <- Chat_kmeans
 
   }
 
-  return(cp)
-
-
+  return(structure(cp, class = "icp.torus.eval"))
 }

@@ -80,7 +80,7 @@
 #' for (j in Jvec){
 #'   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",
 #'                                             kmeansfitmethod = "ge", init = "h",
-#'                                             param = list(J = j), verbose = TRUE)
+#'                                             J = j, verbose = TRUE)
 #' }
 #' hyperparam.torus(data, icp.torus.objects, option = "risk")
 #' }
@@ -93,6 +93,11 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
                              kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular",
                                                  "ellipsoids", "general"),
                              init = c("kmeans", "hierarchical"),
+                             iter.max = 10, nstart = 1,
+                             kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
+                                                  "MacQueen"), trace=FALSE,
+                             hclust.method = "complete",
+                             members = NULL,
                              eval.point = NULL, additional.condition = TRUE,
                              kmax = 500, THRESHOLD = 1e-10, maxiter = 200,
                              verbose = FALSE){
@@ -110,12 +115,12 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
     }
     split.id <- icp.torus.objects[[Jvec[1]]]$split.id
 
-    if(!is.null(icp.torus.objects[[Jvec[1]]]$mixture)) {
+    if(icp.torus.objects[[Jvec[1]]]$method == "mixture") {
       method <- "mixture"
-      mixturefitmethod <- icp.torus.objects[[Jvec[1]]]$mixture$fittingmethod
-    } else if(!is.null(icp.torus.objects[[Jvec[1]]]$kmeans)) {
+      mixturefitmethod <- icp.torus.objects[[Jvec[1]]]$fittingmethod
+    } else if(icp.torus.objects[[Jvec[1]]]$method == "kmeans") {
       method <- "kmeans"
-      kmeansfitmethod <- icp.torus.objects[[Jvec[1]]]$kmeans$fittingmethod
+      kmeansfitmethod <- icp.torus.objects[[Jvec[1]]]$fittingmethod
     } else {method <- "kde"}
   }
 
@@ -165,8 +170,12 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
                                                   mixturefitmethod = mixturefitmethod,
                                                   kmeansfitmethod = kmeansfitmethod,
                                                   init = init,
+                                                  iter.max = iter.max, nstart = nstart,
+                                                  kmeans.algorithm = kmeans.algorithm, trace=trace,
+                                                  hclust.method = hclust.method,
+                                                  members = members,
                                                   additional.condition = additional.condition,
-                                                  param = list(J = j), THRESHOLD = THRESHOLD,
+                                                  J = j, THRESHOLD = THRESHOLD,
                                                   maxiter = maxiter, verbose = verbose)
       }
       n2 <- icp.torus.objects[[j]]$n2
@@ -174,7 +183,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
       # preparing conformity scores for different concentrations
       for (k in kvec){
         icp.torus.objects[[k]] <- icp.torus.score(data, split.id = split.id, method = method,
-                                                  param = list(concentration = k))
+                                                  concentration = k)
       }
       n2 <- icp.torus.objects[[k]]$n2
     }
@@ -185,7 +194,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
 
   # criterion based on elbow -----------------------------------
   if (option == "elbow"){
-    if (d > 3) {warning("Highly drepreciated for high dimensional case (d >= 3).", immediate. = TRUE)}
+    if (d > 3) {warning("Highly depreciated for high dimensional case (d >= 3).", immediate. = TRUE)}
 
     # generating grid points if eval.point == NULL : sparse when d is large.
     grid.size <- ifelse(d == 2, 100, floor(10^(6/d)))
@@ -209,7 +218,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
       output$results <- out
       output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
       output$optim$hyperparam <- unlist(out[out.index, 1:2])
-      return(output)
+      return(structure(output, class = "hyperparam.torus"))
 
       # 2. mixture ----------------------------------------------------------------
     } else if (method == "mixture") {
@@ -229,7 +238,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
       output$results <- out
       output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
       output$optim$hyperparam <- unlist(out[out.index, 1:2])
-      return(output)
+      return(structure(output, class = "hyperparam.torus"))
     }
     # 3. kde --------------------------------------------------
     else {
@@ -249,7 +258,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
       output$results <- out
       output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
       output$optim$hyperparam <- unlist(out[out.index, 1:2])
-      return(output)
+      return(structure(output, class = "hyperparam.torus"))
     }
   }
 
@@ -273,6 +282,6 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
     output$optim$hyperparam <- hyperparam
     output$optim$icp.torus <- icp.torus
 
-    return(output)
+    return(structure(output, class = "hyperparam.torus"))
   }
 }

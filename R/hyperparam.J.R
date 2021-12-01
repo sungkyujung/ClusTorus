@@ -28,8 +28,8 @@
 #' icp.torus.objects <- list()
 #' for (j in Jvec){
 #'   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",
-#'                                             kmeansfitmethod = "ge", init = "h",
-#'                                             param = list(J = j), verbose = TRUE)
+#'                                             kmeansfitmethod = "general", init = "h",
+#'                                             J = j, verbose = TRUE)
 #' }
 #' hyperparam.J(data, icp.torus.objects, option = "risk")
 #' }
@@ -38,33 +38,40 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
 
   if (is.null(data)) {stop("data must be input.")}
   if (is.null(icp.torus.objects)) {stop("icp.torus.objects must be input.")}
-
+  if (!is.list(icp.torus.objects)) {stop("icp.torus.objects must be a list.")}
   if (!is.matrix(data)) {data <- as.matrix(data)}
   data <- on.torus(data)
 
   option <- match.arg(option)
 
-  Jvec <- c()
-  for (j in 1:length(icp.torus.objects)){
-    if (!is.null(icp.torus.objects[[j]])){
-      Jvec <- c(Jvec, j)
+  Ivec <- c()
+  for (i in 1:length(icp.torus.objects)){
+    if (!is.null(icp.torus.objects[[i]])){
+      if (class(icp.torus.objects[[i]]) != "icp.torus") {
+        stop("invalid input: the elements of icp.torus.objects must be icp.torus objects.")
+      }
+      Ivec <- c(Ivec, i)
     }
   }
-  split.id <- icp.torus.objects[[Jvec[1]]]$split.id
+  split.id <- icp.torus.objects[[Ivec[1]]]$split.id
   d <- ncol(data)
-  n2 <- icp.torus.objects[[Jvec[1]]]$n2
+  n2 <- icp.torus.objects[[Ivec[1]]]$n2
 
   # option default is risk.
   if (is.null(option)) { option <- "risk" }
 
-  if(!is.null(icp.torus.objects[[Jvec[1]]]$mixture)) {
+  if(icp.torus.objects[[Ivec[1]]]$method == "mixture") {
     method <- "mixture"
-    mixturefitmethod <- icp.torus.objects[[Jvec[1]]]$mixture$fittingmethod
-  } else if(!is.null(icp.torus.objects[[Jvec[1]]]$kmeans)) {
+    mixturefitmethod <- icp.torus.objects[[Ivec[1]]]$fittingmethod
+  } else if(icp.torus.objects[[Ivec[1]]]$method == "kmeans") {
     method <- "kmeans"
-    kmeansfitmethod <- icp.torus.objects[[Jvec[1]]]$kmeans$fittingmethod
+    kmeansfitmethod <- icp.torus.objects[[Ivec[1]]]$fittingmethod
   } else {stop("method kde is not supported.")}
 
+  for (i in Ivec){
+    if (method == icp.torus.objects[[i]]$method) {next}
+    else {stop("icp.torus objects must share the same method.")}
+  }
   output <- list()
   IC <- data.frame()
   # 1. kmeans -----------------------------------------------------
@@ -76,26 +83,17 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
     } else if (kmeansfitmethod == "heterogeneous-circular"){
       k <- d + 2
     } else {k <- (d + 1)*(d + 2)/2}
-    for (j in Jvec){
+    for (i in Ivec){
+      j <- length(icp.torus.objects[[i]]$ellipsefit$c)
 
-      # counting the singular matrices
-      nsingular <- 0
-      if (is.null(icp.torus.objects[[j]])) {next}
+      if (is.null(icp.torus.objects[[i]])) {next}
       # approximated 2 * log-likelihood for normal approximation
-      sum.conformity.scores <- sum(icp.torus.objects[[j]]$kmeans$score_sphere)
+      sum.conformity.scores <- sum(icp.torus.objects[[i]]$score_ellipse) + n2 * d * log(2 * pi)
 
       # evaluating 2 * log-likelihood for AIC/BIC
       if (option != "risk") {
-        X1 <- data[split.id == 1, ]
-        n2 <- nrow(X1)
-        ehatj <- ehat.eval(X1, icp.torus.objects[[j]]$kmeans$spherefit)
-        sum.conformity.scores <- sum(do.call(pmax, as.data.frame(ehatj)))
-
-        for (jj in 1:j){
-          if(icp.torus.objects[[j]]$kmeans$spherefit$Sigmainv[[jj]][1, 1] == 1e+6){
-            nsingular <- nsingular + 1
-          }
-        }
+        sum.conformity.scores <- 2 * icp.torus.objects[[i]]$ellipsefit$loglkhd
+        nsingular <- length(icp.torus.objects[[i]]$ellipsefit$singular)
       }
 
       # penalty for risk/AIC/BIC
@@ -104,8 +102,8 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
 
       # evaluate risk/AIC/BIC
       # nsingular term corrects the conformity score for the singular matrices
-      criterion <- - sum.conformity.scores + 2 * n2 * d * log(2 * pi) + k * j * penalty +
-        ifelse(option != "risk", nsingular * (log(1e+6^(d - 2))), 0)
+      criterion <- - sum.conformity.scores + (k * j - 1) * penalty +
+        ifelse(option != "risk", nsingular * ((log(1e+6^(d/2 - 1))) + d * log((2*pi))), 0)
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
     }
 
@@ -124,22 +122,16 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
       k <- (d + 1)*(d + 2)/2
     } else stop("Bayesian is not implemented yet.")
 
-    for (j in Jvec){
-      if (is.null(icp.torus.objects[[j]])) {next}
+    for (i in Ivec){
+      if (is.null(icp.torus.objects[[i]])) {next}
+      j <- length(icp.torus.objects[[i]]$ellipsefit$c)
+
       # likelihood for mixture model
-      sum.conformity.scores <- sum(log(icp.torus.objects[[j]]$mixture$score))
+      sum.conformity.scores <- sum(log(icp.torus.objects[[i]]$score))
 
       # evaluating log-likelihood for AIC/BIC
       if (option != "risk") {
-        X1 <- data[split.id == 1, ]
-        n2 <- nrow(X1)
-        phat <- BAMBI::dvmsinmix(X1, kappa1 = icp.torus.objects[[j]]$mixture$fit$parammat[2, ],
-                                 kappa2 = icp.torus.objects[[j]]$mixture$fit$parammat[3, ],
-                                 kappa3 = icp.torus.objects[[j]]$mixture$fit$parammat[4, ],
-                                 mu1 = icp.torus.objects[[j]]$mixture$fit$parammat[5, ],
-                                 mu2 = icp.torus.objects[[j]]$mixture$fit$parammat[6, ],
-                                 pmix = icp.torus.objects[[j]]$mixture$fit$parammat[1, ], log = TRUE)
-        sum.conformity.scores <- sum(phat)
+        sum.conformity.scores <- icp.torus.objects[[i]]$fit$loglkhd.seq[length(icp.torus.objects[[i]]$fit$loglkhd.seq)]
       }
 
       # penalty for risk/AIC/BIC
@@ -147,7 +139,7 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
                         ifelse(option == "BIC", log(n2), 0))
 
       # evaluate risk/AIC/BIC
-      criterion <- - 2 * sum.conformity.scores + k * j * penalty
+      criterion <- - 2 * sum.conformity.scores + (k * j - 1) * penalty
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
     }
 
@@ -155,9 +147,10 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
     Jhat <- IC[IC.index, 1]
   }
 
+  output$criterion <- option
   output$IC.results <- IC
   output$Jhat <- Jhat
   output$icp.torus <- icp.torus.objects[[Jhat]]
 
-  return(output)
+  return(structure(output, class = "hyperparam.J"))
 }

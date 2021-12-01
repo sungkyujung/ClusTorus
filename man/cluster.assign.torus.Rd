@@ -4,13 +4,7 @@
 \alias{cluster.assign.torus}
 \title{Clustering by connected components of ellipsoids}
 \usage{
-cluster.assign.torus(
-  data,
-  icp.torus,
-  level = 0.1,
-  intersection.plot = TRUE,
-  coord = NULL
-)
+cluster.assign.torus(data, icp.torus, level = 0.1)
 }
 \arguments{
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.}
@@ -20,13 +14,6 @@ score, which will be constructed with \code{icp.torus.score}.}
 
 \item{level}{a scalar in \eqn{[0,1]}. Default value
 is 0.1.}
-
-\item{intersection.plot}{boolean index. If \code{TRUE}, then plot the
-intersections of given ellipsoids. Default is \code{TRUE}.}
-
-\item{coord}{a 2-vector for prespecifing the coordinates.
-Default value is \code{NULL} and automatically generates all combinations
-of coordinates.}
 }
 \value{
 clustering assignment for data, given \code{icp.torus} objects
@@ -40,7 +27,7 @@ clustering assignment for data, given \code{icp.torus} objects
 data <- toydata1[, 1:2]
 icp.torus <- icp.torus.score(data, method = "kmeans",
                              kmeansfitmethod = "general",
-                             param = list(J = 4, concentration = 25))
+                             J = 4, concentration = 25)
 level <- 0.1
 
 cluster.assign.torus(data, icp.torus, level)

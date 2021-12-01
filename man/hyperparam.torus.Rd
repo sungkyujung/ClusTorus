@@ -18,6 +18,12 @@ hyperparam.torus(
   kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
     "general"),
   init = c("kmeans", "hierarchical"),
+  iter.max = 10,
+  nstart = 1,
+  kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
+  trace = FALSE,
+  hclust.method = "complete",
+  members = NULL,
   eval.point = NULL,
   additional.condition = TRUE,
   kmax = 500,
@@ -123,7 +129,7 @@ icp.torus.objects <- list()
 for (j in Jvec){
   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",
                                             kmeansfitmethod = "ge", init = "h",
-                                            param = list(J = j), verbose = TRUE)
+                                            J = j, verbose = TRUE)
 }
 hyperparam.torus(data, icp.torus.objects, option = "risk")
 }

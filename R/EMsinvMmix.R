@@ -58,7 +58,7 @@
 #'            type = "general", kmax = 500, verbose = FALSE)
 #' }
 EMsinvMmix <- function(data, J = 4, parammat = EMsinvMmix.init(data, J),
-                       THRESHOLD = 1e-10, maxiter = 200,
+                       THRESHOLD = 1e-10, maxiter = 100,
                        type = c("circular", "axis-aligned", "general"),
                        kmax = 500,
                        verbose = TRUE){

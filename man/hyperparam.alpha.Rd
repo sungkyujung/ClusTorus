@@ -34,7 +34,7 @@ split.id <- rep(2, n)
 split.id[sample(n, floor(n/2))] <- 1
 icp.torus <- icp.torus.score(data, split.id = split.id, method = "kmeans",
                              kmeansfitmethod = "ge", init = "h",
-                             param = list(J = 25), verbose = TRUE)
+                             J = 25, verbose = TRUE)
 hyperparam.alpha(icp.torus)
 }
 }

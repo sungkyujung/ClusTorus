@@ -4,7 +4,14 @@
 \alias{kmeans.torus}
 \title{K-Means Clustering on Torus}
 \usage{
-kmeans.torus(data, centers = 10, iter.max = 100, nstart = 1)
+kmeans.torus(
+  data,
+  centers = 10,
+  iter.max = 100,
+  nstart = 1,
+  algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
+  trace = FALSE
+)
 }
 \arguments{
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}

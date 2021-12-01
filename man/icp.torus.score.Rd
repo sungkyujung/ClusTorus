@@ -7,13 +7,20 @@
 icp.torus.score(
   data,
   split.id = NULL,
-  method = c("all", "kde", "mixture", "kmeans"),
+  method = c("kde", "mixture", "kmeans"),
   mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
   kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
     "general"),
   init = c("kmeans", "hierarchical"),
+  iter.max = 10,
+  nstart = 1,
+  kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
+  trace = FALSE,
+  hclust.method = "complete",
+  members = NULL,
   additional.condition = TRUE,
-  param = list(J = 4, concentration = 25),
+  J = 4,
+  concentration = 25,
   kmax = 500,
   THRESHOLD = 1e-10,
   maxiter = 200,
@@ -24,19 +31,20 @@ icp.torus.score(
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 or \eqn{[-\pi, \pi)^d}}
 
-\item{split.id}{a n-dimensinal vector consisting of values 1 (estimation)
+\item{split.id}{a n-dimensional vector consisting of values 1 (estimation)
 and 2(evaluation)}
 
-\item{method}{A string. One of "all", "kde", "mixture", and "kmeans" which
+\item{method}{A string. One of "kde", "mixture", and "kmeans" which
 determines the model or estimation methods. If "kde", the model is based
 on the kernel density estimates. It supports the kde-based conformity score
-only. If "mixutre", the model is based on the von Mises mixture, fitted
+only. If "mixture", the model is based on the von Mises mixture, fitted
 with an EM algorithm. It supports the von Mises mixture and its variants
 based conformity scores. If "kmeans", the model is also based on the von
 Mises mixture, but the parameter estimation is implemented with the
 elliptical k-means algorithm illustrated in Appendix. It supports the
-log-max-mixture based conformity score only. Default is "all". If the
-dimension of data space is greater than 2, only "kmeans" is supported.}
+log-max-mixture based conformity score only. If the
+dimension of data space is greater than 2, only "kmeans" is supported.
+Default is \code{method = "kmeans"}.}
 
 \item{mixturefitmethod}{A string. One of "circular", "axis-aligned", and
 "general" which determines the constraint of the EM fitting. Default is
@@ -61,7 +69,11 @@ Default is "kmeans".}
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
 
-\item{param}{the number of components for mixture fitting and the concentration
+\item{J}{the number of components for \code{method = c("mixture", "kmeans")}.
+Default is \code{J = 4}.}
+
+\item{concentration}{the concentration parameter for \code{method = "kde"}.
+Default is \code{concentration = 25}.
 parameter in the form of \code{list(J=j, concentration=k)}.}
 
 \item{kmax}{the maximal number of kappa. If estimated kappa is
@@ -89,10 +101,10 @@ returns an \code{icp.torus} object, containing all values
 \donttest{
 data <- toydata1[, 1:2]
 
-icp.torus <- icp.torus.score(data, method = "all",
+icp.torus <- icp.torus.score(data, method = "kmeans",
                              mixturefitmethod = "general",
                              kmeansfitmethod = "general",
-                             param = list(J = 4, concentration = 25))
+                             J = 4, concentration = 25)
 }
 }
 \references{

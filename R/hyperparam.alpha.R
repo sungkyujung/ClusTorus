@@ -24,14 +24,14 @@
 #' split.id[sample(n, floor(n/2))] <- 1
 #' icp.torus <- icp.torus.score(data, split.id = split.id, method = "kmeans",
 #'                              kmeansfitmethod = "ge", init = "h",
-#'                              param = list(J = 25), verbose = TRUE)
+#'                              J = 25, verbose = TRUE)
 #' hyperparam.alpha(icp.torus)
 #' }
 hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   if(is.null(icp.torus)) {stop("icp.torus object must be input.")}
 
-  if(!is.null(icp.torus$mixture)) {method <- "mixture"}
-  else if(!is.null(icp.torus$kmeans)) {method <- "kmeans"}
+  if(icp.torus$method == "mixture") {method <- "mixture"}
+  else if(icp.torus$method == "kmeans") {method <- "kmeans"}
   else {stop("method kde is not supported.")}
   n2 <- icp.torus$n2
 
@@ -45,8 +45,8 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   if (method == "kmeans"){
     for (alpha in alphavec){
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
-      t <- icp.torus$kmeans$score_sphere[ialpha]
-      ncluster <- conn.comp.ellipse(icp.torus$kmeans$spherefit, t)$ncluster
+      t <- icp.torus$score_ellipse[ialpha]
+      ncluster <- conn.comp.ellipse(icp.torus$ellipsefit, t)$ncluster
 
       out <- rbind(out, data.frame(alpha = alpha, ncluster = ncluster))
     }
@@ -67,8 +67,8 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   else if (method == "mixture"){
     for (alpha in alphavec){
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
-      t <- icp.torus$mixture$score_ellipse[ialpha]
-      ncluster <- conn.comp.ellipse(icp.torus$mixture$ellipsefit, t)$ncluster
+      t <- icp.torus$score_ellipse[ialpha]
+      ncluster <- conn.comp.ellipse(icp.torus$ellipsefit, t)$ncluster
 
       out <- rbind(out, data.frame(alpha = alpha, ncluster = ncluster))
     }
@@ -84,5 +84,5 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
     output$alpha.results <- out
     output$alphahat <- alphahat
   }
-  return(output)
+  return(structure(output, class = "hyperparam.alpha"))
 }

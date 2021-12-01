@@ -30,9 +30,9 @@ returns a \code{cp} object with the boolean values which
 \donttest{
 data <- toydata1[, 1:2]
 
-icp.torus <- icp.torus.score(data, method = "all",
+icp.torus <- icp.torus.score(data, method = "kmeans",
                              mixturefitmethod = "general",
-                             param = list(J = 4, concentration = 25))
+                             J = 4, concentration = 25)
 
 icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 }

@@ -69,10 +69,10 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
   }
 
 
-  list(cp.torus = cp.torus,
-       grid = eval.point,
-       phat.grid = phat.grid,
-       phat.data = phat.data,
-       data.sorted = data
-  )
+  structure(list(concentration = concentration, level = level,
+                 cp.torus = cp.torus,
+                 grid = eval.point,
+                 phat.grid = phat.grid,
+                 phat.data = phat.data,
+                 data.sorted = data), class = "cp.torus.kde")
 }

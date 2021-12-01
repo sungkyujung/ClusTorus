@@ -36,8 +36,8 @@ Jvec <- 3:35
 icp.torus.objects <- list()
 for (j in Jvec){
   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",
-                                            kmeansfitmethod = "ge", init = "h",
-                                            param = list(J = j), verbose = TRUE)
+                                            kmeansfitmethod = "general", init = "h",
+                                            J = j, verbose = TRUE)
 }
 hyperparam.J(data, icp.torus.objects, option = "risk")
 }

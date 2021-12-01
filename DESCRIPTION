@@ -32,10 +32,10 @@ Imports:
     ggplot2,
     rlang,
     stats,
-    utils
+    utils,
+    cowplot
 Suggests: 
     knitr,
     rmarkdown,
-    tidyverse,
-    cowplot
+    tidyverse
 VignetteBuilder: knitr

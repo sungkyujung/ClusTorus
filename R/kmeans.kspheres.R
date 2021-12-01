@@ -51,6 +51,11 @@ kmeans.kspheres <- function(data, centers = 10,
                                      "ellipsoids",
                                      "general"),
                             init = c("kmeans", "hierarchical"),
+                            iter.max = 10, nstart = 1,
+                            kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
+                                          "MacQueen"), trace=FALSE,
+                            hclust.method = "complete",
+                            members = NULL,
                             additional.condition = TRUE,
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE){
@@ -76,10 +81,12 @@ kmeans.kspheres <- function(data, centers = 10,
 
   # -------------- initializing ----------------
   if (init == "kmeans"){
-    kmeans.out <- kmeans.torus(data, centers)
+    kmeans.out <- kmeans.torus(data, centers, iter.max = iter.max,
+                               nstart = nstart, algorithm = kmeans.algorithm,
+                               trace = trace)
   } else {
     J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
-    kmeans.out <- hcluster.torus(data, J = centers)
+    kmeans.out <- hcluster.torus(data, J = centers, method = hclust.method, members = members)
   }
 
   centroid <- kmeans.out$centers
@@ -116,7 +123,6 @@ kmeans.kspheres <- function(data, centers = 10,
   # 3. kmeans to ellipsoids ----------------------------
   else if (type == "ellipsoids") {
 
-    cnt.singular <- 0
     for (j in 1:J){
 
       nj <- kmeans.out$size[j]
@@ -156,10 +162,6 @@ kmeans.kspheres <- function(data, centers = 10,
       # update c's
       sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
     }
-
-    if (cnt.singular >= 1){
-      warning("Singular matrices are altered to the scaled idenity.")
-    }
   }
 
 
@@ -176,10 +178,9 @@ kmeans.kspheres <- function(data, centers = 10,
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
 
-      dat.j <- data[kmeans.out$membership == j, ]
-
+      # dat.j <- data[kmeans.out$membership == j, ]
       # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
-      z <- tor.minus(dat.j, sphere.param$mu[j, ])
+      z <- tor.minus(data[kmeans.out$membership == j, ], sphere.param$mu[j, ])
 
       S <- t(z) %*% z / nrow(z)
 
@@ -220,7 +221,7 @@ kmeans.kspheres <- function(data, centers = 10,
     }
 
     cnt <- 1
-    cnt.singular <- 0
+    wmat <- ehatj <- matrix(0, n, J)
 
     while(TRUE){
       cnt <- cnt + 1
@@ -229,14 +230,11 @@ kmeans.kspheres <- function(data, centers = 10,
 
       # Step.2 ------------------------------------
       # prepare w's which work like weights
-      wmat <- matrix(0, n, J)
 
       ehatj <- ehat.eval(data, sphere.param)
       # maxj <- apply(ehatj, 1, which.max)
-      maxj <- max.col(ehatj, ties.method = "first")
-
       # evaluate wmat
-      for(j in 1:J){ wmat[, j] <- maxj == j }
+      for(j in 1:J){ wmat[, j] <- max.col(ehatj, ties.method = "first") == j }
 
       # Step.3 -------------------------------------
       # update mu's
@@ -254,19 +252,18 @@ kmeans.kspheres <- function(data, centers = 10,
         } else { return(rep(0, d)) }
       })
 
-      mu <- t(wmat.mul)
 
       # sphere.param$mu1 <- mu[, 1]
       # sphere.param$mu2 <- mu[, 2]
-      sphere.param$mu <- mu
+      sphere.param$mu <- t(wmat.mul)
 
       # Step.4 and Step.5
 
       for (j in 1:J){
-        dat.j <- data[wmat[, j] == 1, ]
+        # dat.j <- data[wmat[, j] == 1, ]
         # Step.4 -----------------------------------
         # z <- tor.minus(dat.j, c(sphere.param$mu1[j], sphere.param$mu2[j]))
-        z <- tor.minus(dat.j, sphere.param$mu[j, ])
+        z <- tor.minus(data[wmat[, j] == 1, ], sphere.param$mu[j, ])
 
         # evaluate the MLE of Sigma_j
         S <- t(z) %*% z / nrow(z)
@@ -280,7 +277,6 @@ kmeans.kspheres <- function(data, centers = 10,
         # only implemented when additional.condition == TRUE
         if (additional.condition){
           if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-            cnt.singular <- cnt.singular + 1
             S <- sum(S) / d * diag(d)
           }
         }
@@ -299,10 +295,8 @@ kmeans.kspheres <- function(data, centers = 10,
         sphere.param$c[j] <- 2 * log(pi_j) - log(det(S))
       }
 
-      param.seq <- rbind(param.seq, unlist(sphere.param))
-
-      diff <- sum((param.seq[nrow(param.seq), ] - param.seq[nrow(param.seq) - 1, ])^2,
-                  na.rm = TRUE)
+      diff <- sum((param.seq - unlist(sphere.param))^2, na.rm = TRUE)
+      param.seq <- unlist(sphere.param)
 
       if (cnt >= maxiter | diff < THRESHOLD){
         if(verbose){
@@ -311,8 +305,14 @@ kmeans.kspheres <- function(data, centers = 10,
         }
         break}
     }
-    if (cnt.singular >= 1){
-      warning("Singular matrices are altered to the scaled idenity.")
+    sphere.param$loglkhd <- 0.5 * sum(do.call(pmax,
+                                               as.data.frame(ehat.eval(data, sphere.param)))) - n * d * log(2 * pi) / 2
+
+    sphere.param$singular <- c()
+    for (j in 1:J){
+      if (sphere.param$Sigmainv[[j]][1, 1] == 1e+6){
+        sphere.param$singular <- c(sphere.param$singular, j)
+      }
     }
   }
   return(sphere.param)

@@ -36,12 +36,16 @@
 
 
 kmeans.torus <- function(data, centers = 10,
-                         iter.max = 100, nstart = 1){
+                         iter.max = 100, nstart = 1,
+                         algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
+                         trace=FALSE){
 
   # prepare for d - dimensional expansion
   n <- nrow(data)
   d <- ncol(data)
 
+  if(is.null(algorithm)){algorithm <- "Lloyd"}
+  algorithm <- match.arg(algorithm)
   kmeans <- list(data = data, centers = NULL,
                  membership = NULL, totss = NULL, withinss = NULL,
                  betweenss = NULL, size = NULL, extrinsic.results = NULL)
@@ -51,7 +55,8 @@ kmeans.torus <- function(data, centers = 10,
 
     centroids <- cbind(cos(centers), sin(centers))
     kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centroids,
-                         iter.max = iter.max, nstart = nstart)
+                         iter.max = iter.max, nstart = nstart, algorithm = algorithm,
+                         trace = trace)
 
   }
 
@@ -107,5 +112,5 @@ kmeans.torus <- function(data, centers = 10,
   center.distmat <- ifelse(is.vector(centers), 0, ang.pdist(kmeans$centers))
   kmeans$betweenss <- sum(center.distmat^2)
 
-  return(kmeans)
+  return(structure(kmeans, class = "kmeans.torus"))
 }
