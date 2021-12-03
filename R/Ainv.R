@@ -9,7 +9,7 @@
 # @param kmax positive value. Default value is 2000.
 # @seealso See the similar function in package \code{circular} :
 #   \code{\link[circular]{A1inv}}
-# @references  Mardia, K. V. and Jupp, P. E. (2000), Directional Statistics,
+# @references  Mardia, K. V. and Jupp, P. E. (2000), \emph{Directional Statistics},
 #   New York: Wiley.
 # @examples
 # \dontrun{
