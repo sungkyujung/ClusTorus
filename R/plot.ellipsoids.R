@@ -25,7 +25,7 @@
 # coord <- c(1, 3)
 # t <- 0.5
 #
-# plot.ellipsoids(ellipse.param, t, coord)
+# ploting.ellipsoids(ellipse.param, t, coord)
 # }
 
 ploting.ellipsoids <- function(data, ellipse.param, t, coord = c(1, 2)){

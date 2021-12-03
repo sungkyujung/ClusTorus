@@ -35,6 +35,9 @@
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
 #'   clustering method.
 #'   Default is "kmeans".
+#' @param ... Further arguments for argument \code{init}. If \code{init = "kmeans"},
+#'   these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
+#'   there are for \code{\link[stats]{hclust}}.
 #' @param additional.condition boolean index.
 #'   If \code{TRUE}, a singular matrix will be altered to the scaled identity.
 #' @param J the number of components for \code{method = c("mixture", "kmeans")}.
@@ -73,15 +76,10 @@ icp.torus.score <- function(data, split.id = NULL,
                                                 "ellipsoids",
                                                 "general"),
                             init = c("kmeans", "hierarchical"),
-                            iter.max = 10, nstart = 1,
-                            kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
-                                                 "MacQueen"), trace=FALSE,
-                            hclust.method = "complete",
-                            members = NULL,
                             additional.condition = TRUE,
                             J = 4, concentration = 25, kmax = 500,
                             THRESHOLD = 1e-10, maxiter = 200,
-                            verbose = TRUE){
+                            verbose = TRUE, ...){
   # returns an icp.torus object, containing all values to compute the conformity score.
 
   # Use sample splitting to produce (inductive) conformal prediction sets
@@ -215,16 +213,12 @@ icp.torus.score <- function(data, split.id = NULL,
 
     # consider -R as ehat in von mises mixture approximation
     # where R is the notation in J. Shin (2019)
-    ellipse.param <- kmeans.kspheres(X1, centers = J,
-                                    type = kmeansfitmethod,
-                                    init = init,
-                                    iter.max = iter.max, nstart = nstart,
-                                    kmeans.algorithm = kmeans.algorithm, trace = trace,
-                                    hclust.method = hclust.method,
-                                    members = members,
-                                    additional.condition = additional.condition,
-                                    THRESHOLD = THRESHOLD, maxiter = maxiter,
-                                    verbose = verbose)
+    ellipse.param <- ellip.kmeans.torus(X1, centers = J,
+                                        type = kmeansfitmethod,
+                                        init = init,
+                                        additional.condition = additional.condition,
+                                        THRESHOLD = THRESHOLD, maxiter = maxiter,
+                                        verbose = verbose, ...)
 
     icp.torus$ellipsefit <- ellipse.param
 

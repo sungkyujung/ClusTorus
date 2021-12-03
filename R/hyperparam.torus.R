@@ -47,6 +47,9 @@
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
 #'   clustering method.
 #'   Default is "kmeans".
+#' @param ... Further arguments for argument \code{init}. If \code{init = "kmeans"},
+#'   these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
+#'   there are for \code{\link[stats]{hclust}}.
 #' @param eval.point N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 #'   \code{grid.torus}.
 #' @param additional.condition boolean index.
@@ -92,12 +95,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
                              mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
                              kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular",
                                                  "ellipsoids", "general"),
-                             init = c("kmeans", "hierarchical"),
-                             iter.max = 10, nstart = 1,
-                             kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
-                                                  "MacQueen"), trace=FALSE,
-                             hclust.method = "complete",
-                             members = NULL,
+                             init = c("kmeans", "hierarchical"), ...,
                              eval.point = NULL, additional.condition = TRUE,
                              kmax = 500, THRESHOLD = 1e-10, maxiter = 200,
                              verbose = FALSE){
@@ -169,11 +167,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
                                                   method = method,
                                                   mixturefitmethod = mixturefitmethod,
                                                   kmeansfitmethod = kmeansfitmethod,
-                                                  init = init,
-                                                  iter.max = iter.max, nstart = nstart,
-                                                  kmeans.algorithm = kmeans.algorithm, trace=trace,
-                                                  hclust.method = hclust.method,
-                                                  members = members,
+                                                  init = init, ...,
                                                   additional.condition = additional.condition,
                                                   J = j, THRESHOLD = THRESHOLD,
                                                   maxiter = maxiter, verbose = verbose)

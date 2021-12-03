@@ -4,14 +4,7 @@
 \alias{kmeans.torus}
 \title{K-Means Clustering on Torus}
 \usage{
-kmeans.torus(
-  data,
-  centers = 10,
-  iter.max = 100,
-  nstart = 1,
-  algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
-  trace = FALSE
-)
+kmeans.torus(data, centers = 10, ...)
 }
 \arguments{
 \item{data}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}}
@@ -20,17 +13,19 @@ kmeans.torus(
 cluster centers. If a number, a random set of row in x is
 chosen as the initial centers.}
 
-\item{iter.max}{the maximum number of iterations}
-
-\item{nstart}{if \code{centers} is a number, how many random sets
-should be chosen?}
+\item{...}{Further arguments for \code{\link[stats]{kmeans}}.}
 }
 \value{
 returns a \code{kmeans} object, which contains
-  input data, cluster centers on torus, membership,
-  total sum of squares, within cluster sum of squares,
-  between cluster centers sum of squares, and the size of
-  each cluster.
+\describe{
+  \item{\code{extrinsic.results}}{extrinsic k-means clustering results using ordinary kmeans algorithm.}
+  \item{\code{centers}}{A matrix of cluster centers.}
+  \item{\code{membership}}{A vector of integers indicating the cluster to which each point is allocated.}
+  \item{\code{size}}{The number of points in each cluster.}
+  \item{\code{withinss}}{Vector of within-cluster sum of squares, one component per cluster.}
+  \item{\code{totss}}{The total sum of squares, based on angular distance.}
+  \item{\code{betweenss}}{The between-cluster sum of squares.}
+}
 }
 \description{
 \code{kmeans.torus} implements extrinsic k-means clustering
@@ -42,6 +37,11 @@ In Euclidean space, we know that the total sum of squares
   the between cluster centers sum of squares. However, toroidal space
   does not satisfy the property; the equality does not hold. Thus,
   you need to be careful to use the sum of squares.
+
+  Extrinsic k-means algorithm uses the ambient space for \eqn{[0, 2\pi)^d}.
+  Each datum is transformed to a vector in 2d-dimensional
+  Euclidean space, whose elements are sine and cosine values of the datum,
+  then a usual k-means algorithm is applied to transformed data.
 }
 \examples{
 data <- ILE[1:200, 1:2]
@@ -54,5 +54,5 @@ kmeans.torus(data, centers = 2,
   "Clustering on the torus by conformal prediction"
 }
 \seealso{
-\code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}
+\code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}, \code{\link[ClusTorus]{ang.dist}}
 }

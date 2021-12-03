@@ -18,12 +18,7 @@ hyperparam.torus(
   kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
     "general"),
   init = c("kmeans", "hierarchical"),
-  iter.max = 10,
-  nstart = 1,
-  kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
-  trace = FALSE,
-  hclust.method = "complete",
-  members = NULL,
+  ...,
   eval.point = NULL,
   additional.condition = TRUE,
   kmax = 500,
@@ -88,6 +83,10 @@ method.
 If "hierarchical", the initial parameters are obtained with hierarchical
 clustering method.
 Default is "kmeans".}
+
+\item{...}{Further arguments for argument \code{init}. If \code{init = "kmeans"},
+these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
+there are for \code{\link[stats]{hclust}}.}
 
 \item{eval.point}{N x N numeric matrix on \eqn{[0, 2\pi)^2}. Default input is
 \code{grid.torus}.}

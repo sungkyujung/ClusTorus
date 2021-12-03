@@ -12,19 +12,14 @@ icp.torus.score(
   kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids",
     "general"),
   init = c("kmeans", "hierarchical"),
-  iter.max = 10,
-  nstart = 1,
-  kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
-  trace = FALSE,
-  hclust.method = "complete",
-  members = NULL,
   additional.condition = TRUE,
   J = 4,
   concentration = 25,
   kmax = 500,
   THRESHOLD = 1e-10,
   maxiter = 200,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
@@ -88,6 +83,10 @@ updated parameters. Default is 1e-10.}
 additional details as to what the algorithm is doing or
 how many loops are done. Moreover, if \code{additional.condition} is
 \code{TRUE}, the warning message will be reported.}
+
+\item{...}{Further arguments for argument \code{init}. If \code{init = "kmeans"},
+these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
+there are for \code{\link[stats]{hclust}}.}
 }
 \value{
 returns an \code{icp.torus} object, containing all values

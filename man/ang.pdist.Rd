@@ -29,5 +29,5 @@ S. Jung, K. Park, and B. Kim (2021),
   "Clustering on the torus by conformal prediction"
 }
 \seealso{
-\code{\link{ang.dist}}
+\code{\link{ang.dist}}, \code{\link[stats]{dist}}
 }

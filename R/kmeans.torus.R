@@ -7,9 +7,7 @@
 #' @param centers either the number of clusters or a set of initial
 #'   cluster centers. If a number, a random set of row in x is
 #'   chosen as the initial centers.
-#' @param iter.max the maximum number of iterations
-#' @param nstart if \code{centers} is a number, how many random sets
-#'   should be chosen?
+#' @param ... Further arguments for \code{\link[stats]{kmeans}}.
 #'
 #' @details In Euclidean space, we know that the total sum of squares
 #'   is equal to the summation of the within cluster sum of squares and
@@ -17,16 +15,26 @@
 #'   does not satisfy the property; the equality does not hold. Thus,
 #'   you need to be careful to use the sum of squares.
 #'
+#'   Extrinsic k-means algorithm uses the ambient space for \eqn{[0, 2\pi)^d}.
+#'   Each datum is transformed to a vector in 2d-dimensional
+#'   Euclidean space, whose elements are sine and cosine values of the datum,
+#'   then a usual k-means algorithm is applied to transformed data.
+#'
 #' @return returns a \code{kmeans} object, which contains
-#'   input data, cluster centers on torus, membership,
-#'   total sum of squares, within cluster sum of squares,
-#'   between cluster centers sum of squares, and the size of
-#'   each cluster.
+#' \describe{
+#'   \item{\code{extrinsic.results}}{extrinsic k-means clustering results using ordinary kmeans algorithm.}
+#'   \item{\code{centers}}{A matrix of cluster centers.}
+#'   \item{\code{membership}}{A vector of integers indicating the cluster to which each point is allocated.}
+#'   \item{\code{size}}{The number of points in each cluster.}
+#'   \item{\code{withinss}}{Vector of within-cluster sum of squares, one component per cluster.}
+#'   \item{\code{totss}}{The total sum of squares, based on angular distance.}
+#'   \item{\code{betweenss}}{The between-cluster sum of squares.}
+#' }
 #'
 #' @references 'S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"
 #'
-#' @seealso \code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}
+#' @seealso \code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}, \code{\link[ClusTorus]{ang.dist}}
 #' @export
 #' @examples
 #' data <- ILE[1:200, 1:2]
@@ -35,17 +43,12 @@
 #'              iter.max = 100, nstart = 1)
 
 
-kmeans.torus <- function(data, centers = 10,
-                         iter.max = 100, nstart = 1,
-                         algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"),
-                         trace=FALSE){
+kmeans.torus <- function(data, centers = 10, ...){
 
   # prepare for d - dimensional expansion
   n <- nrow(data)
   d <- ncol(data)
 
-  if(is.null(algorithm)){algorithm <- "Lloyd"}
-  algorithm <- match.arg(algorithm)
   kmeans <- list(data = data, centers = NULL,
                  membership = NULL, totss = NULL, withinss = NULL,
                  betweenss = NULL, size = NULL, extrinsic.results = NULL)
@@ -54,17 +57,14 @@ kmeans.torus <- function(data, centers = 10,
   if(length(centers) > 1){
 
     centroids <- cbind(cos(centers), sin(centers))
-    kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centroids,
-                         iter.max = iter.max, nstart = nstart, algorithm = algorithm,
-                         trace = trace)
+    kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centroids, ...)
 
   }
 
   # case for centers given as a number or not given
   else if (length(centers) == 1){
 
-    kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centers,
-                         iter.max = iter.max, nstart = nstart)
+    kmeans.out <- kmeans(cbind(cos(data),sin(data)), centers = centers, ...)
   }
 
   kmeans$extrinsic.results <- kmeans.out

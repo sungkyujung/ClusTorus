@@ -5,7 +5,7 @@
 #' @param data n x d angular data on \eqn{[0, 2\pi)^d}
 #' @return \code{ang.pdist} returns pairwise angular distances matrix
 #'   with the class \code{dist}
-#' @seealso \code{\link{ang.dist}}
+#' @seealso \code{\link{ang.dist}}, \code{\link[stats]{dist}}
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"

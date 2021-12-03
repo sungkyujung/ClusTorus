@@ -12,13 +12,13 @@
 )
 }
 \arguments{
+\item{x}{\code{x} object}
+
 \item{method}{A string. One of "outlier", "ehat", "partialsum", "mahalanobis". Default is "outlier".}
 
 \item{out}{An option for returning the ggplot object.}
 
 \item{...}{additional parameter}
-
-\item{cluster.obj}{\code{cluster.obj} object}
 }
 \description{
 more details

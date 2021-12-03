@@ -5,29 +5,11 @@
 \alias{SARS_CoV_2}
 \title{6VXX: Structure of the SARS-CoV-2 spike glycoprotein(closed state)}
 \format{
-This list contains the following components:
+This data.frame contains the following columns:
 \describe{
-  \item{\code{psi}}{protein backbone chain angle
-    for atoms C, N, C_alpha and C, in arc-degree.}
-  \item{\code{phi}}{protein backbone chain angle
-    for atoms N, C_alpha, C and N, in arc-degree.}
-  \item{\code{omega}}{protein backbone chain angle
-    for atoms C_alpha, C, N and C-alpha, in arc-degree.}
-  \item{\code{chi1}}{side chain torsion angle
-    for atoms N, C_alpha, C_beta and *G, in arc-degree.}
-  \item{\code{chi2}}{side chain torsion angle
-    for atoms C_alpha, C_beta, *G and *D, in arc-degree.}
-  \item{\code{chi3}}{side chain torsion angle
-    for atomsC_beta, *G, *D and *E, in arc-degree.}
-  \item{\code{chi4}}{side chain torsion angle
-    for atoms *G, *D, *E and *Z, in arc-degree.}
-  \item{\code{chi5}}{side chain torsion angle
-    for atoms *D, *E, *Z and NH1, in arc-degree.}
-  \item{\code{alpha}}{virtual torsion angle between
-    consecutive C_alpha atoms.}
-  \item{\code{coords}}{numeric matrix of 'justified' coordinates.}
-  \item{\code{tbl}}{a numeric matrix of psi, phi, and chi torsion
-    angles.}
+  \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
+  \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
+  \item{\code{type}}{type of protein chains}
 }
 }
 \source{

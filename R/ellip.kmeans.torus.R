@@ -1,6 +1,6 @@
 #' K-Means Clustering to K-Spheres Clustering on Torus
 #'
-#' \code{kmeans.kspheres} prepares the parameters for conformity scores
+#' \code{ellip.kmeans.torus} prepares the parameters for conformity scores
 #'   which are derived by k-means clustering on torus.
 #'
 #' @param data data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
@@ -22,6 +22,9 @@
 #'   method.
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
 #'   clustering method. Default is "hierarchical".
+#' @param ... Further arguments for argument \code{init}. If \code{init = "kmeans"},
+#'   these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
+#'   there are for \code{\link[stats]{hclust}}.
 #' @param additional.condition boolean index.
 #'   If \code{TRUE}, a singular matrix will be altered to the scalar identity.
 #' @param THRESHOLD number of threshold for difference between updating and
@@ -31,7 +34,7 @@
 #'   additional details as to what the algorithm is doing or
 #'   how many loops are done. Default is \code{TRUE}.
 #'
-#' @return returns a \code{sphere.param} object,
+#' @return returns a list,
 #'   containing all values which determines the shape and
 #'   location of spheres.
 #' @export
@@ -44,21 +47,16 @@
 #' @examples
 #' data <- ILE[1:200, 1:2]
 #'
-#' kmeans.kspheres(data, centers = 3, type = "general")
-kmeans.kspheres <- function(data, centers = 10,
+#' ellip.kmeans.torus(data, centers = 3, type = "general")
+ellip.kmeans.torus <- function(data, centers = 10,
                             type = c("homogeneous-circular",
                                      "heterogeneous-circular",
                                      "ellipsoids",
                                      "general"),
                             init = c("kmeans", "hierarchical"),
-                            iter.max = 10, nstart = 1,
-                            kmeans.algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
-                                          "MacQueen"), trace=FALSE,
-                            hclust.method = "complete",
-                            members = NULL,
                             additional.condition = TRUE,
                             THRESHOLD = 1e-10, maxiter = 200,
-                            verbose = TRUE){
+                            verbose = TRUE, ...){
 
   # Returns a sphere.param object, containing all values which determines
   # the shape and location of spheres
@@ -81,12 +79,10 @@ kmeans.kspheres <- function(data, centers = 10,
 
   # -------------- initializing ----------------
   if (init == "kmeans"){
-    kmeans.out <- kmeans.torus(data, centers, iter.max = iter.max,
-                               nstart = nstart, algorithm = kmeans.algorithm,
-                               trace = trace)
+    kmeans.out <- kmeans.torus(data, centers, ...)
   } else {
     J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
-    kmeans.out <- hcluster.torus(data, J = centers, method = hclust.method, members = members)
+    kmeans.out <- hcluster.torus(data, J = centers, ...)
   }
 
   centroid <- kmeans.out$centers

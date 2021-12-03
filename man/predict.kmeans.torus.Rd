@@ -7,11 +7,11 @@
 \method{predict}{kmeans.torus}(object, newdata, ...)
 }
 \arguments{
+\item{object}{\code{kmeans.torus} object}
+
 \item{newdata}{\code{data} to be input}
 
 \item{...}{additional parameter}
-
-\item{kmeans.torus}{\code{kmeans.torus} object}
 }
 \description{
 more details

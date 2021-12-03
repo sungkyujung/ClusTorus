@@ -323,7 +323,7 @@ print.cluster.obj <- function(x, ...){
 #'
 #' more details
 #'
-#' @param cluster.obj \code{cluster.obj} object
+#' @param x \code{x} object
 #' @param method A string. One of "outlier", "ehat", "partialsum", "mahalanobis". Default is "outlier".
 #' @param out An option for returning the ggplot object.
 #' @param ... additional parameter
@@ -356,7 +356,7 @@ plot.cluster.obj <- function(x, method = c("outlier", "ehat", "partialsum", "mah
   angle.names <- colnames(data)
   plot_list <- list()
 
-  hues = seq(15, 375, length = max_colnum + 1)
+  hues = seq(15, 375, length = max_colnum - 1)
   for (i in 1:nrow(coord)){
     plotdata <- data.frame(angle1 = data[ , coord[i, 1]], angle2 = data[ , coord[i, 2]])
     membership[membership == max_colnum] <- "out"
@@ -365,7 +365,7 @@ plot.cluster.obj <- function(x, method = c("outlier", "ehat", "partialsum", "mah
       ggplot2::geom_point() +
       ggplot2::scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
       ggplot2::scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
-      ggplot2::scale_color_manual(values =  grDevices::hcl(h = hues, l = 65, c = 100)[1:colnum])
+      ggplot2::scale_color_manual(values =  c(grDevices::hcl(h = hues, l = 65, c = 100), "#999999")[1:colnum])
   }
   legend <- cowplot::get_legend(plot_list[[1]] + ggplot2::theme(legend.box.margin = ggplot2::margin(0,0,0,12)))
 
@@ -415,7 +415,7 @@ print.kmeans.torus <- function(x, ...){
 #'
 #' more details
 #'
-#' @param kmeans.torus \code{kmeans.torus} object
+#' @param object \code{kmeans.torus} object
 #' @param newdata \code{data} to be input
 #' @param ... additional parameter
 #'
