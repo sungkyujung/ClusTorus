@@ -1,7 +1,7 @@
 #' Fitting mixtures of bivariate von Mises distribution
 #'
 #' \code{EMsinvMmix} returns fitted parameters of J-mixture of
-#'   bivariate sine von Mises.
+#'   bivariate sine von Mises distributions.
 #'
 #' @param data n x 2 matrix of toroidal data on \eqn{[0, 2\pi)^2}
 #' @param J number of components of mixture density
@@ -47,8 +47,8 @@
 #'   density is more complicated than before, check the detail of
 #'   the reference article.
 #' @export
-#' @references 'S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction"
+#' @references S. Jung, K. Park, and B. Kim (2021),
+#'   "Clustering on the torus by conformal prediction" to appear in \emph{Annals of Applied Statistics}.
 #' @examples
 #' \donttest{
 #' data <- ILE[1:200, 1:2]
