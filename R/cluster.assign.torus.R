@@ -26,9 +26,8 @@
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction" to appear in Annals of Applied Statistics,
 #'
-#'   I. Gilitschenski and U. D. Hanebeck,
-#'   "A robust computational test for overlap of
-#'   two arbitrary-dimensional ellipsoids in fault-detection of Kalman filters"
+#'   I.  Gilitschenski  and  U.  D.  Hanebeck.   "A  robust  computational  test  for  overlap  of  two  
+#'     arbitrary-dimensional ellipsoids in fault-detection of kalman filters". In 2012 15th International Conference onInformation Fusion, pages 396–401,
 #' @seealso \code{\link[ClusTorus]{icp.torus.score}}, \code{\link[ClusTorus]{hyperparam.torus}}
 #' @examples
 #' data <- toydata1[, 1:2]
