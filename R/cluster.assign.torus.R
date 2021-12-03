@@ -24,7 +24,7 @@
 #' }
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction",
+#'   "Clustering on the torus by conformal prediction" to appear in Annals of Applied Statistics,
 #'
 #'   I. Gilitschenski and U. D. Hanebeck,
 #'   "A robust computational test for overlap of
