@@ -13,11 +13,11 @@
 #'   automatically chosen by the optimal level.
 #' @return clustering assignment for data, given \code{icp.torus} objects
 #' \describe{
-#'   \item{\code{cluster.id.by.ehat}}{cluster assignment results which are based on log-approximation of max-mixture.}
-#'   \item{\code{cluster.id.by.partialsum}}{cluster assignment results which are based on the mixture model.}
-#'   \item{\code{cluster.id.outlier}}{cluster assignment results which regards data not included in conformal prediction set
+#'   \item{\code{cluster.id.by.log.density}}{cluster assignment result based on approximate log-density.}
+#'   \item{\code{cluster.id.by.posterior}}{cluster assignment result based on the posterior probability.}
+#'   \item{\code{cluster.id.outlier}}{cluster assignment result which regards data not included in conformal prediction set
 #'   as outliers.}
-#'   \item{\code{cluster.id.by.Mah.dist}}{cluster assignment results which are based on Mahalanobis distance.}
+#'   \item{\code{cluster.id.by.Mah.dist}}{cluster assignment result based on Mahalanobis distance.}
 #'   \item{\code{level}}{used level which determines the size of clusters(conformal prediction set).}
 #'   \item{\code{data}}{input data which are assigned to each cluster.}
 #'   \item{\code{icp.torus}}{\code{icp.torus} object which is used for cluster assignment.}
@@ -86,7 +86,7 @@ cluster.assign.torus <- function(data, icp.object, level = 0.1){
     # maxj.id <- apply(ehatj, 1, which.max)
     maxj.id <- max.col(ehatj, ties.method = "first")
     cluster.id1 <- cluster.obj$componentid[maxj.id]
-    cluster.obj$cluster.id.by.ehat <- cluster.id1
+    cluster.obj$cluster.id.log.density <- cluster.id1
 
     partsum <- matrix(0, nrow = nrow(data), ncol = K)
     for(k in 1:K){
@@ -95,7 +95,7 @@ cluster.assign.torus <- function(data, icp.object, level = 0.1){
              partsum[,k] <- ehatj[,cluster.obj$componentid == k])
     }
     # cluster.obj$mixture$cluster.id.by.partialsum <- apply(partsum, 1, which.max)
-    cluster.obj$cluster.id.by.partialsum <- max.col(partsum, ties.method = "first")
+    cluster.obj$cluster.id.by.posterior <- max.col(partsum, ties.method = "first")
 
     # ehat <- apply(ehatj,1,max)
     ehat <- do.call(pmax, as.data.frame(ehatj))
