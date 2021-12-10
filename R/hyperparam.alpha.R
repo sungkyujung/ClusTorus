@@ -39,7 +39,7 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
 
   output <- list()
   out <- data.frame()
-  if (is.null(alphavec)) {alphavec <- 1:floor(n2 * alpha.lim) / n2}
+  if (is.null(alphavec)) {alphavec <- 1:floor(min(n2, 1000) * alpha.lim) / n2}
 
   # 1. kmeans -----------------------------------------------------
   if (method == "kmeans"){

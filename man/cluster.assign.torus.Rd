@@ -20,11 +20,11 @@ automatically chosen by the optimal level.}
 \value{
 clustering assignment for data, given \code{icp.torus} objects
 \describe{
-  \item{\code{cluster.id.by.ehat}}{cluster assignment results which are based on log-approximation of max-mixture.}
-  \item{\code{cluster.id.by.partialsum}}{cluster assignment results which are based on the mixture model.}
-  \item{\code{cluster.id.outlier}}{cluster assignment results which regards data not included in conformal prediction set
+  \item{\code{cluster.id.by.log.density}}{cluster assignment result based on approximate log-density.}
+  \item{\code{cluster.id.by.posterior}}{cluster assignment result based on the posterior probability.}
+  \item{\code{cluster.id.outlier}}{cluster assignment result which regards data not included in conformal prediction set
   as outliers.}
-  \item{\code{cluster.id.by.Mah.dist}}{cluster assignment results which are based on Mahalanobis distance.}
+  \item{\code{cluster.id.by.Mah.dist}}{cluster assignment result based on Mahalanobis distance.}
   \item{\code{level}}{used level which determines the size of clusters(conformal prediction set).}
   \item{\code{data}}{input data which are assigned to each cluster.}
   \item{\code{icp.torus}}{\code{icp.torus} object which is used for cluster assignment.}
@@ -46,11 +46,10 @@ cluster.assign.torus(data, icp.torus, level = level)
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction",
+  "Clustering on the torus by conformal prediction" to appear in Annals of Applied Statistics.
 
-  I. Gilitschenski and U. D. Hanebeck,
-  "A robust computational test for overlap of
-  two arbitrary-dimensional ellipsoids in fault-detection of Kalman filters"
+  I.  Gilitschenski  and  U.  D.  Hanebeck.   "A  robust  computational  test  for  overlap  of  two  
+    arbitrary-dimensional ellipsoids in fault-detection of kalman filters". In 2012 15th International Conference onInformation Fusion, pages 396–401.
 }
 \seealso{
 \code{\link[ClusTorus]{icp.torus.score}}, \code{\link[ClusTorus]{hyperparam.torus}}

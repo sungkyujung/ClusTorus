@@ -74,6 +74,9 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
   }
   output <- list()
   IC <- data.frame()
+
+  penalty <- ifelse(option == "AIC", 2,
+                    ifelse(option == "BIC", log(n2), 0))
   # 1. kmeans -----------------------------------------------------
   if (method == "kmeans"){
 
@@ -88,7 +91,7 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
 
       if (is.null(icp.torus.objects[[i]])) {next}
       # approximated 2 * log-likelihood for normal approximation
-      sum.conformity.scores <- sum(icp.torus.objects[[i]]$score_ellipse) + n2 * d * log(2 * pi)
+      sum.conformity.scores <- sum(icp.torus.objects[[i]]$score_ellipse) - n2 * d * log(2 * pi)
 
       # evaluating 2 * log-likelihood for AIC/BIC
       if (option != "risk") {
@@ -96,14 +99,10 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
         nsingular <- length(icp.torus.objects[[i]]$ellipsefit$singular)
       }
 
-      # penalty for risk/AIC/BIC
-      penalty <- ifelse(option == "AIC", 2,
-                        ifelse(option == "BIC", log(n2), 0))
-
       # evaluate risk/AIC/BIC
       # nsingular term corrects the conformity score for the singular matrices
       criterion <- - sum.conformity.scores + (k * j - 1) * penalty +
-        ifelse(option != "risk", nsingular * ((log(1e+6^(d/2 - 1))) + d * log((2*pi))), 0)
+        ifelse(option != "risk", nsingular * ((log(1e+6^(d - 2))) + d * log((2*pi))), 0)
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
     }
 
@@ -133,10 +132,6 @@ hyperparam.J <- function(data, icp.torus.objects, option = c("risk", "AIC", "BIC
       if (option != "risk") {
         sum.conformity.scores <- icp.torus.objects[[i]]$fit$loglkhd.seq[length(icp.torus.objects[[i]]$fit$loglkhd.seq)]
       }
-
-      # penalty for risk/AIC/BIC
-      penalty <- ifelse(option == "AIC", 2,
-                        ifelse(option == "BIC", log(n2), 0))
 
       # evaluate risk/AIC/BIC
       criterion <- - 2 * sum.conformity.scores + (k * j - 1) * penalty

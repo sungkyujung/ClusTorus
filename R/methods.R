@@ -291,18 +291,18 @@ print.cluster.obj <- function(x, ...){
 
   cluster.obj <- x
   n <- 10
-  n <- min(length(cluster.obj$cluster.id.by.ehat), n)
+  n <- min(length(cluster.obj$cluster.id.log.density), n)
   cat("Number of clusters:", cluster.obj$ncluster, "\n")
   cat("-------------\n")
-  cat("Clustering results by ellipsoidal conformity score:\n")
-  print(utils::head(cluster.obj$cluster.id.by.ehat, n = n))
+  cat("Clustering results by log density:\n")
+  print(utils::head(cluster.obj$cluster.id.log.density, n = n))
   cat("cluster sizes:", purrr::map_int(1:cluster.obj$ncluster,
-                                       function(x){sum(cluster.obj$cluster.id.by.ehat == x)}), "\n")
+                                       function(x){sum(cluster.obj$cluster.id.log.density == x)}), "\n")
   cat("\n")
-  cat("Clustering results by partial sum:\n")
-  print(utils::head(cluster.obj$cluster.id.by.partialsum, n = n))
+  cat("Clustering results by posterior:\n")
+  print(utils::head(cluster.obj$cluster.id.by.posterior, n = n))
   cat("cluster sizes:", purrr::map_int(1:cluster.obj$ncluster,
-                                       function(x){sum(cluster.obj$cluster.id.by.partialsum == x)}), "\n")
+                                       function(x){sum(cluster.obj$cluster.id.by.posterior == x)}), "\n")
   cat("\n")
   cat("Clustering results by representing outliers:\n")
   print(utils::head(cluster.obj$cluster.id.outlier, n = n))
@@ -315,7 +315,7 @@ print.cluster.obj <- function(x, ...){
   cat("cluster sizes:", purrr::map_int(1:cluster.obj$ncluster,
                                        function(x){sum(cluster.obj$cluster.id.by.Mah.dist == x)}), "\n")
   cat("\n")
-  cat(length(cluster.obj$cluster.id.by.ehat) - n, "clustering results are omitted.")
+  cat(length(cluster.obj$cluster.id.log.density) - n, "clustering results are omitted.")
 }
 
 
@@ -324,18 +324,18 @@ print.cluster.obj <- function(x, ...){
 #' more details
 #'
 #' @param x \code{x} object
-#' @param method A string. One of "outlier", "ehat", "partialsum", "mahalanobis". Default is "outlier".
+#' @param method A string. One of "outlier", "log.density", "posterior", "mahalanobis". Default is "outlier".
 #' @param out An option for returning the ggplot object.
 #' @param ... additional parameter
 #'
 #' @rdname plot.cluster.obj
 #' @method plot cluster.obj
 #' @export
-plot.cluster.obj <- function(x, method = c("outlier", "ehat", "partialsum", "mahalanobis"), out = FALSE, ...){
+plot.cluster.obj <- function(x, method = c("outlier", "log.density", "posterior", "mahalanobis"), out = FALSE, ...){
 
   cluster.obj <- x
   if(is.null(data)) {stop("invalid input: data must be input.")}
-  if(!is.character(method)) {stop("invalid input: method must be a character, one of \"ehat\", \"partialsum\", \"outlier\", \"mahalanobis\".")}
+  if(!is.character(method)) {stop("invalid input: method must be a character, one of \"log.density\", \"posterior\", \"outlier\", \"mahalanobis\".")}
   if(is.null(method)) {method <- "outlier"}
 
   method <- match.arg(method)
@@ -343,29 +343,33 @@ plot.cluster.obj <- function(x, method = c("outlier", "ehat", "partialsum", "mah
   d <- ncol(data)
   if (d != cluster.obj$icp.torus$d) {stop("dimension mismatch: dimension of icp.torus object and input data are not the same.")}
   if (method == "outlier") {membership <- cluster.obj$cluster.id.outlier}
-  else if (method == "ehat") {membership <- cluster.obj$cluster.id.by.ehat}
-  else if (method == "partialsum") {membership <- cluster.obj$cluster.id.by.partialsum}
+  else if (method == "log.density") {membership <- cluster.obj$cluster.id.log.density}
+  else if (method == "posterior") {membership <- cluster.obj$cluster.id.by.posterior}
   else {membership <- cluster.obj$cluster.id.by.Mah.dist}
 
   coord <- t(utils::combn(d, 2))
   if (max(coord) > d | min(coord) < 1)
   {stop("invalid coordinates: out of dimensionality.")}
 
-  max_colnum <- max(cluster.obj$cluster.id.outlier)
-  colnum <- max(membership)
+  outlier_id <- max(cluster.obj$cluster.id.outlier)
+
+  unique.membership <- unique(membership)
+  unique.membership <- sort(unique.membership[unique.membership != outlier_id])
+  colnum <- length(membership)
   angle.names <- colnames(data)
   plot_list <- list()
 
-  hues = seq(15, 375, length = max_colnum - 1)
+  hues = seq(15, 375, length = outlier_id + 1)[unique.membership]
   for (i in 1:nrow(coord)){
     plotdata <- data.frame(angle1 = data[ , coord[i, 1]], angle2 = data[ , coord[i, 2]])
-    membership[membership == max_colnum] <- "out"
-    plotdata <- data.frame(plotdata, membership = as.factor(membership))
-    plot_list[[i]] <- ggplot2::ggplot(ggplot2::aes(x = .data$angle1, y = .data$angle2, color = .data$membership), data = plotdata) +
+    membership[membership == outlier_id] <- "out"
+    plotdata <- data.frame(plotdata, membership = factor(membership,
+                                                         levels = c(as.character(unique.membership), "out")))
+    plot_list[[i]] <- ggplot2::ggplot(ggplot2::aes(x = .data$angle1, y = .data$angle2, color = .data$membership), data = plotdata, ...) +
+      ggplot2::scale_color_manual(values = c(grDevices::hcl(h = hues, l = 65, c = 100), "#999999")[1:colnum]) +
       ggplot2::geom_point() +
       ggplot2::scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
-      ggplot2::scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
-      ggplot2::scale_color_manual(values =  c(grDevices::hcl(h = hues, l = 65, c = 100), "#999999")[1:colnum])
+      ggplot2::scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))
   }
   legend <- cowplot::get_legend(plot_list[[1]] + ggplot2::theme(legend.box.margin = ggplot2::margin(0,0,0,12)))
 
@@ -461,7 +465,7 @@ plot.hyperparam.J <- function(x, ...){
     ggplot2::geom_point(ggplot2::aes(x = .data$J, y = .data$criterion),
                         data = as.data.frame(hyperparam.J$IC.results[which.min(hyperparam.J$IC.results[, 2]), ]),
                         shape = 19, size = 1.5) +
-    ggplot2::geom_line(alpha = 0.5) + ggplot2::ggtitle(paste("option = ", hyperparam.torus$option))
+    ggplot2::geom_line(alpha = 0.5) + ggplot2::ggtitle(paste("option = ", hyperparam.J$option))
 }
 
 # hyperparam.alpha object ------------------------------------------

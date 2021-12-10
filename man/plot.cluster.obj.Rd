@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{cluster.obj}(
   x,
-  method = c("outlier", "ehat", "partialsum", "mahalanobis"),
+  method = c("outlier", "log.density", "posterior", "mahalanobis"),
   out = FALSE,
   ...
 )
@@ -14,7 +14,7 @@
 \arguments{
 \item{x}{\code{x} object}
 
-\item{method}{A string. One of "outlier", "ehat", "partialsum", "mahalanobis". Default is "outlier".}
+\item{method}{A string. One of "outlier", "log.density", "posterior", "mahalanobis". Default is "outlier".}
 
 \item{out}{An option for returning the ggplot object.}
 
