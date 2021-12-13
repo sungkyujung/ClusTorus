@@ -33,7 +33,13 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
   n <- nrow(data)
 
   eval.point.bind <- rbind(eval.point, data)
-  #
+  
+  concentration = concentration[1]
+  if (!is.numeric(concentration) | concentration <= 0) {
+    concentration <- 25 
+    warning("Concentration must be a positive number. Reset as concentration = 25 (default)\n")
+  }
+  
   phat <- kde.torus(data, eval.point.bind,
                     concentration = concentration)
 
@@ -45,7 +51,11 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
   nalpha <- length(level)
   cp.torus <- NULL
 
-  if (!is.null(level)){
+  if (is.null(level) || level < 0 || level > 1) {
+    level <- 0.1
+    warning("Level must be numeric and between 0 and 1. Reset as level = 0.1 (default)")
+  }
+    
     for (i in 1:nalpha){
       ialpha <- floor( (n + 1) * level[i])
       # indices for inclusion in L-
@@ -66,7 +76,7 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
                                Lminus = Lminus, Cn = Cn, Lplus = Lplus, level = level[i])
       cp.torus <- rbind(cp.torus, cp.torus.i)
     }
-  }
+  
 
 
   structure(list(concentration = concentration, level = level,

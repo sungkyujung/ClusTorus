@@ -28,7 +28,7 @@ kde.torus <- function(data, eval.point = NULL,
   concentration = concentration[1]
   if (!is.numeric(concentration) | concentration <= 0) {
     concentration <- 25 
-    cat("Message from kde.torus(): concentration must be a positive number. Reset as concentration = 25 (default)\n")
+    warning("Concentration must be a positive number. Reset as concentration = 25 (default)\n")
     }
   d <- ncol(data)
   n <- nrow(data)
