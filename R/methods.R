@@ -156,11 +156,15 @@ predict.icp.torus <- function(object, newdata, ...){
 #' @rdname plot.icp.torus
 #' @method plot icp.torus
 #' @export
-plot.icp.torus <- function(x, data, level = 0.1, ellipse = TRUE, out = FALSE, ...){
+plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FALSE, ...){
 
   icp.torus <- x
-  if(is.null(data)) {stop("invalid input: data must be input.")}
+  
+  #if(is.null(data)) {stop("invalid input: data must be input.")}
+  
+  if(is.null(data)) { data <- x$model}
   data <- on.torus(data)
+  
   d <- ncol(data)
   if (d != icp.torus$d) {stop("dimension mismatch: dimension of icp.torus object and input data are not the same.")}
   n2 <- icp.torus$n2
@@ -170,7 +174,7 @@ plot.icp.torus <- function(x, data, level = 0.1, ellipse = TRUE, out = FALSE, ..
 
   method <- icp.torus$method
   if (method == "kde"){
-    if(ellipse == TRUE) {warning("method kde does not support the option ellipse. Automatically plot on the grid.")}
+   # if(ellipse == TRUE) {warning("method kde does not support the option ellipse. Automatically plot on the grid.")}
     ellipse <- FALSE
   }
 
@@ -223,17 +227,17 @@ print.icp.torus.eval <- function(x, ...){
   n = 10
   n <- min(nrow(icp.torus.eval$eval.point), n)
   if (!is.null(icp.torus.eval$Chat_kmeans)){
-    cat("Conformal prediction set(Chat_kmeans)\n\n")
+    cat("Conformal prediction set (Chat_kmeans)\n\n")
     cat("Testing inclusion to the conformal prediction set with level =", paste0(icp.torus.eval$level, ":\n"))
     cat("-------------\n")
     print(utils::head(data.frame(icp.torus.eval$eval.point, inclusion = icp.torus.eval$Chat_kmeans), n = n))
   } else if (!is.null(icp.torus.eval$Chat_kde)){
-    cat("Conformal prediction set(Chat_kde)\n\n")
+    cat("Conformal prediction set (Chat_kde)\n\n")
     cat("Testing inclusion to the conformal prediction set with level =", paste0(icp.torus.eval$level, ":\n"))
     cat("-------------\n")
     print(utils::head(data.frame(icp.torus.eval$eval.point, inclusion = icp.torus.eval$Chat_kde), n = n))
   } else {
-    cat("Conformal prediction sets(Chat_mix, Chat_max, Chat_e)\n\n")
+    cat("Conformal prediction sets (Chat_mix, Chat_max, Chat_e)\n\n")
     cat("Testing inclusion to the conformal prediction set with level =", paste0(icp.torus.eval$level, ":\n"))
     cat("-------------\n")
     print(utils::head(data.frame(icp.torus.eval$eval.point, inclusion.mix = icp.torus.eval$Chat_mix,
@@ -243,8 +247,7 @@ print.icp.torus.eval <- function(x, ...){
 }
 
 # cp.torus.kde object ----------------------------------------------
-# 1. print, 2. summary
-
+# 1. print, 2. plot (to be added)
 
 #' @method print cp.torus.kde
 #' @export

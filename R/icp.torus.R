@@ -118,7 +118,7 @@ icp.torus.score <- function(data, split.id = NULL,
   n2 <- nrow(X2)
 
   # Prepare output
-  icp.torus <- list(n2 = n2, split.id = split.id, d = ncol(data))
+  icp.torus <- list(n2 = n2, split.id = split.id, d = ncol(data), model = as.data.frame(data))
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
