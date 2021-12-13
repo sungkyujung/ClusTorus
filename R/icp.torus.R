@@ -27,7 +27,7 @@
 #'   only the one iteration of the algorithm is used. If"heterogeneous-circular",
 #'   the same as above, but with the constraint that ellipsoids must be spheres.
 #'   If "homogeneous-circular", the same as above but the radii of the spheres are
-#'   identical. This argument only works for method = "kmeans".
+#'   identical. Default is "general". This argument only works for method = "kmeans".
 #' @param init determine the initial parameter of "kmeans" method,
 #'   for option "general". Must be "kmeans" or "hierarchical".
 #'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
@@ -43,8 +43,7 @@
 #' @param J the number of components for \code{method = c("mixture", "kmeans")}.
 #'   Default is \code{J = 4}.
 #' @param concentration the concentration parameter for \code{method = "kde"}.
-#'   Default is \code{concentration = 25}.
-#'   parameter in the form of \code{list(J=j, concentration=k)}.
+#'   Default is \code{concentration = 25}. 
 #' @param THRESHOLD number for difference between updating and
 #'   updated parameters. Default is 1e-10.
 #' @param maxiter the maximal number of iteration. Default is 200.
@@ -69,12 +68,11 @@
 #'                              J = 4, concentration = 25)
 #' }
 icp.torus.score <- function(data, split.id = NULL,
-                            method = c("kde", "mixture", "kmeans"),
-                            mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
-                            kmeansfitmethod = c("homogeneous-circular",
+                            method = c("kmeans", "kde", "mixture"),
+                            mixturefitmethod = c("axis-aligned","circular","general") #, "Bayesian"),
+                            kmeansfitmethod = c("general", "homogeneous-circular",
                                                 "heterogeneous-circular",
-                                                "ellipsoids",
-                                                "general"),
+                                                "ellipsoids"),
                             init = c("kmeans", "hierarchical"),
                             additional.condition = TRUE,
                             J = 4, concentration = 25, kmax = 500,
@@ -92,7 +90,7 @@ icp.torus.score <- function(data, split.id = NULL,
 
   if (is.null(method)) {method <- "kmeans" }
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned" }
-  if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "homogeneous-circular" }
+  if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "general" }
   if (is.null(init)){ type <- "hierarchical" }
 
   data <- on.torus(data)
