@@ -253,7 +253,7 @@ print.cp.torus.kde <- function(x, ...){
   cp.torus.kde <- x
   n_score <- 30
   n_test <- 10
-  cat("Conformal prediction sets(Lminus, Cn, Lplus)\n\n")
+  cat("Conformal prediction sets (Lminus, Cn, Lplus)\n\n")
 
   cat("Concentration:", cp.torus.kde$concentration, "\n")
   cat("-------------\n")
