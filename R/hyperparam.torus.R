@@ -18,8 +18,9 @@
 #' @param alphavec either a scalar or a vector, or even \code{NULL} for the levels.
 #'   Default value is \code{NULL}. If \code{NULL}, then \code{alphavec} is
 #'   automatically generated as a sequence from 0 to \code{alpha.lim}.
-#' @param alpha.lim a positive number lower than 1, which is the upper bound of
-#'   Default is 0.15.
+#' @param alpha.lim a positive number lower than 1. Default value is \code(NULL). 
+#'   If \code{NULL}, then \code{alpha.vec} is is 0.5 for option = "elbow", and 
+#'   0.15 for options c("risk", "AIC", or "BIC").#'   
 #' @param method A string. One of "all", "kde", "mixture", and "kmeans" which
 #'   determines the model or estimation methods. If "kde", the model is based
 #'   on the kernel density estimates. It supports the kde-based conformity score
@@ -91,7 +92,7 @@
 hyperparam.torus <- function(data, icp.torus.objects = NULL,
                              option = c("elbow", "risk", "AIC", "BIC"),
                              split.id = NULL, Jvec = 3:35, kvec = 20:100, alphavec = NULL,
-                             alpha.lim = 0.15 ,method = c("kde", "mixture", "kmeans"),
+                             alpha.lim = NULL ,method = c("kde", "mixture", "kmeans"),
                              mixturefitmethod = c("circular", "axis-aligned", "general", "Bayesian"),
                              kmeansfitmethod = c("homogeneous-circular", "heterogeneous-circular",
                                                  "ellipsoids", "general"),
@@ -137,9 +138,14 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
   if (is.null(mixturefitmethod)) {mixturefitmethod <- "axis-aligned"}
   if (is.null(kmeansfitmethod)) {kmeansfitmethod <- "general"}
   if (is.null(init)) {init <- "kmeans"}
+  
+  option <- match.arg(option) # this uses the first element. 
+  
+  
+  if (is.null(alpha.lim)) { alpha.lim <- ifelse(option=="elbow",0.5,0.15)}
   if (alpha.lim > 1) {stop("alpha.lim must be less than 1.")}
-
-  option <- match.arg(option)
+  
+  
   method <- match.arg(method)
   mixturefitmethod <- match.arg(mixturefitmethod)
   kmeansfitmethod <- match.arg(kmeansfitmethod)
