@@ -499,7 +499,7 @@ plot.hyperparam.J <- function(x, ...){
     ggplot2::geom_point(ggplot2::aes(x = .data$J, y = .data$criterion),
                         data = as.data.frame(hyperparam.J$IC.results[which.min(hyperparam.J$IC.results[, 2]), ]),
                         shape = 19, size = 1.5) +
-    ggplot2::geom_line(alpha = 0.5) + ggplot2::ggtitle(paste("option = ", hyperparam.J$option))
+    ggplot2::geom_line(alpha = 0.5) + ggplot2::ggtitle(paste("criterion: ", hyperparam.J$criterion))
 }
 
 # hyperparam.alpha object ------------------------------------------
