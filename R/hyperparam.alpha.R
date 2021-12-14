@@ -35,7 +35,7 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   else {stop("method kde is not supported.")}
   n2 <- icp.torus$n2
 
-  if (alpha.lim > 1) {stop("alpha.lim must be less than 1.")}
+  if (is.null(alphavec) && alpha.lim > 1) {stop("alpha.lim must be less than 1.")}
 
   output <- list()
   out <- data.frame()
