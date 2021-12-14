@@ -71,7 +71,7 @@
 #' }
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("kmeans", "kde", "mixture"),
-                            mixturefitmethod = c("axis-aligned","circular","general"), #, "Bayesian"),
+                            mixturefitmethod = c("axis-aligned","circular","general"),  
                             kmeansfitmethod = c("general", "homogeneous-circular",
                                                 "heterogeneous-circular",
                                                 "ellipsoids"),
@@ -116,7 +116,49 @@ icp.torus.score <- function(data, split.id = NULL,
     split.id <- rep(2,n)
     split.id[ sample(n,floor(n/2)) ] <- 1
   }
-
+  
+  # if concentration is a vector, return a list of icp.torus objects 
+  if(length(concentration) > 1){ 
+    if (method == "kde"){  
+      icp.torus.objects <- lapply(concentration, function(kappa){
+        icp.torus.score(data, split.id = split.id, method = method, 
+                        init = init,
+                        additional.condition = TRUE,
+                        concentration = kappa,...)
+        })
+      names(icp.torus.objects) <- paste("conc", concentration, sep = "_")
+      return(icp.torus.objects)
+      
+    }else{
+      concentration = concentration[1]
+    }
+  }
+  
+  # if J is a vector, return a list of icp.torus objects
+  if(length(J)>1){
+    if(method != "kde"){
+      icp.torus.objects <- lapply(J, function(j){
+        icp.torus.score(data, split.id = split.id, method = method,
+                        init = init,
+                        additional.condition = additional.condition,
+                        J = j,
+                        kmax = kmax,
+                        THRESHOLD = THRESHOLD,
+                        maxiter = maxiter,
+                        verbose = verbose, ...
+                        )
+      })
+      names(icp.torus.objects) <- paste("J", J, sep = "_")
+      
+      return(icp.torus.objects)
+      
+    }else{
+      J = J[1]
+    }
+  }
+  
+  # What follows is for single conc. and J.
+  
   X1 <- data[split.id == 1, ]
   X2 <- data[split.id == 2, ]
   n2 <- nrow(X2)
@@ -130,31 +172,24 @@ icp.torus.score <- function(data, split.id = NULL,
   if (method == "kde"){
     icp.torus$method <- "kde"
     phat <- kde.torus(X1, X2, concentration = concentration)
-    # phat.X2.sorted <- sort(phat)
-
     icp.torus$concentration <- concentration
     icp.torus$score <- sort(phat)
     icp.torus$X1 <- X1
 
   }
 
-  # 2. mixture fitting
+  # 2. mixture fitting by EM 
   if (method == "mixture"){
     icp.torus$method <- "mixture"
     icp.torus$fittingmethod <- mixturefitmethod
-
-    if (mixturefitmethod != "Bayesian"){
-      vm2mixfit <- EMsinvMmix(X1, J = J, parammat = EMsinvMmix.init(data, J),
-                              THRESHOLD = THRESHOLD, maxiter = maxiter,
-                              type = mixturefitmethod,
-                              kmax = kmax,
-                              verbose = verbose)
-      icp.torus$fit <- vm2mixfit
-    } else {
-      #vm2mixfit ## USE BAMBI
-      stop("Bayesian not yet implemented")
-    }
-
+    
+    vm2mixfit <- EMsinvMmix(X1, J = J, parammat = EMsinvMmix.init(data, J),
+                            THRESHOLD = THRESHOLD, maxiter = maxiter,
+                            type = mixturefitmethod,
+                            kmax = kmax,
+                            verbose = verbose)
+    icp.torus$fit <- vm2mixfit 
+    
     # compute phat(X2)
     phat <- BAMBI::dvmsinmix(X2,kappa1 = vm2mixfit$parammat[2, ],
                              kappa2 = vm2mixfit$parammat[3, ],
@@ -167,49 +202,18 @@ icp.torus.score <- function(data, split.id = NULL,
 
     # compute phat_max(X2)
     phatj <- phat.eval(X2, vm2mixfit$parammat)
-
-    # phatj <- matrix(0,nrow = n2,ncol = param$J)
-    # for(j in 1:param$J){
-    #   phatj[,j] <- BAMBI::dvmsin(X2, kappa1 = vm2mixfit$parammat[2,j],
-    #                              kappa2 = vm2mixfit$parammat[3,j],
-    #                              kappa3 = vm2mixfit$parammat[4,j],
-    #                              mu1 = vm2mixfit$parammat[5,j],
-    #                              mu2 = vm2mixfit$parammat[6,j],log = FALSE
-    #   ) * vm2mixfit$parammat[1,j]
-    # }
-    # icp.torus$mixture$score_max <- sort(apply(phatj, 1, max))
     icp.torus$score_max <- sort(do.call(pmax, as.data.frame(phatj)))
 
     # compute parameters for ellipses and phat_e(X2)
     ellipse.param <- norm.appr.param(vm2mixfit$parammat)
-    # ellipse.param <- list(mu1 = NULL, mu2=NULL, Sigmainv = NULL,c = NULL)
-    # ellipse.param$mu1 <- vm2mixfit$parammat[5,]
-    # ellipse.param$mu2 <- vm2mixfit$parammat[6,]
-    # for (j in 1:param$J){
-    #   kap1 <- vm2mixfit$parammat[2,j]
-    #   kap2 <- vm2mixfit$parammat[3,j]
-    #   lamb <- vm2mixfit$parammat[4,j]
-    #   pi_j <- vm2mixfit$parammat[1,j]
-    #   ellipse.param$Sigmainv[[j]] <-
-    #     matrix(c(kap1, rep(lamb,2), kap2), nrow = 2)
-    #   ellipse.param$c[j] <- 2*log(pi_j * (kap1*kap2 - lamb^2) )
-    # }
     icp.torus$ellipsefit <- ellipse.param
 
     ehatj <- ehat.eval(X2, ellipse.param)
-    # ehatj <- matrix(0,nrow = n2,ncol = param$J)
-    # for(j in 1:param$J){
-    #   z <- tor.minus(X2, c(ellipse.param$mu1[j], ellipse.param$mu2[j]) )
-    #   S <- ellipse.param$Sigmainv[[j]]
-    #   A <- z %*% S
-    #   ehatj[,j] <- -apply(cbind(A,z), 1, function(a){a[1]*a[3]+a[2]*a[4]}) + ellipse.param$c[j]
-    # }
-    # icp.torus$mixture$score_ellipse <- sort(apply(ehatj, 1, max))
     icp.torus$score_ellipse <- sort(do.call(pmax, as.data.frame(ehatj)))
 
   }
 
-  # 3. kmeans to kspheres
+  # 3. elliptical kmeans algorithm 
   if (method == "kmeans"){
     # implement extrinsic kmeans clustering for find the centers
     icp.torus$method <- "kmeans"
@@ -227,7 +231,6 @@ icp.torus.score <- function(data, split.id = NULL,
     icp.torus$ellipsefit <- ellipse.param
 
     ellipsej <- ehat.eval(X2, ellipse.param)
-    # icp.torus$kmeans$score_sphere <- sort(apply(spherej, 1, max))
     icp.torus$score_ellipse <- sort(do.call(pmax, as.data.frame(ellipsej)))
 
   }
