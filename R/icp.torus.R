@@ -53,8 +53,10 @@
 #'   \code{TRUE}, the warning message will be reported.
 #' @param kmax the maximal number of kappa. If estimated kappa is
 #'   larger than \code{kmax}, then put kappa as \code{kmax}.
-#' @return returns an \code{icp.torus} object, containing all values
-#'   to compute the conformity score.
+#' @return \code{icp.torus.score} returns an \code{icp.torus} object, containing all values
+#'   to compute the conformity score (if \code{J} or \code{concentration} is a 
+#'   single value). if \code{J} or \code{concentration} is a vector containing 
+#'   multiple values, then \code{icp.torus.score} returns a list of \code{icp.torus} objects
 #' @export
 #' @references S. Jung, K. Park, and B. Kim (2021),
 #'   "Clustering on the torus by conformal prediction"

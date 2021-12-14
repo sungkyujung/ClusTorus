@@ -265,7 +265,7 @@ hyperparam.torus <- function(data, icp.torus.objects = NULL,
   # criterion based on information criteria ----------------------
   if (sum(option == c("AIC", "BIC", "risk")) == 1){
 
-    results.J <- hyperparam.J(data = data, icp.torus.objects = icp.torus.objects,
+    results.J <- hyperparam.J(icp.torus.objects = icp.torus.objects,
                               option = option)
 
     output$IC.results <- results.J$IC.results
