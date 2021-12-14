@@ -23,7 +23,7 @@
 #' @param method A string. One of "all", "kde", "mixture", and "kmeans" which
 #'   determines the model or estimation methods. If "kde", the model is based
 #'   on the kernel density estimates. It supports the kde-based conformity score
-#'   only. If "mixutre", the model is based on the von Mises mixture, fitted
+#'   only. If "mixture", the model is based on the von Mises mixture, fitted
 #'   with an EM algorithm. It supports the von Mises mixture and its variants
 #'   based conformity scores. If "kmeans", the model is also based on the von
 #'   Mises mixture, but the parameter estimation is implemented with the
