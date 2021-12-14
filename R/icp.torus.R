@@ -69,7 +69,7 @@
 #' }
 icp.torus.score <- function(data, split.id = NULL,
                             method = c("kmeans", "kde", "mixture"),
-                            mixturefitmethod = c("axis-aligned","circular","general") #, "Bayesian"),
+                            mixturefitmethod = c("axis-aligned","circular","general"), #, "Bayesian"),
                             kmeansfitmethod = c("general", "homogeneous-circular",
                                                 "heterogeneous-circular",
                                                 "ellipsoids"),
@@ -86,6 +86,10 @@ icp.torus.score <- function(data, split.id = NULL,
 
   # param contains the number of components for mixture fitting
   #       and the concentration parameter.
+  
+  # if data contains NAs, the rows containing NAs are removed by na.omit()
+  
+  data <- na.omit(data)
   if (!is.matrix(data)) {data <- as.matrix(data)}
 
   if (is.null(method)) {method <- "kmeans" }

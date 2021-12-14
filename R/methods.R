@@ -285,6 +285,37 @@ print.cp.torus.kde <- function(x, ...){
   cat("\n", nrow(cp.torus.kde$cp.torus) - n_test, "rows are omitted.")
 }
 
+#' description
+#'
+#' more details
+#'
+#' @param x \code{cp.torus.kde} object
+#' @param level.id a scalar
+#' @param ... additional parameter
+#'
+#' @rdname plot.cp.torus.kde
+#' @method plot cp.torus.kde
+#' @export
+
+plot.cp.torus.kde <- function(x,level.id = 1,...){ 
+  #  level.id is an integer among 1:length(cp.torus$level).
+  
+  if (is.null(x$cp.torus)) {stop("Conformal prediction set has not been evaluated.")}
+  
+  cp.torus <- dplyr::filter(x$cp.torus, level == x$level[level.id])
+  
+  g.new = ggplot2::ggplot() +
+    ggplot2::geom_contour(ggplot2::aes(phi,psi, z = ifelse(Cn, 1, 0)), data = cp.torus,
+                          size = 1, lineend = "round" ) +
+    ggplot2::geom_point(mapping = ggplot2::aes(phi,psi), data = as.data.frame(x$data.sorted)) +
+    ggplot2::scale_x_continuous(breaks = c(0, 1, 2, 3, 4) * pi / 2,
+                                labels = c("0","pi/2", "pi", "3pi/2", "2pi"), limits = c(0, 2 * pi)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 1, 2, 3, 4) * pi / 2,
+                                labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi))
+  g.new
+}
+
+
 # cluster.obj object -----------------------------------------------
 # 1. print, 2. plot
 
