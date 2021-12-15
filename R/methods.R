@@ -543,9 +543,17 @@ print.hyperparam.torus <- function(x, ...){
   cat("Type of conformity score:", hyperparam.torus$method, "\n")
   cat("Optimizing method:", hyperparam.torus$option, "\n")
   cat("-------------\n")
-  cat("Optimally chosen parameters", paste0("(", ifelse(hyperparam.torus$method[1] == "kde", "concentration", "J"),
-      ", alpha):"),
-      hyperparam.torus$optim$hyperparam, "\n")
+  if (hyperparam.torus$method[1] == "kde"){
+    cat("Optimally chosen parameters. Concentration = ", hyperparam.torus$khat, 
+        ", alpha = ", hyperparam.torus$alphahat, "\n")
+  }else{
+    cat("Optimally chosen parameters. Number of components = ", hyperparam.torus$Jhat, 
+        ", alpha = ", hyperparam.torus$alphahat, "\n")
+  }
+  # cat("Optimally chosen parameters", 
+  #     paste0("(", ifelse(hyperparam.torus$method[1] == "kde", "concentration", "J"),
+  #     ", alpha):"),
+  #     hyperparam.torus$optim$hyperparam, "\n")
   if (hyperparam.torus$option == "elbow"){
     n <- min(15, nrow(hyperparam.torus$results))
     cat("Results based on criterion", hyperparam.torus$option, ":\n")

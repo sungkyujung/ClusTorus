@@ -112,8 +112,11 @@ hyperparam.torus <- function(icp.torus.objects,
       
       out.index <- which.min(out$criterion) 
       output$results <- out[,2:5]
-      output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
-      output$optim$hyperparam <- unlist(out[out.index, 2:3])
+      output$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
+      output$Jhat <- unlist(out[out.index, 2])
+      output$alphahat <- unlist(out[out.index, 3])
+      #output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
+      #output$optim$hyperparam <- unlist(out[out.index, 2:3])
       return(structure(output, class = "hyperparam.torus"))
       
       # 2. mixture ----------------------------------------------------------------
@@ -131,8 +134,12 @@ hyperparam.torus <- function(icp.torus.objects,
       
       out.index <- which.min(out$criterion)
       output$results <- out[,2:5]
-      output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
-      output$optim$hyperparam <- unlist(out[out.index, 2:3])
+      output$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
+      output$Jhat <- unlist(out[out.index, 2])
+      output$alphahat <- unlist(out[out.index, 3])
+      
+      #output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
+      #output$optim$hyperparam <- unlist(out[out.index, 2:3])
       return(structure(output, class = "hyperparam.torus"))
     }
     # 3. kde --------------------------------------------------
@@ -150,8 +157,9 @@ hyperparam.torus <- function(icp.torus.objects,
       
       out.index <- which.min(out$criterion) 
       output$results <- out[,2:5]
-      output$optim$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
-      output$optim$hyperparam <- unlist(out[out.index, 2:3])
+      output$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
+      output$khat <- unlist(out[out.index, 2])
+      output$alphahat <- unlist(out[out.index, 3])
       return(structure(output, class = "hyperparam.torus"))
     }
   }
@@ -174,9 +182,9 @@ hyperparam.torus <- function(icp.torus.objects,
 
     hyperparam <- c(Jhat, alphahat)
     names(hyperparam) <- c("J", "alpha")
-
-    output$optim$hyperparam <- hyperparam
-    output$optim$icp.torus <- icp.torus
+    output$icp.torus <- icp.torus
+    output$Jhat <- hyperparam[1]
+    output$alphahat <- hyperparam[2] 
 
     return(structure(output, class = "hyperparam.torus"))
   }
