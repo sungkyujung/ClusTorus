@@ -47,7 +47,7 @@
 #' @examples
 #' data <- ILE[1:200, 1:2]
 #'
-#' ellip.kmeans.torus(data, centers = 3, type = "general")
+#' ellip.kmeans.torus(data, centers = 3, type = "general", init = "hierarchical")
 ellip.kmeans.torus <- function(data, centers = 10,
                             type = c("homogeneous-circular",
                                      "heterogeneous-circular",

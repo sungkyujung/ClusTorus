@@ -28,22 +28,22 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
   # if level is null, return kde at eval.point and at data points.
   # if level is a vector, return the above and Prediction set indices for each value of level.
   # if data contains NAs, the rows containing NAs are removed by na.omit()
-  
-  data <- na.omit(data)
-  
+
+  data <- stats::na.omit(data)
+
   if (!is.matrix(data)) {data <- as.matrix(data)}
-  
+
   N <- nrow(eval.point)
   n <- nrow(data)
 
   eval.point.bind <- rbind(eval.point, data)
-  
+
   concentration = concentration[1]
   if (!is.numeric(concentration) | concentration <= 0) {
-    concentration <- 25 
+    concentration <- 25
     warning("Concentration must be a positive number. Reset as concentration = 25 (default)\n")
   }
-  
+
   phat <- kde.torus(data, eval.point.bind,
                     concentration = concentration)
 
@@ -56,35 +56,35 @@ cp.torus.kde <- function(data, eval.point = grid.torus(),
 
 
   if (!is.null(level)){
-    
+
     if (level < 0 || level > 1) {
       level <- 0.1
       warning("Level must be numeric and between 0 and 1. Reset as level = 0.1 (default)")
     }
-    
+
     nalpha <- length(level)
-    
+
     for (i in 1:nalpha){
       ialpha <- floor( (n + 1) * level[i])
       # indices for inclusion in L-
       Lminus <- phat.grid >= phat.data[ialpha]
-      
+
       # indices for inclusion in L+
       const_vM2 <- (2 * pi * besselI(concentration, 0))^2
       zeta <- (exp(concentration * 2) - exp(-concentration * 2)) / const_vM2
       Lplus <- phat.grid >=  phat.data[ialpha] - zeta / n
-      
+
       # indices for inclusion in Cn(alpha)
       K <- (exp(concentration * 2) -
               exp(concentration * (  rowSums(cos(sweep(eval.point, 2, data[ialpha, ], "-"))  )))) /
         const_vM2 # K(0) - K(y_(ialpha) - y)
       Cn <- phat.grid - phat.data[ialpha] + K/n >= 0
-      
+
       cp.torus.i <- data.frame(phi = eval.point[, 1], psi = eval.point[, 2],
                                Lminus = Lminus, Cn = Cn, Lplus = Lplus, level = level[i])
       cp.torus <- rbind(cp.torus, cp.torus.i)
     }
-    
+
   }
 
   structure(list(concentration = concentration, level = level,

@@ -44,24 +44,19 @@ Now, we are ready to implement clustering algorithms to the data. ClusTorus prov
 set.seed(2021)
 
 Jvec <- 5:30
-l <- list()
-
-for (j in Jvec){
-  l[[j]] <- icp.torus.score(as.matrix(data[, 1:2]),
-                            method = "kmeans",
+l <- icp.torus(as.matrix(data[, 1:2]),
+                            model = "kmeans",
                             kmeansfitmethod = "general",
                             init = "hierarchical",
-                            J = j,
+                            J = Jvec,
                             verbose = FALSE)
-}
-
 ```
 
 
 The list `l` contains the `icp.torus` objects, which consist of fitted parameters for generating clusters, by varying the hypterparameter $J$. That is, these objects are optimally fitted ingredients for generating clusters for given $J$. By specifying the significance level, we can get the clusters. But, how to generate optimal clusters/conformal prediction sets? One may think that the hyperparameter which generates the cluster/prediction set of the minimum volume/area will be the optimum for given significance level. The other may think that we can choose the number of mixture components $J$ by using information criteria such as AIC or BIC. These approaches are implemented in the function `hyperparam.torus`; the main arguments of `hyperparam.torus` is `data`, `icp.torus.objects`, and `option`. Analogously, the argument `data` is analogously for the data. `icp.torus.objects` is for the list object whose elements are `icp.torus` objects, such as the list `l` generated above. The argument `option`, which is the most important argument, is for the hyperparameter selection criterion. If `option = "elbow"`, then `hyperparam.torus` selects $J$ and $\alpha$ based on the volume based criterion as mentioned above. If `option = "AIC"` or `option = "BIC"`, then `hyperparam.torus` selects $J$ based on the designated information criterion, and selects the most stable $\alpha$ in the sense of the number of generated clusters. If `option = "risk"`, then it chooses $J$ which minimizes the sum of the conformity scores and analogously choose the stable $\alpha$. We will use `option = "risk"` in this case, and the following codes show the criterion results($J$ versus the evaluated criterion), $\alpha$ results($\alpha$ versus the number of clusters), and chosen $J$ and $\alpha$.
 
 ```{r}
-output <- hyperparam.torus(data[, 1:2], icp.torus.objects = l, option = "risk")
+output <- hyperparam.torus(l, option = "risk")
 output
 plot(output)
 ```
@@ -69,8 +64,8 @@ plot(output)
 `hyperparam.torus` also provides the selected model; that is, since `icp.torus.score` is the function for the model fitting, `hyperparam.torus` selects the model of the chosen $J$. `output$optim$icp.torus` is the selected model, and we will generate the resulting clusters with it.
 
 ```{r}
-icp.torus.kmeans <- output$optim$icp.torus
-alphahat <- output$optim$hyperparam[2]
+icp.torus.kmeans <- output$icp.torus
+alphahat <- output$alphahat
 ```
 
 
@@ -78,8 +73,8 @@ alphahat <- output$optim$hyperparam[2]
 With `cluster.assign.torus`, we can generate the cluster for option `mixture` and `kmeans`, and for each data point, the label of cluster is assigned. Moreover, for the case of `kmeans`, we can check how the cluster is generated directly as below:
 
 ```{r}
-c_kmeans <- cluster.assign.torus(data[, 1:2], icp.torus.kmeans, level = alphahat)
-plot(icp.torus.kmeans, data[, 1:2], level = alphahat)
+c_kmeans <- cluster.assign.torus(icp.torus.kmeans, level = alphahat)
+plot(icp.torus.kmeans, level = alphahat)
 ```
 
 Also, with the assigned cluster labels, we can visualize the clusters with colored data points; 

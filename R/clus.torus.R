@@ -1,13 +1,13 @@
 #' Clustering on the torus by conformal prediction
 #'
-#' \code{clus.torus} returns clustering results of data on the torus based on 
+#' \code{clus.torus} returns clustering results of data on the torus based on
 #'   inductive conformal prediction set
 #'
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #'   or \eqn{[-\pi, \pi)^d}
 #' @param split.id a n-dimensional vector consisting of values 1 (estimation)
 #'   and 2(evaluation)
-#' @param method A string. One of "mixture" and "kmeans" which
+#' @param model A string. One of "mixture" and "kmeans" which
 #'   determines the model or estimation methods. If "mixture", the model is based
 #'   on the von Mises mixture, fitted
 #'   with an EM algorithm. It supports the von Mises mixture and its variants
@@ -27,18 +27,18 @@
 #'   the same as above, but with the constraint that ellipsoids must be spheres.
 #'   If "homogeneous-circular", the same as above but the radii of the spheres are
 #'   identical. Default is "general". This argument only works for method = "kmeans".
-#' @param J the number of components for mixture model fitting. If \code{J} is a vector, 
-#'   then \code{hyperparam.torus} is used to choose optimal \code{J}. If 
+#' @param J the number of components for mixture model fitting. If \code{J} is a vector,
+#'   then \code{hyperparam.torus} is used to choose optimal \code{J}. If
 #'  \code{J == NULL}, then \code{J = 4:30} is used.
 #' @param level a scalar in \eqn{[0,1]}. The level of the conformal prediction set
-#'  used for clustering. If \code{level == NULL}, then \code{hyperparam.alpha} is 
+#'  used for clustering. If \code{level == NULL}, then \code{hyperparam.alpha} is
 #'  used to choose optimal \code{level}
 #' @param option A string. One of "elbow", "risk", "AIC", or "BIC", which determines the
 #'  criterion for the model selection. "risk" is based on the negative log-likelihood, "AIC"
 #'  for the Akaike Information Criterion, and "BIC" for the Bayesian Information Criterion.
-#'  "elbow" is based on minimizing the criterion used in Jung et. al.(2021). 
+#'  "elbow" is based on minimizing the criterion used in Jung et. al.(2021).
 #'  This argument is only used if \code{J} is a vector or \code{NULL}.
-#' @param ... Further arguments that will be passed to \code{icp.torus.score} and 
+#' @param ... Further arguments that will be passed to \code{icp.torus} and
 #'   \code{hyperparam.torus}
 #' @return clustering assignment for data
 #' \describe{
@@ -58,35 +58,26 @@
 #' \donttest{
 #' data <- toydata2[, 1:2]
 #' n <- nrow(data)
-#' split.id <- rep(2, n)
-#' split.id[sample(n, floor(n/2))] <- 1
-#' Jvec <- 3:35
-#' icp.torus.objects <- list()
-#' for (j in Jvec){
-#'   icp.torus.objects[[j]] <- icp.torus.score(data, split.id = split.id, method = "kmeans",
-#'                                             kmeansfitmethod = "ge", init = "h",
-#'                                             J = j, verbose = TRUE)
-#' }
-#' hyperparam.torus(data, icp.torus.objects, option = "risk")
+#' clus.torus(data = data, model = "kmeans", kmeansfitmethod = "general", J = 5:30, option = "risk")
 #' }
 
-clus.torus <- function(data, split.id = NULL,  
-                       method = c("kmeans", "mixture"),
-                       mixturefitmethod = c("axis-aligned","circular","general"),  
+clus.torus <- function(data, split.id = NULL,
+                       model = c("kmeans", "mixture"),
+                       mixturefitmethod = c("axis-aligned","circular","general"),
                        kmeansfitmethod = c("general", "homogeneous-circular",
                                            "heterogeneous-circular",
                                            "ellipsoids"),
                        J = NULL,
                        level = NULL,
                        option = NULL,...){
-  
-  # this line prevents using "kde" for clustering. 
-  method <- match.arg(method)
-  
+
+  # this line prevents using "kde" for clustering.
+  model <- match.arg(model)
+
   if(is.null(J)){J = 4:30}
   ind.J.select <- length(J) > 1
-  
-  if(is.null(level)){ 
+
+  if(is.null(level)){
     ind.alpha.select <- TRUE
   }else{
     ind.alpha.select <- FALSE
@@ -100,63 +91,61 @@ clus.torus <- function(data, split.id = NULL,
       warning("Level must be numeric and between 0 and 1. Reset as level = NULL (default)")
     }
   }
-  
-  method <- match.arg(method)
+
+  model <- match.arg(model)
   mixturefitmethod <- match.arg(mixturefitmethod)
   kmeansfitmethod <- match.arg(kmeansfitmethod)
-  
-  
-  if(ind.J.select){  
-    # J is a vector 
-    icp.torus.objects <- icp.torus.score(data, split.id = split.id,
-                              method = method,
-                              mixturefitmethod = mixturefitmethod,  
+
+
+  if(ind.J.select){
+    # J is a vector
+    icp.torus.objects <- icp.torus(data, split.id = split.id,
+                              model = model,
+                              mixturefitmethod = mixturefitmethod,
                               kmeansfitmethod = kmeansfitmethod,
                               J = J,...)
-    if (ind.alpha.select){ 
+    if (ind.alpha.select){
       # choose both J and alpha
       hyperparam.out <- hyperparam.torus(icp.torus.objects, option = option, ...)
       clust.out <- cluster.assign.torus(hyperparam.out)
-      return(list(cluster.obj = clust.out, 
-                  icp.torus = hyperparam.out$icp.torus, 
-                  hyperparam.select = hyperparam.out))
+      return(structure(list(cluster.obj = clust.out,
+                  icp.torus = hyperparam.out$icp.torus,
+                  hyperparam.select = hyperparam.out), class = "clus.torus"))
     }else{
-      hyperparam.J.out <- hyperparam.J(icp.torus,objects, option = option)
-      clust.out <- cluster.assign.torus(hyperparam.J.out$icp.torus, level = level) 
-      
-      return(list(cluster.obj = clust.out, 
-                  icp.torus = hyperparam.J.out$icp.torus, 
-                  hyperparam.select = hyperparam.J.out))
+      hyperparam.J.out <- hyperparam.J(icp.torus.objects, option = option)
+      clust.out <- cluster.assign.torus(hyperparam.J.out$icp.torus, level = level)
+
+      return(structure(list(cluster.obj = clust.out,
+                  icp.torus = hyperparam.J.out$icp.torus,
+                  hyperparam.select = hyperparam.J.out), class = "clus.torus"))
     }
-    
-    
-    
-  }else{ 
-    
-    
-    
+
+
+
+  }else{
+
     # J is a scalar
-    icp.torus <- icp.torus.score(data, split.id = split.id,
-                                 method = method,
-                                 mixturefitmethod = mixturefitmethod,  
+    icp.torus <- icp.torus(data, split.id = split.id,
+                                 model = model,
+                                 mixturefitmethod = mixturefitmethod,
                                  kmeansfitmethod = kmeansfitmethod,
                                  J = J,...)
-    
-    
+
+
     if(ind.alpha.select){
       alpha.out <- hyperparam.alpha(icp.torus, ...)
       level = alpha.out$alphahat
     }else{
       alpha.out <- NULL
     }
-    
+
     clust.out <- cluster.assign.torus(icp.torus, level = level)
-    return(list(cluster.obj = clust.out, icp.torus = icp.torus, hyperparam.select = alpha.out))
+    return(structure(list(cluster.obj = clust.out, icp.torus = icp.torus, hyperparam.select = alpha.out), class = "clus.torus"))
   }
-  
-  
-  
-  
-  
-   
+
+
+
+
+
+
 }

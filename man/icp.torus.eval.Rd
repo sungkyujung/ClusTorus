@@ -8,7 +8,7 @@ icp.torus.eval(icp.torus, level = 0.1, eval.point = grid.torus())
 }
 \arguments{
 \item{icp.torus}{an object containing all values to compute the conformity
-score, which will be constructed with \code{icp.torus.score}.}
+score, which will be constructed with \code{icp.torus}.}
 
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
 is 0.1.}
@@ -30,9 +30,9 @@ returns a \code{cp} object with the boolean values which
 \donttest{
 data <- toydata1[, 1:2]
 
-icp.torus <- icp.torus.score(data, method = "kmeans",
-                             mixturefitmethod = "general",
-                             J = 4, concentration = 25)
+icp.torus <- icp.torus(data, model = "kmeans",
+                       mixturefitmethod = "general",
+                       J = 4, concentration = 25)
 
 icp.torus.eval(icp.torus, level = c(0.1, 0.08), eval.point = grid.torus())
 }
@@ -42,5 +42,5 @@ S. Jung, K. Park, and B. Kim (2021),
   "Clustering on the torus by conformal prediction"
 }
 \seealso{
-\code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus.score}}
+\code{\link[ClusTorus]{grid.torus}}, \code{\link[ClusTorus]{icp.torus}}
 }

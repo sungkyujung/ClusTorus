@@ -68,7 +68,7 @@ returns a list,
 \examples{
 data <- ILE[1:200, 1:2]
 
-ellip.kmeans.torus(data, centers = 3, type = "general")
+ellip.kmeans.torus(data, centers = 3, type = "general", init = "hierarchical")
 }
 \references{
 S. Jung, K. Park, and B. Kim (2021),

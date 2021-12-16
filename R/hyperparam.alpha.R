@@ -15,16 +15,16 @@
 #'   level.
 #' @export
 #' @seealso \code{\link[ClusTorus]{hyperparam.J}}, \code{\link[ClusTorus]{hyperparam.torus}}
-#'  \code{\link[ClusTorus]{icp.torus.score}}
+#'  \code{\link[ClusTorus]{icp.torus}}
 #' @examples
 #' \donttest{
 #' data <- toydata2[, 1:2]
 #' n <- nrow(data)
 #' split.id <- rep(2, n)
 #' split.id[sample(n, floor(n/2))] <- 1
-#' icp.torus <- icp.torus.score(data, split.id = split.id, method = "kmeans",
-#'                              kmeansfitmethod = "ge", init = "h",
-#'                              J = 25, verbose = TRUE)
+#' icp.torus <- icp.torus(data, split.id = split.id, model = "kmeans",
+#'                        kmeansfitmethod = "ge", init = "h",
+#'                        J = 25, verbose = TRUE)
 #' hyperparam.alpha(icp.torus)
 #' }
 hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
