@@ -56,11 +56,11 @@ Mises mixture, but the parameter estimation is implemented with the
 elliptical k-means algorithm illustrated in Appendix. It supports the
 log-max-mixture based conformity score only. If the
 dimension of data space is greater than 2, only "kmeans" is supported.
-Default is \code{method = "kmeans"}.}
+Default is \code{model = "kmeans"}.}
 
 \item{mixturefitmethod}{A string. One of "circular", "axis-aligned", and
 "general" which determines the constraint of the EM fitting. Default is
-"axis-aligned". This argument only works for \code{method = "mixture"}.}
+"axis-aligned". This argument only works for \code{model = "mixture"}.}
 
 \item{kmeansfitmethod}{A string. One of "general", ellipsoids",
 "heterogeneous-circular" or "homogeneous-circular". If "general", the
@@ -68,7 +68,7 @@ elliptical k-means algorithm with no constraint is used. If "ellipsoids",
 only the one iteration of the algorithm is used. If"heterogeneous-circular",
 the same as above, but with the constraint that ellipsoids must be spheres.
 If "homogeneous-circular", the same as above but the radii of the spheres are
-identical. Default is "general". This argument only works for method = "kmeans".}
+identical. Default is "general". This argument only works for \code{model = "kmeans"}.}
 
 \item{init}{determine the initial parameter of "kmeans" method,
 for option "general". Must be "kmeans" or "hierarchical".
@@ -81,10 +81,10 @@ Default is "kmeans".}
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
 
-\item{J}{the number of components for \code{method = c("mixture", "kmeans")}.
+\item{J}{the number of components for \code{model = c("mixture", "kmeans")}.
 Default is \code{J = 4}.}
 
-\item{concentration}{the concentration parameter for \code{method = "kde"}.
+\item{concentration}{the concentration parameter for \code{model = "kde"}.
 Default is \code{concentration = 25}.}
 
 \item{kmax}{the maximal number of kappa. If estimated kappa is
@@ -111,7 +111,9 @@ how many loops are done. Moreover, if \code{additional.condition} is
 \item{level}{either a scalar or a vector, or even \code{NULL}. Default value
 is 0.1.}
 
-\item{ellipse}{A boolean index which determines whether plotting ellipse-intersections. Default is \code{TRUE}.}
+\item{ellipse}{A boolean index which determines whether plotting ellipses from 
+mixture models. Default is \code{TRUE}. (This option is used only when the
+\code{icp.torus} object \code{x} is fitted by model \code{kmeans} or \code{mixture}.)}
 
 \item{out}{An option for returning the ggplot object. Default is \code{FALSE}.}
 

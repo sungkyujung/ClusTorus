@@ -8,9 +8,9 @@
 This list contains the following components:
 \describe{
   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
-  \item{\code{phi}}{main chain torsion angle for atoms N,CA,C,N.}
-  \item{\code{phi}}{side chain torsion angle for atoms N,CA,CB,*G.}
-  \item{\code{phi}}{side chain torsion angle for atoms CA,CB,*G,*D.}
+  \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
+  \item{\code{chi1}}{side chain torsion angle for atoms N,CA,CB,*G.}
+  \item{\code{chi2}}{side chain torsion angle for atoms CA,CB,*G,*D.}
 }
 }
 \source{

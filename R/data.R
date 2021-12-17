@@ -1,12 +1,35 @@
 #' 6VXX: Structure of the SARS-CoV-2 spike glycoprotein(closed state)
 #'
-#' The torsion angle dataset of the SARS-CoV-2 spike glycopreotein.
+#' The torsion angle dataset of SARS-CoV-2 spike glycopreotein.
 #'
 #' @format This data.frame contains the following columns:
 #' \describe{
 #'   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
 #'   \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
-#'   \item{\code{type}}{type of protein chains}
+#'   \item{\code{chi1}}{side chain torsion angle for atoms N,CA,CB,*G.}
+#'   \item{\code{chi2}}{side chain torsion angle for atoms CA,CB,*G,*D.}
+#'   \item{\code{chi3}}{side chain torsion angle for atoms CB,*G,*D,*E.}
+#'   \item{\code{chi4}}{side chain torsion angle for atoms *G,*D,*E,*Z.}
+#'   \item{\code{chi5}}{side chain torsion angle for atoms *D,*E,*Z, NH1.}
+#' }
+#' @source This data can be downloaded in
+#'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
+#'   \code{bio3d}.
+#' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
+#'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
+#'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
+#' @seealso Description of the angluar information is from the 'value'
+#'   part of \code{torsion.pdb} in the package \code{bio3d}.
+"data_6VXX"
+
+#' SARS-CoV-2: chain B of Structure of the SARS-CoV-2 spike glycoprotein(closed state)
+#'
+#' The torsion angle dataset of the chain B of SARS-CoV-2 spike glycopreotein.
+#'
+#' @format This data.frame contains the following columns:
+#' \describe{
+#'   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
+#'   \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
 #' }
 #' @source This data can be downloaded in
 #'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
@@ -25,9 +48,9 @@
 #' @format This list contains the following components:
 #' \describe{
 #'   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
-#'   \item{\code{phi}}{main chain torsion angle for atoms N,CA,C,N.}
-#'   \item{\code{phi}}{side chain torsion angle for atoms N,CA,CB,*G.}
-#'   \item{\code{phi}}{side chain torsion angle for atoms CA,CB,*G,*D.}
+#'   \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
+#'   \item{\code{chi1}}{side chain torsion angle for atoms N,CA,CB,*G.}
+#'   \item{\code{chi2}}{side chain torsion angle for atoms CA,CB,*G,*D.}
 #' }
 #' @details
 #'   ILE data is generated with collection of different pdb files. To select adequate protein

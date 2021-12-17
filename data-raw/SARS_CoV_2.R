@@ -9,8 +9,6 @@ SARS_CoV_2 <- SARS_CoV_2 %>%
   data.frame(id = rownames(.)) %>%
   mutate(id = trimws(id)) %>%
   separate(id, into = c('position', 'type', 'rest')) %>%
-  filter(type %in% c("A", "B", "C"))
-SARS_CoV_2[, 1:2] <- on.torus(as.matrix(SARS_CoV_2[, 1:2]))
-SARS_CoV_2 <- SARS_CoV_2[, c(1, 2, 4)]
+  filter(type == "B") %>% select(c(1,2)) %>% as.matrix() %>% on.torus()
 
 usethis::use_data(SARS_CoV_2, overwrite = TRUE)
