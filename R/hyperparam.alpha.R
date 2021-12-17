@@ -40,16 +40,21 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   output <- list()
   out <- data.frame()
   if (is.null(alphavec)) {alphavec <- 1:floor(min(n2, 1000) * alpha.lim) / n2}
-
+  
+  n.alphavec <- length(alphavec)
+  
   # 1. kmeans -----------------------------------------------------
   if (method == "kmeans"){
-    for (alpha in alphavec){
+    for (ii in 1:n.alphavec){
+      alpha <- alphavec[ii]
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
       t <- icp.torus$score_ellipse[ialpha]
       ncluster <- conn.comp.ellipse(icp.torus$ellipsefit, t)$ncluster
 
       out <- rbind(out, data.frame(alpha = alpha, ncluster = ncluster))
+      if(ii%%10 == 0) cat(".")
     }
+    cat("\n")
 
     nclusters.length <- rle(out$ncluster)$lengths
     length <- max(nclusters.length)
@@ -65,13 +70,16 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
 
   # 2. mixture ----------------------------------------------------
   else if (method == "mixture"){
-    for (alpha in alphavec){
+    for (ii in 1:n.alphavec){
+      alpha <- alphavec[ii]
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
       t <- icp.torus$score_ellipse[ialpha]
       ncluster <- conn.comp.ellipse(icp.torus$ellipsefit, t)$ncluster
 
       out <- rbind(out, data.frame(alpha = alpha, ncluster = ncluster))
+      if(ii%%10 == 0) cat(".")
     }
+    cat("\n")
 
     nclusters.length <- rle(out$ncluster)$lengths
     length <- max(nclusters.length)
