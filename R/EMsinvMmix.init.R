@@ -1,6 +1,6 @@
 # Initalize for EMsinvMmix
 #
-# \code{EMsinvMmix.init} returns the inital parameter for the optimizing
+# \code{EMsinvMmix.init} returns the initial parameter for the optimizing
 #   algorithm, \code{EMsinvMmix}.
 #
 # @details This function uses complete-linkage hierarchical clustering
