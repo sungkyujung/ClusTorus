@@ -8,12 +8,13 @@
 #' @param option A string. One of "elbow", "risk", "AIC", or "BIC", which determines the
 #'   criterion for the model selection. "risk" is based on the negative log-likelihood, "AIC"
 #'   for the Akaike Information Criterion, and "BIC" for the Bayesian Information Criterion.
-#'   "elbow" is based on minimizing the criterion used in Jung et. al.(2021).
+#'   "elbow" is based on minimizing the criterion used in Jung et. al.(2021). Default is
+#'   \code{option = "elbow"} for 2-dimensional cases and \code{option = "risk"} for d(>2)-dimensional cases.
 #' @param alphavec either a scalar or a vector, or even \code{NULL} for the levels.
 #'   Default value is \code{NULL}. If \code{NULL}, then \code{alphavec} is
 #'   automatically generated as a sequence from 0 to \code{alpha.lim}.
 #' @param alpha.lim a positive number lower than 1. Default value is \code{NULL}.
-#'   If \code{NULL}, then \code{alpha.vec} is is 0.5 for option = "elbow", and
+#'   If \code{NULL}, then \code{alpha.vec} is is 0.5 for \code{option = "elbow"}, and
 #'   0.15 for options c("risk", "AIC", or "BIC").
 #' @param eval.point N x N numeric matrix on \eqn{[0, 2\pi)^2}.
 #'   Default input is \code{grid.torus}.
@@ -88,7 +89,7 @@ hyperparam.torus <- function(icp.torus.objects,
 
   # criterion based on elbow -----------------------------------
   if (option == "elbow"){
-    
+
         if (d > 3) {warning("Option `elbow` takes long for high dimensional case (d >= 3).", immediate. = TRUE)}
 
     # generating grid points if eval.point == NULL : sparse when d is large.
