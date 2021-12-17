@@ -9,6 +9,7 @@ ellip.kmeans.torus(
   centers = 10,
   type = c("homogeneous-circular", "heterogeneous-circular", "ellipsoids", "general"),
   init = c("kmeans", "hierarchical"),
+  d = NULL,
   additional.condition = TRUE,
   THRESHOLD = 1e-10,
   maxiter = 200,
@@ -39,6 +40,10 @@ If "kmeans", the initial parameters are obtained with extrinsic kmeans
 method.
 If "hierarchical", the initial parameters are obtained with hierarchical
 clustering method. Default is "hierarchical".}
+
+\item{d}{pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
+which used in hierarchical clustering. If \code{init = "hierarchical"} and \code{d = NULL},
+\code{d} will be automatically filled with \code{ang.pdist(data)}.}
 
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scalar identity.}

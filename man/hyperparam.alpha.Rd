@@ -25,9 +25,8 @@ Default is 0.15.}
 \item{...}{additional parameter for ggplot2::ggplot()}
 }
 \value{
-returns a list object which contains a \code{data.frame} for
-  the numbers of clusters corresponding to the levels and the optimal
-  level.
+returns a \code{hyperparam.alpha} object which contains a \code{data.frame} for
+  the numbers of clusters corresponding to the levels and the optimal level.
 }
 \description{
 \code{hyperparam.alpha} evaluates the numbers of clusters for various

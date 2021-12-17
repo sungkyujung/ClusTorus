@@ -29,12 +29,15 @@
 #'   If "homogeneous-circular", the same as above but the radii of the spheres are
 #'   identical. Default is "general". This argument only works for \code{model = "kmeans"}.
 #' @param init determine the initial parameter of "kmeans" method,
-#'   for option "general". Must be "kmeans" or "hierarchical".
-#'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
-#'   method.
+#'   for option "general". Must be "hierarchical" or "kmeans".
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
 #'   clustering method.
-#'   Default is "kmeans".
+#'   If "kmeans", the initial parameters are obtained with extrinsic kmeans
+#'   method.
+#'   Default is "hierarchical".
+#' @param d pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
+#'   which used in hierarchical clustering. If \code{init = "hierarchical"} and \code{d = NULL},
+#'   \code{d} will be automatically filled with \code{ang.pdist(data)}.
 #' @param ... Further arguments for argument \code{init}. If \code{init = "kmeans"},
 #'   these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
 #'   there are for \code{\link[stats]{hclust}}.
@@ -74,7 +77,8 @@ icp.torus <- function(data, split.id = NULL,
                       kmeansfitmethod = c("general", "homogeneous-circular",
                                           "heterogeneous-circular",
                                           "ellipsoids"),
-                      init = c("kmeans", "hierarchical"),
+                      init = c("hierarchical", "kmeans"),
+                      d = NULL,
                       additional.condition = TRUE,
                       J = 4, concentration = 25, kmax = 500,
                       THRESHOLD = 1e-10, maxiter = 200,
@@ -105,6 +109,7 @@ icp.torus <- function(data, split.id = NULL,
   kmeansfitmethod <- match.arg(kmeansfitmethod)
   init <- match.arg(init)
 
+
   if (ncol(data) > 2 && model != "kmeans"){
     warning("kde and mixture methods are not implemented for high dimensional case (>= 3)")
     model <- "kmeans"
@@ -126,7 +131,7 @@ icp.torus <- function(data, split.id = NULL,
         icp.torus(data, split.id = split.id, model = model,
                         init = init,
                         additional.condition = TRUE,
-                        concentration = kappa,...)
+                        concentration = kappa, ...)
         })
       names(icp.torus.objects) <- paste("conc", concentration, sep = "_")
       return(icp.torus.objects)
@@ -134,6 +139,16 @@ icp.torus <- function(data, split.id = NULL,
     }else{
       concentration = concentration[1]
     }
+  }
+
+  # What follows is for single conc. and J.
+
+  X1 <- data[split.id == 1, ]
+  X2 <- data[split.id == 2, ]
+  n2 <- nrow(X2)
+
+  if (init == "hierarchical" && is.null(d)) {
+    d <- ang.pdist(X1)
   }
 
   # if J is a vector, return a list of icp.torus objects
@@ -144,6 +159,7 @@ icp.torus <- function(data, split.id = NULL,
                   mixturefitmethod = mixturefitmethod,
                   kmeansfitmethod = kmeansfitmethod,
                   init = init,
+                  d = d,
                   additional.condition = additional.condition,
                   J = j,
                   kmax = kmax,
@@ -161,14 +177,8 @@ icp.torus <- function(data, split.id = NULL,
     }
   }
 
-  # What follows is for single conc. and J.
-
-  X1 <- data[split.id == 1, ]
-  X2 <- data[split.id == 2, ]
-  n2 <- nrow(X2)
-
   # Prepare output
-  icp.torus <- list(n2 = n2, split.id = split.id, d = ncol(data), model = as.data.frame(data))
+  icp.torus <- list(n2 = n2, split.id = split.id, d = ncol(data), data = as.data.frame(data))
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
@@ -177,7 +187,7 @@ icp.torus <- function(data, split.id = NULL,
 
   # 1. kde
   if (model == "kde"){
-    icp.torus$method <- "kde"
+    icp.torus$model <- "kde"
 
     if (!is.numeric(concentration) | concentration <= 0) {
       concentration <- 25
@@ -193,7 +203,7 @@ icp.torus <- function(data, split.id = NULL,
 
   # 2. mixture fitting by EM
   if (model == "mixture"){
-    icp.torus$method <- "mixture"
+    icp.torus$model <- "mixture"
     icp.torus$fittingmethod <- mixturefitmethod
 
 
@@ -236,7 +246,7 @@ icp.torus <- function(data, split.id = NULL,
   # 3. elliptical kmeans algorithm
   if (model == "kmeans"){
     # implement extrinsic kmeans clustering for find the centers
-    icp.torus$method <- "kmeans"
+    icp.torus$model <- "kmeans"
     icp.torus$fittingmethod <- kmeansfitmethod
 
     if (!is.numeric(J) | J < 1) {
@@ -252,7 +262,7 @@ icp.torus <- function(data, split.id = NULL,
                                         init = init,
                                         additional.condition = additional.condition,
                                         THRESHOLD = THRESHOLD, maxiter = maxiter,
-                                        verbose = verbose, ...)
+                                        verbose = verbose, d = d, ...)
 
     icp.torus$ellipsefit <- ellipse.param
 
@@ -304,8 +314,8 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
 
   ialpha <- floor((n2 + 1) * level)
 
-  if(icp.torus$method == "kde"){
-    cp$method <- "kde"
+  if(icp.torus$model == "kde"){
+    cp$model <- "kde"
     Chat_kde <- matrix(0, nrow = N, ncol = nalpha)
     colnames(Chat_kde) <- level
 
@@ -323,8 +333,8 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     cp$Chat_kde <- Chat_kde
   }
 
-  if(icp.torus$method == "mixture"){
-    cp$method <- "mixture"
+  if(icp.torus$model == "mixture"){
+    cp$model <- "mixture"
     Chat_mix <- matrix(0, nrow = N, ncol = nalpha)
     colnames(Chat_mix) <- level
 
@@ -360,8 +370,8 @@ icp.torus.eval <- function(icp.torus, level = 0.1, eval.point = grid.torus()){
     cp$Chat_e <- Chat_e
   }
 
-  if(icp.torus$method == "kmeans"){
-    cp$method <- "kmeans"
+  if(icp.torus$model == "kmeans"){
+    cp$model <- "kmeans"
     Chat_kmeans <- matrix(0, nrow = N, ncol = nalpha)
 
     ellipsej <- ehat.eval(eval.point, icp.torus$ellipsefit)

@@ -1,17 +1,11 @@
-hcluster.torus <- function(data, J = 4, method = "complete", members = NULL){
+hcluster.torus <- function(data, J = 4, d, method = "complete", members = NULL){
 
   # hierarchical clustering for the data
   # this function will not be exported: only use for initializing method for ellip.kmeans.torus
   n <- nrow(data)
-  d <- ncol(data)
-  
-  if(n > 1000){ # if there are too many observations limit it to n = 1000
-    data <- data[sample(1:n, 1000),]
-    n <- 1000
-  }
-    
+  p <- ncol(data)
 
-  hc = stats::hclust(ang.pdist(data), method = method, members = members)
+  hc = stats::hclust(d, method = method, members = members)
 
   membership <- stats::cutree(hc, J)
 
@@ -21,7 +15,7 @@ hcluster.torus <- function(data, J = 4, method = "complete", members = NULL){
                    betweenss = NULL, size = NULL)
 
   hcluster$size <- rep(0, J)
-  hcluster$centers <- matrix(0, nrow = J, ncol = d)
+  hcluster$centers <- matrix(0, nrow = J, ncol = p)
   hcluster$withinss <- rep(0, J)
 
   # -------- calculate withinss -----------

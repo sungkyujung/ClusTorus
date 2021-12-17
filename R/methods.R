@@ -11,8 +11,8 @@ print.icp.torus <- function(x, ...){
   cat("Data splited proportion", paste0(sum(icp.torus$split.id == 1), ":", sum(icp.torus$split.id != 1)), "\n")
   cat("\n")
 
-  cat("Used method:", icp.torus$method, "\n")
-  if(icp.torus$method == "kde"){
+  cat("Used method:", icp.torus$model, "\n")
+  if(icp.torus$model == "kde"){
     cat("Concentration:", icp.torus$concentration, "\n")
     cat("-------------\n")
     cat("Conformity scores based on kde: \n")
@@ -22,7 +22,7 @@ print.icp.torus <- function(x, ...){
     print(utils::head(icp.torus$score, n = n))
     cat("\n")
     cat(icp.torus$n2-n, "conformity scores are omitted.")
-  } else if (icp.torus$method == "mixture"){
+  } else if (icp.torus$model == "mixture"){
     J <- length(icp.torus$ellipsefit$c)
     cat("Fitting method:", icp.torus$fittingmethod, "\n")
     cat("Number of mixture components:", J, "\n")
@@ -75,11 +75,11 @@ print.icp.torus <- function(x, ...){
 logLik.icp.torus <- function(object, ...){
 
   icp.torus <- object
-  method <- icp.torus$method
+  model <- icp.torus$model
   j <- length(icp.torus$ellipsefit$c)
   d <- icp.torus$d
-  if (method == "kde") {stop("method \'kde\' is not supported.")}
-  else if (method == "mixture"){
+  if (model == "kde") {stop("model \'kde\' is not supported.")}
+  else if (model == "mixture"){
     loglik <- icp.torus$fit$loglkhd.seq[length(icp.torus$fit$loglkhd.seq)]
 
     mixturefitmethod <- icp.torus$fittingmethod
@@ -108,20 +108,22 @@ logLik.icp.torus <- function(object, ...){
 }
 
 #' @param object \code{icp.torus} object
-#' @param newdata \code{data}
+#' @param newdata n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
+#'   Dimension d must be the same as data used for \code{icp.torus} object.
 #' @param ... additional parameter
 #'
 #' @rdname icp.torus
 #' @method predict icp.torus
 #' @export
 predict.icp.torus <- function(object, newdata, ...){
+  if (object$d != ncol(newdata)) {stop("invalid newdata: dimension mismatch.")}
   icp.torus <- object
   if (is.null(newdata)) {stop("newdata must be inpt for evaluating their conformity scores.")}
   newdata <- as.matrix(newdata)
-  if (icp.torus$method == "kde"){
+  if (icp.torus$model == "kde"){
     phat <- kde.torus(icp.torus$X1, newdata, concentration = icp.torus$concentration)
     result <- sort(phat)
-  } else if (icp.torus$method == "mixture"){
+  } else if (icp.torus$model == "mixture"){
     result <- list(score = c(), score_max = c(), score_ellipse = c())
     result$score <-  sort(BAMBI::dvmsinmix(newdata, kappa1 = icp.torus$fit$parammat[2, ],
                                                kappa2 = icp.torus$fit$parammat[3, ],
@@ -146,14 +148,13 @@ predict.icp.torus <- function(object, newdata, ...){
 #' @param x \code{icp.torus} object
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #'   or \eqn{[-\pi, \pi)^d}. Default is \code{NULL}.
-#' @param level either a scalar or a vector, or even \code{NULL}. Default value
-#'   is 0.1.
-#' @param ellipse A boolean index which determines whether plotting ellipses from 
+#' @param level either a numeric scalar or a vector in \eqn{[0,1]}. Default value is 0.1.
+#' @param ellipse A boolean index which determines whether plotting ellipses from
 #'   mixture models. Default is \code{TRUE}. (This option is used only when the
 #'   \code{icp.torus} object \code{x} is fitted by model \code{kmeans} or \code{mixture}.)
 #' @param out An option for returning the ggplot object. Default is \code{FALSE}.
 #' @param type A string. One of "mix", "max" or "e". This argument is only available if \code{icp.torus}
-#'   object is fitted with method = "mixture". Default is \code{NULL}. If \code{type != NULL}, argument
+#'   object is fitted with \code{model = "mixture"}. Default is \code{NULL}. If \code{type != NULL}, argument
 #'   \code{ellipse} automatically becomes \code{FALSE}. If "mix", it plots based on von Mises mixture.
 #'   If "max", it plots based on von Mises max-mixture. If "e", it plots based on ellipse-approximation.
 #' @param ... additional parameters. For plotting icp.torus, these parameters are for ggplot2::ggplot().
@@ -168,18 +169,25 @@ plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FA
   if (!is.null(type)) {ellipse <- FALSE}
   #if(is.null(data)) {stop("invalid input: data must be input.")}
 
-  if(is.null(data)) { data <- x$model}
+  if(is.null(data)) { data <- x$data}
   data <- on.torus(data)
 
   d <- ncol(data)
-  if (d != icp.torus$d) {stop("dimension mismatch: dimension of icp.torus object and input data are not the same.")}
+  if (d != icp.torus$d) {stop("invalid data: dimension mismatch")}
+  if (!is.null(level)){
+    if (level < 0 || level > 1) {
+      level <- 0.1
+      warning("Level must be numeric and between 0 and 1. Reset as level = 0.1 (default)")
+    }
+  }
+
   n2 <- icp.torus$n2
   names <- colnames(data)
   angle.names <- colnames(data)
 
-  
-  method <- icp.torus$method
-  if (method == "kde"){
+
+  model <- icp.torus$model
+  if (model == "kde"){
    # if(ellipse == TRUE) {warning("method kde does not support the option ellipse. Automatically plot on the grid.")}
     ellipse <- FALSE
   }
@@ -187,16 +195,16 @@ plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FA
   if (ellipse == FALSE){
     if (d > 2) {stop("dimension d > 2 cases does not support the option ellipse = FLASE")}
     ia <- icp.torus.eval(icp.torus, level = level, eval.point = grid.torus(d = d, grid.size = 100))
-    if (method == "kde"){
+    if (model == "kde"){
       b <- data.frame(ia$eval.point, ia$Chat_kde == 1)
-    } else if (method == "mixture"){
+    } else if (model == "mixture"){
       if (type == "mix"){b <- data.frame(ia$eval.point, ia$Chat_mix == 1)}
       else if (type == "max"){b <- data.frame(ia$eval.point, ia$Chat_max == 1)}
       else {b <- data.frame(ia$eval.point, ia$Chat_e == 1)}
     } else {
       b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
     }
-    colnames(b) <- c("phi","psi", method)
+    colnames(b) <- c("phi","psi", model)
     g0 <- ggplot2::ggplot(...) + ggplot2::geom_contour(ggplot2::aes(x = .data$phi, y = .data$psi, z = ifelse(b[, 3], 1, 0)),
                                                     data = b, size = 1, lineend = "round" ) +
       ggplot2::geom_point(mapping = ggplot2::aes(x = .data$x, y = .data$y), data = data.frame(x = data[, 1],y = data[, 2])) +
@@ -277,7 +285,7 @@ print.cp.torus.kde <- function(x, ...){
   # cat("\n")
   # cat(length(cp.torus.kde$phat.data)-n_score, "conformity scores are omitted.")
   # cat("\n\n")
-  # 
+  #
   # cat("Conformity scores of evaluation points, based on kde: \n")
   # print(stats::quantile(cp.torus.kde$phat.grid))
   # cat("\n")
@@ -308,6 +316,10 @@ plot.cp.torus.kde <- function(x, level.id = 1, ...){
   #  level.id is an integer among 1:length(cp.torus$level).
 
   if (is.null(x$cp.torus)) {stop("Conformal prediction set has not been evaluated.")}
+  if (!(level.id %in% 1:length(x$level))){
+    level.id <- 1
+    warning("level.id is out of bound: level.id = 1 will be used.")
+  }
 
   cp.torus <- x$cp.torus[x$cp.torus$level == x$level[level.id], ]
 
@@ -379,7 +391,9 @@ plot.cluster.obj <- function(x, assignment = "outlier", overlay = FALSE, out = F
 
   cluster.obj <- x
   if(is.null(data)) {stop("invalid input: data must be input.")}
-  if(!is.character(assignment)) {stop("invalid input: assignment must be a character, one of \"log.density\", \"posterior\", \"outlier\", \"mahalanobis\".")}
+  if(!is.character(assignment) || !(assignment) %in% c("outlier", "log.density", "posterior", "mahalanobis")) {
+    assignment <- "outlier"
+    warning("invalid input: assignment must be a character, one of \"log.density\", \"posterior\", \"outlier\", \"mahalanobis\".")}
   if(is.null(assignment)) {assignment <- "outlier"}
 
   data <- on.torus(cluster.obj$data)
@@ -537,13 +551,17 @@ print.kmeans.torus <- function(x, ...){
 }
 
 #' @param object \code{kmeans.torus} object
-#' @param newdata \code{data} to be input
+#' @param newdata n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
+#'   Dimension d must be the same as data used for \code{kmeans.torus} object.
 #' @param ... additional parameter
 #'
 #' @rdname kmeans.torus
 #' @method predict kmeans.torus
 #' @export
 predict.kmeans.torus <- function(object, newdata, ...){
+  if (ncol(object$centers) != ncol(newdata)){
+    stop("invalid newdata: dimension mismatch.")
+  }
   kmeans.torus <- object
   data <- on.torus(newdata)
 
@@ -629,10 +647,10 @@ plot.hyperparam.alpha <- function(x, ...){
 print.hyperparam.torus <- function(x, ...){
 
   hyperparam.torus <- x
-  cat("Type of conformity score:", hyperparam.torus$method, "\n")
+  cat("Type of conformity score:", hyperparam.torus$model, "\n")
   cat("Optimizing method:", hyperparam.torus$option, "\n")
   cat("-------------\n")
-  if (hyperparam.torus$method[1] == "kde"){
+  if (hyperparam.torus$model[1] == "kde"){
     cat("Optimally chosen parameters. Concentration = ", hyperparam.torus$khat,
         ", alpha = ", hyperparam.torus$alphahat, "\n")
   }else{
@@ -675,8 +693,12 @@ print.hyperparam.torus <- function(x, ...){
 #' @export
 plot.hyperparam.torus <- function(x, color = "auto", ...){
 
+  if (!(color %in% c("auto", "sequential", "qualitative"))){
+    color <- "auto"
+    warning("Level must be one of \"auto\", \"sequential\", \"qualitative\". Reset as color = \"auto\" (default)")
+  }
   hyperparam.torus <- x
-  if (hyperparam.torus$option == "elbow" && hyperparam.torus$method[1] == "kde"){
+  if (hyperparam.torus$option == "elbow" && hyperparam.torus$model[1] == "kde"){
     data <- as.data.frame(hyperparam.torus$results)
     if ((color == "qualitative") || (color == "auto" && length(unique(hyperparam.torus$results)) < 10)){
       data$k <- as.factor(data$k)
@@ -684,7 +706,7 @@ plot.hyperparam.torus <- function(x, color = "auto", ...){
     ggplot2::ggplot(ggplot2::aes(x = .data$alpha, y = .data$criterion, color = .data$k, type = .data$k),
                     data = data, ...) + ggplot2::geom_point() +
       ggplot2::geom_line(ggplot2::aes(x = .data$alpha, y = .data$criterion, group = .data$k))
-  } else if (hyperparam.torus$option == "elbow" && hyperparam.torus$method[1] != "kde"){
+  } else if (hyperparam.torus$option == "elbow" && hyperparam.torus$model[1] != "kde"){
     data <- as.data.frame(hyperparam.torus$results)
     if ((color == "qualitative") || (color == "auto" && length(unique(hyperparam.torus$results)) < 10)){
       data$k <- as.factor(data$J)
@@ -724,8 +746,6 @@ print.clus.torus <- function(x, ...){
 
 #' Plot clus.torus object
 #'
-#' \code{plot.clus.torus} plots \code{clus.torus} object with some options.
-#'
 #' @param x \code{clus.torus} object
 #' @param panel One of 1 or 2 which determines the type of plot. If \code{panel = 1},
 #'   \code{x$cluster.obj} will be plotted, if \code{panel = 2}, \code{x$icp.torus} will be plotted.
@@ -736,19 +756,22 @@ print.clus.torus <- function(x, ...){
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #'   or \eqn{[-\pi, \pi)^d}. Default is \code{NULL}.
 #' @param type A string. One of "mix", "max" or "e". This argument is only available if \code{icp.torus}
-#'   object is fitted with method = "mixture". Default is \code{NULL}. If \code{type != NULL}, argument
+#'   object is fitted with \code{model = "mixture"}. Default is \code{NULL}. If \code{type != NULL}, argument
 #'   \code{ellipse} automatically becomes \code{FALSE}. If "mix", it plots based on von Mises mixture.
 #'   If "max", it plots based on von Mises max-mixture. If "e", it plots based on ellipse-approximation.
 #' @param ellipse A boolean index which determines whether plotting ellipse-intersections. Default is \code{TRUE}. Only available
 #'   for \code{panel = 2}.
 #' @param out An option for returning the ggplot object. Default is \code{FALSE}.
-#' @param ... additional parameter for ggplot2::ggplot()
+#' @param ... Further arguments that will be passed to \code{icp.torus} and
+#'   \code{hyperparam.torus}
 #' @method plot clus.torus
 #' @rdname clus.torus
 #' @export
 plot.clus.torus <- function(x, panel = 1, assignment = "outlier", data = NULL,
                             ellipse = TRUE, type = NULL, overlay = FALSE, out = FALSE, ...){
-  if (!(panel %in% c(1, 2, 3))) {stop("invalid input: panel must be one of 1, 2 or 3.")}
+  if (!(panel %in% c(1, 2, 3))) {
+    panel <- 1
+    warning("invalid input: panel must be one of 1, 2 or 3. Reset as panel = 1 (default)")}
   if (panel == 1){plot(x$cluster.obj, assignment = assignment, overlay = overlay, out = out, ...)}
   else if (panel == 2){plot(x$icp.torus, data = data, level = x$cluster.obj$level, ellipse = ellipse, out = out, type = type, ...)}
   else if (panel == 3){plot(x$hyperparam.select, ...)}

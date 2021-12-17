@@ -14,7 +14,8 @@ icp.torus(
   mixturefitmethod = c("axis-aligned", "circular", "general"),
   kmeansfitmethod = c("general", "homogeneous-circular", "heterogeneous-circular",
     "ellipsoids"),
-  init = c("kmeans", "hierarchical"),
+  init = c("hierarchical", "kmeans"),
+  d = NULL,
   additional.condition = TRUE,
   J = 4,
   concentration = 25,
@@ -71,12 +72,16 @@ If "homogeneous-circular", the same as above but the radii of the spheres are
 identical. Default is "general". This argument only works for \code{model = "kmeans"}.}
 
 \item{init}{determine the initial parameter of "kmeans" method,
-for option "general". Must be "kmeans" or "hierarchical".
-If "kmeans", the initial parameters are obtained with extrinsic kmeans
-method.
+for option "general". Must be "hierarchical" or "kmeans".
 If "hierarchical", the initial parameters are obtained with hierarchical
 clustering method.
-Default is "kmeans".}
+If "kmeans", the initial parameters are obtained with extrinsic kmeans
+method.
+Default is "hierarchical".}
+
+\item{d}{pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
+which used in hierarchical clustering. If \code{init = "hierarchical"} and \code{d = NULL},
+\code{d} will be automatically filled with \code{ang.pdist(data)}.}
 
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
@@ -104,21 +109,21 @@ how many loops are done. Moreover, if \code{additional.condition} is
 
 \item{object}{\code{icp.torus} object}
 
-\item{newdata}{\code{data}}
+\item{newdata}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
+Dimension d must be the same as data used for \code{icp.torus} object.}
 
 \item{x}{\code{icp.torus} object}
 
-\item{level}{either a scalar or a vector, or even \code{NULL}. Default value
-is 0.1.}
+\item{level}{either a numeric scalar or a vector in \eqn{[0,1]}. Default value is 0.1.}
 
-\item{ellipse}{A boolean index which determines whether plotting ellipses from 
+\item{ellipse}{A boolean index which determines whether plotting ellipses from
 mixture models. Default is \code{TRUE}. (This option is used only when the
 \code{icp.torus} object \code{x} is fitted by model \code{kmeans} or \code{mixture}.)}
 
 \item{out}{An option for returning the ggplot object. Default is \code{FALSE}.}
 
 \item{type}{A string. One of "mix", "max" or "e". This argument is only available if \code{icp.torus}
-object is fitted with method = "mixture". Default is \code{NULL}. If \code{type != NULL}, argument
+object is fitted with \code{model = "mixture"}. Default is \code{NULL}. If \code{type != NULL}, argument
 \code{ellipse} automatically becomes \code{FALSE}. If "mix", it plots based on von Mises mixture.
 If "max", it plots based on von Mises max-mixture. If "e", it plots based on ellipse-approximation.}
 }

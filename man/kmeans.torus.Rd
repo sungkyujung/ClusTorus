@@ -20,7 +20,8 @@ chosen as the initial centers.}
 
 \item{object}{\code{kmeans.torus} object}
 
-\item{newdata}{\code{data} to be input}
+\item{newdata}{n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}.
+Dimension d must be the same as data used for \code{kmeans.torus} object.}
 }
 \value{
 returns a \code{kmeans} object, which contains

@@ -22,7 +22,7 @@ Akaike Information Criterion, and "BIC" for the Bayesian Information Criterion.}
 \item{...}{additional parameter for ggplot2::ggplot()}
 }
 \value{
-returns a list object which contains a \code{data.frame} for
+returns a \code{hyperparam.J} object which contains a \code{data.frame} for
   the evaluated criterion corresponding to each number of components, the optimal
   number of components, and the corresponding \code{icp.torus} object.
 }

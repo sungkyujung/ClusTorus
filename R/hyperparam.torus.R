@@ -58,9 +58,9 @@ hyperparam.torus <- function(icp.torus.objects,
       stop("invalid input: the elements of icp.torus.objects must be icp.torus objects.")
     }
   }
-  method <- icp.torus.objects[[1]]$method
-  fitmethod <- ifelse(method != "kde",  icp.torus.objects[[1]]$fittingmethod, " ")
-  data <- as.matrix(icp.torus.objects[[1]]$model)
+  model <- icp.torus.objects[[1]]$model
+  fitmethod <- ifelse(model != "kde",  icp.torus.objects[[1]]$fittingmethod, " ")
+  data <- as.matrix(icp.torus.objects[[1]]$data)
   d <- icp.torus.objects[[1]]$d
   n2 <- icp.torus.objects[[1]]$n2
   # if d <= 2, default is elbow based criterion. If d > 2, default is risk.
@@ -68,19 +68,19 @@ hyperparam.torus <- function(icp.torus.objects,
     option <- ifelse(d <= 2, "elbow", "risk")
   }
 
-  if (option != "elbow" && method == "kde"){
+  if (option != "elbow" && model == "kde"){
     warning("Parameters for kde should be chosen by option elbow. Switching to option elbow...")
     option = "elbow"
   }
-  if (method != "kmeans" && d > 2) {
-    stop(paste("The method", method," is not supported for dimension d >= 3."))
+  if (model != "kmeans" && d > 2) {
+    stop(paste("The model", model," is not supported for dimension d >= 3."))
   }
 
   if (is.null(alpha.lim)) { alpha.lim <- ifelse(option=="elbow",0.5,0.15)}
   if (is.null(alphavec) && alpha.lim > 1) {stop("alpha.lim must be less than 1.")}
 
   output <- list()
-  output$method <- c(method, fitmethod)
+  output$model <- c(model, fitmethod)
   output$option <- option
 
 
@@ -97,7 +97,7 @@ hyperparam.torus <- function(icp.torus.objects,
     if (is.null(eval.point)) { eval.point <- grid.torus(d = d, grid.size = grid.size)}
 
     # 1. kmeans -----------------------------------------------------
-    if (method == "kmeans"){
+    if (model == "kmeans"){
       N <- length(alphavec)
       Mvec <- vector("numeric", length = N)
       out <- data.frame()
@@ -120,7 +120,7 @@ hyperparam.torus <- function(icp.torus.objects,
       return(structure(output, class = "hyperparam.torus"))
 
       # 2. mixture ----------------------------------------------------------------
-    } else if (method == "mixture") {
+    } else if (model == "mixture") {
       N <- length(alphavec)
       Mvec <- vector("numeric", length = N)
       out <- data.frame()

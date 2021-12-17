@@ -72,7 +72,11 @@ cluster.assign.torus <- function(icp.object, level = NULL){
     }
   }
 
-  data <- icp.torus$model
+  if (!is.numeric(level)){
+    level <- 0.1
+    warning("invalid level: level = 0.1 is used.")
+  }
+  data <- icp.torus$data
   #if (ncol(data) != icp.torus$d) {stop("dimension mismatch: dimension of data and icp.torus are not the same.")}
   #data <- on.torus(data)
 
@@ -82,8 +86,8 @@ cluster.assign.torus <- function(icp.object, level = NULL){
   cluster.obj <- list()
   # For kmeans to kspheres --------------------------------------------------
 
-  if(icp.torus$method == "kde"){
-    stop("method kde does not support clustering.")
+  if(icp.torus$model == "kde"){
+    stop("model kde does not support clustering.")
   } else {
     t <- icp.torus$score_ellipse[ialpha]
     cluster.obj <- conn.comp.ellipse(icp.torus$ellipsefit, t)

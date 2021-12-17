@@ -10,9 +10,8 @@
 #'   automatically generated as a sequence from 0 to \code{alpha.lim}.
 #' @param alpha.lim a positive number lower than 1, which is the upper bound of
 #'   Default is 0.15.
-#' @return returns a list object which contains a \code{data.frame} for
-#'   the numbers of clusters corresponding to the levels and the optimal
-#'   level.
+#' @return returns a \code{hyperparam.alpha} object which contains a \code{data.frame} for
+#'   the numbers of clusters corresponding to the levels and the optimal level.
 #' @export
 #' @seealso \code{\link[ClusTorus]{hyperparam.J}}, \code{\link[ClusTorus]{hyperparam.torus}}
 #'  \code{\link[ClusTorus]{icp.torus}}

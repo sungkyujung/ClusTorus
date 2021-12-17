@@ -22,6 +22,9 @@
 #'   method.
 #'   If "hierarchical", the initial parameters are obtained with hierarchical
 #'   clustering method. Default is "hierarchical".
+#' @param d pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
+#'   which used in hierarchical clustering. If \code{init = "hierarchical"} and \code{d = NULL},
+#'   \code{d} will be automatically filled with \code{ang.pdist(data)}.
 #' @param ... Further arguments for argument \code{init}. If \code{init = "kmeans"},
 #'   these are for \code{\link[stats]{kmeans}}. If \code{init = "hierarchical"},
 #'   there are for \code{\link[stats]{hclust}}.
@@ -54,6 +57,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
                                      "ellipsoids",
                                      "general"),
                             init = c("kmeans", "hierarchical"),
+                            d = NULL,
                             additional.condition = TRUE,
                             THRESHOLD = 1e-10, maxiter = 200,
                             verbose = TRUE, ...){
@@ -71,6 +75,10 @@ ellip.kmeans.torus <- function(data, centers = 10,
   p <- ncol(data)
   n <- nrow(data)
 
+  if (init == "hierarchical" && is.null(d)) {
+    d <- ang.pdist(data)
+  }
+
   sphere.param <- list(mu = NULL, Sigmainv = NULL, c = NULL)
 
   # Use extrinsic kmeans clustering for initial center points.
@@ -82,7 +90,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
     kmeans.out <- kmeans.torus(data, centers, ...)
   } else {
     J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
-    kmeans.out <- hcluster.torus(data, J = centers, ...)
+    kmeans.out <- hcluster.torus(data, J = centers, d = d, ...)
   }
 
   centroid <- kmeans.out$centers
