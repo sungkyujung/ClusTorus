@@ -68,7 +68,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
 
   type <- match.arg(type)
   init <- match.arg(init)
-  d <- ncol(data)
+  p <- ncol(data)
   n <- nrow(data)
 
   sphere.param <- list(mu = NULL, Sigmainv = NULL, c = NULL)
@@ -96,7 +96,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
   sphere.param$c <- rep(0, J)
 
   for(j in 1:J){
-    sphere.param$Sigmainv[[j]] <- diag(d)
+    sphere.param$Sigmainv[[j]] <- diag(p)
   }
 
 
@@ -109,10 +109,10 @@ ellip.kmeans.torus <- function(data, centers = 10,
       nj <- kmeans.out$size[j]
       pi_j <- nj / n
       sigma_j <- ifelse(kmeans.out$size[j] <= 1,
-                        1e-6, kmeans.out$withinss[j] / (nj * d))
+                        1e-6, kmeans.out$withinss[j] / (nj * p))
 
-      sphere.param$c[j] <- 2 * log(pi_j) - d * log(sigma_j)
-      sphere.param$Sigmainv[[j]] <- diag(d) / sigma_j
+      sphere.param$c[j] <- 2 * log(pi_j) - p * log(sigma_j)
+      sphere.param$Sigmainv[[j]] <- diag(p) / sigma_j
     }
   }
 
@@ -141,13 +141,13 @@ ellip.kmeans.torus <- function(data, centers = 10,
       if (additional.condition){
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
           cnt.singular <- cnt.singular + 1
-          S <- sum(S) / d * diag(d)
+          S <- sum(S) / p * diag(p)
         }
       }
 
       # vanishing the ellipsoid even if the additional condition is given.
       if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-        S <- 1e-6 * diag(d)
+        S <- 1e-6 * diag(p)
       }
 
       sphere.param$Sigmainv[[j]] <- solve(S)
@@ -189,13 +189,13 @@ ellip.kmeans.torus <- function(data, centers = 10,
       # only implemented when verbose == TRUE
       if (additional.condition){
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- sum(S) / d * diag(d)
+          S <- sum(S) / p * diag(p)
         }
       }
 
       # vanishing the ellipsoid even if the additional condition is given.
       if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-        S <- 1e-6 * diag(d)
+        S <- 1e-6 * diag(p)
       }
 
       sphere.param$Sigmainv[[j]] <- solve(S)
@@ -242,10 +242,10 @@ ellip.kmeans.torus <- function(data, centers = 10,
       #                w = x[((d * n) + 1):length(x)] / sum(x[((d * n) + 1):length(x)]))$Mean})
       wmat.mul <- apply(wmat, 2, function(x){
         dat.j <- data[x == 1, ]
-        nj <- length(dat.j) / d
+        nj <- length(dat.j) / p
         if(nj > 0){
           return(wtd.stat.ang(dat.j, w = rep(1, nj) / nj)$Mean)
-        } else { return(rep(0, d)) }
+        } else { return(rep(0, p)) }
       })
 
 
@@ -273,13 +273,13 @@ ellip.kmeans.torus <- function(data, centers = 10,
         # only implemented when additional.condition == TRUE
         if (additional.condition){
           if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-            S <- sum(S) / d * diag(d)
+            S <- sum(S) / p * diag(p)
           }
         }
 
         # vanishing the ellipsoid even if the additional condition is given.
         if (det(S) < THRESHOLD || sum(is.na(S)) != 0){
-          S <- 1e-6 * diag(d)
+          S <- 1e-6 * diag(p)
         }
 
         sphere.param$Sigmainv[[j]] <- solve(S)
@@ -302,7 +302,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
         break}
     }
     sphere.param$loglkhd <- 0.5 * sum(do.call(pmax,
-                                               as.data.frame(ehat.eval(data, sphere.param)))) - n * d * log(2 * pi) / 2
+                                               as.data.frame(ehat.eval(data, sphere.param)))) - n * p * log(2 * pi) / 2
 
     sphere.param$singular <- c()
     for (j in 1:J){
