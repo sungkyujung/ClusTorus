@@ -148,7 +148,9 @@ predict.icp.torus <- function(object, newdata, ...){
 #'   or \eqn{[-\pi, \pi)^d}. Default is \code{NULL}.
 #' @param level either a scalar or a vector, or even \code{NULL}. Default value
 #'   is 0.1.
-#' @param ellipse A boolean index which determines whether plotting ellipse-intersections. Default is \code{TRUE}.
+#' @param ellipse A boolean index which determines whether plotting ellipses from 
+#'   mixture models. Default is \code{TRUE}. (This option is used only when the
+#'   \code{icp.torus} object \code{x} is fitted by model \code{kmeans} or \code{mixture}.)
 #' @param out An option for returning the ggplot object. Default is \code{FALSE}.
 #' @param type A string. One of "mix", "max" or "e". This argument is only available if \code{icp.torus}
 #'   object is fitted with method = "mixture". Default is \code{NULL}. If \code{type != NULL}, argument
@@ -175,7 +177,7 @@ plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FA
   names <- colnames(data)
   angle.names <- colnames(data)
 
-
+  
   method <- icp.torus$method
   if (method == "kde"){
    # if(ellipse == TRUE) {warning("method kde does not support the option ellipse. Automatically plot on the grid.")}

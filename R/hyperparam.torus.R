@@ -88,7 +88,8 @@ hyperparam.torus <- function(icp.torus.objects,
 
   # criterion based on elbow -----------------------------------
   if (option == "elbow"){
-    if (d > 3) {warning("Option `elbow` takes long for high dimensional case (d >= 3).", immediate. = TRUE)}
+    
+        if (d > 3) {warning("Option `elbow` takes long for high dimensional case (d >= 3).", immediate. = TRUE)}
 
     # generating grid points if eval.point == NULL : sparse when d is large.
     grid.size <- ifelse(d == 2, 100, floor(10^(6/d)))
@@ -105,8 +106,9 @@ hyperparam.torus <- function(icp.torus.objects,
         Mvec <- colSums(inclusion.test$Chat_kmeans)/nrow(eval.point)
 
         out <- rbind(out, data.frame(id = j,J = length(icp.torus.objects[[j]]$ellipsefit$c), alpha = alphavec, mu = Mvec, criterion = alphavec +  Mvec))
+        cat(".")
       }
-
+      cat("\n")
       out.index <- which.min(out$criterion)
       output$results <- out[,2:5]
       output$icp.torus <- icp.torus.objects[[out[out.index, 1]]]
@@ -125,9 +127,10 @@ hyperparam.torus <- function(icp.torus.objects,
       for (j in 1:n.icp.torus){
         inclusion.test <- icp.torus.eval(icp.torus.objects[[j]], level = alphavec, eval.point = eval.point)
         Mvec <- colSums(inclusion.test$Chat_mix)/nrow(eval.point)
-
         out <- rbind(out, data.frame(id = j, J = length(icp.torus.objects[[j]]$ellipsefit$c), alpha = alphavec, mu = Mvec, criterion = alphavec +  Mvec))
+        cat(".")
       }
+      cat("\n")
 
       out.index <- which.min(out$criterion)
       output$results <- out[,2:5]
@@ -148,9 +151,10 @@ hyperparam.torus <- function(icp.torus.objects,
       for (k in 1:n.icp.torus){
         inclusion.test <- icp.torus.eval(icp.torus.objects[[k]], level = alphavec, eval.point = eval.point)
         Mvec <- colSums(inclusion.test$Chat_kde)/nrow(eval.point)
-
         out <- rbind(out, data.frame(id = k, k = icp.torus.objects[[k]]$concentration, alpha = alphavec, mu = Mvec, criterion = alphavec + Mvec))
+        cat(".")
       }
+      cat("\n")
 
       out.index <- which.min(out$criterion)
       output$results <- out[,2:5]
