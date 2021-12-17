@@ -76,7 +76,8 @@ for option "general". Must be "hierarchical" or "kmeans".
 If "hierarchical", the initial parameters are obtained with hierarchical
 clustering method.
 If "kmeans", the initial parameters are obtained with extrinsic kmeans
-method.
+method. Some options for kmeans clustering and hierarchical clustering can be
+designated via argument \code{...}.
 Default is "hierarchical".}
 
 \item{d}{pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},

@@ -638,7 +638,7 @@ plot.hyperparam.alpha <- function(x, ...){
                   data = as.data.frame(hyperparam.alpha$alpha.results), ...) + ggplot2::geom_point() +
     ggplot2::geom_point(ggplot2::aes(x = .data$alpha, y = .data$ncluster), data = hyperparam.alpha$alpha.results[(length.sum + 1):(length.sum + length), ],
                         color = "blue") +
-    ggplot2::ggtitle(paste0("number of clusters, chosen alpha=", hyperparam.alpha$alphahat))
+    ggplot2::ggtitle(paste0("number of clusters, chosen alpha=", round(hyperparam.alpha$alphahat, 4)))
 }
 
 # hyperparam.torus object ------------------------------------------
@@ -732,7 +732,7 @@ plot.hyperparam.torus <- function(x, color = "auto", ...){
                           data = as.data.frame(hyperparam.torus$alpha.results), ...) + ggplot2::geom_point() +
       ggplot2::geom_point(ggplot2::aes(x = .data$alpha, y = .data$ncluster), data = hyperparam.torus$alpha.results[(length.sum + 1):(length.sum + length), ],
                           color = "blue") +
-      ggplot2::ggtitle(paste0("number of clusters, chosen alpha=", hyperparam.torus$alphahat))
+      ggplot2::ggtitle(paste0("number of clusters, chosen alpha=", round(hyperparam.torus$alphahat, 4)))
     cowplot::plot_grid(g1, g2, nrow = 1)
   }
 }

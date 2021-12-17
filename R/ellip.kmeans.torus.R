@@ -67,8 +67,6 @@ ellip.kmeans.torus <- function(data, centers = 10,
 
   # type determines kmeans-fitting method. If "identical", the radii of
   # shperes are the same, and if not, the radii may be different.
-  if (is.null(type)){ type <- "homogeneous-circular" }
-  if (is.null(init)){ init <- "hierarchical" }
 
   type <- match.arg(type)
   init <- match.arg(init)
@@ -90,6 +88,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
     kmeans.out <- kmeans.torus(data, centers, ...)
   } else {
     J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
+    if (!(class(d) == "dist")) {stop("invalid d: d must be a distance matrix (dist object).")}
     kmeans.out <- hcluster.torus(data, J = centers, d = d, ...)
   }
 
