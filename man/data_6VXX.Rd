@@ -5,21 +5,25 @@
 \alias{data_6VXX}
 \title{6VXX: Structure of the SARS-CoV-2 spike glycoprotein(closed state)}
 \format{
-This data.frame contains the following columns:
+\code{data_6VXX} consists of following informations:
 \describe{
   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
   \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
+  \item{\code{omega}}{main chain torsion angle for atoms CA,C,N,CA.}
+  \item{\code{alpha}}{virtual torsion angle between consecutive C-alpha atoms.}
   \item{\code{chi1}}{side chain torsion angle for atoms N,CA,CB,*G.}
   \item{\code{chi2}}{side chain torsion angle for atoms CA,CB,*G,*D.}
   \item{\code{chi3}}{side chain torsion angle for atoms CB,*G,*D,*E.}
   \item{\code{chi4}}{side chain torsion angle for atoms *G,*D,*E,*Z.}
   \item{\code{chi5}}{side chain torsion angle for atoms *D,*E,*Z, NH1.}
+  \item{\code{coords}}{numeric matrix of ‘justified’ coordinates.}
+  \item{\code{tbl}}{a numeric matrix of psi, phi and chi torsion angles.}
 }
 }
 \source{
 This data can be downloaded in
   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
-  \code{bio3d}.
+  \code{bio3d}. Precisely, we use the code: \code{bio3d::torsion.pdb(bio3d::read.pdb("6vxx"))}
 }
 \usage{
 data_6VXX

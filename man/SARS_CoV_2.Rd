@@ -14,13 +14,17 @@ This data.frame contains the following columns:
 \source{
 This data can be downloaded in
   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
-  \code{bio3d}.
+  \code{bio3d}. To see the precise extracting code, visit \url{https://github.com/sungkyujung/ClusTorus/tree/master/data-raw}
 }
 \usage{
 SARS_CoV_2
 }
 \description{
-The torsion angle dataset of the chain B of SARS-CoV-2 spike glycopreotein.
+The torsion angle dataset of the chain B of SARS-CoV-2 spike glycopreotein. This data is originally
+from first two main torsion angles of \code{data_6VXX}.
+}
+\details{
+This data is obtained with following codes:
 }
 \references{
 Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2

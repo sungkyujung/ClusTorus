@@ -2,19 +2,23 @@
 #'
 #' The torsion angle dataset of SARS-CoV-2 spike glycopreotein.
 #'
-#' @format This data.frame contains the following columns:
+#' @format \code{data_6VXX} consists of following informations:
 #' \describe{
 #'   \item{\code{phi}}{main chain torsion angle for atoms C,N,CA,C.}
 #'   \item{\code{psi}}{main chain torsion angle for atoms N,CA,C,N.}
+#'   \item{\code{omega}}{main chain torsion angle for atoms CA,C,N,CA.}
+#'   \item{\code{alpha}}{virtual torsion angle between consecutive C-alpha atoms.}
 #'   \item{\code{chi1}}{side chain torsion angle for atoms N,CA,CB,*G.}
 #'   \item{\code{chi2}}{side chain torsion angle for atoms CA,CB,*G,*D.}
 #'   \item{\code{chi3}}{side chain torsion angle for atoms CB,*G,*D,*E.}
 #'   \item{\code{chi4}}{side chain torsion angle for atoms *G,*D,*E,*Z.}
 #'   \item{\code{chi5}}{side chain torsion angle for atoms *D,*E,*Z, NH1.}
+#'   \item{\code{coords}}{numeric matrix of ‘justified’ coordinates.}
+#'   \item{\code{tbl}}{a numeric matrix of psi, phi and chi torsion angles.}
 #' }
 #' @source This data can be downloaded in
 #'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
-#'   \code{bio3d}.
+#'   \code{bio3d}. Precisely, we use the code: \code{bio3d::torsion.pdb(bio3d::read.pdb("6vxx"))}
 #' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
 #'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
 #'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
@@ -24,7 +28,10 @@
 
 #' SARS-CoV-2: chain B of Structure of the SARS-CoV-2 spike glycoprotein(closed state)
 #'
-#' The torsion angle dataset of the chain B of SARS-CoV-2 spike glycopreotein.
+#' The torsion angle dataset of the chain B of SARS-CoV-2 spike glycopreotein. This data is originally
+#' from first two main torsion angles of \code{data_6VXX}.
+#'
+#' This data is obtained with following codes:
 #'
 #' @format This data.frame contains the following columns:
 #' \describe{
@@ -33,7 +40,7 @@
 #' }
 #' @source This data can be downloaded in
 #'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
-#'   \code{bio3d}.
+#'   \code{bio3d}. To see the precise extracting code, visit \url{https://github.com/sungkyujung/ClusTorus/tree/master/data-raw}
 #' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
 #'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
 #'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
