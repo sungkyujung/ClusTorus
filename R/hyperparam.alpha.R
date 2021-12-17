@@ -30,19 +30,19 @@
 hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   if(is.null(icp.torus)) {stop("icp.torus object must be input.")}
 
-  if(icp.torus$method == "mixture") {method <- "mixture"}
-  else if(icp.torus$method == "kmeans") {method <- "kmeans"}
-  else {stop("method kde is not supported.")}
+  if(icp.torus$model == "mixture") {model <- "mixture"}
+  else if(icp.torus$model == "kmeans") {model <- "kmeans"}
+  else {stop("model kde is not supported.")}
   n2 <- icp.torus$n2
 
   if (is.null(alphavec) && alpha.lim > 1) {stop("alpha.lim must be less than 1.")}
 
   output <- list()
   out <- data.frame()
-  if (is.null(alphavec)) {alphavec <- 1:floor(min(n2, 1000) * alpha.lim) / n2}
+  if (is.null(alphavec) || n2 > 1000) {alphavec <- 1:floor(min(n2, 1000) * alpha.lim) / n2}
 
   # 1. kmeans -----------------------------------------------------
-  if (method == "kmeans"){
+  if (model == "kmeans"){
     for (alpha in alphavec){
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
       t <- icp.torus$score_ellipse[ialpha]
@@ -64,7 +64,7 @@ hyperparam.alpha <- function(icp.torus, alphavec = NULL, alpha.lim = 0.15){
   }
 
   # 2. mixture ----------------------------------------------------
-  else if (method == "mixture"){
+  else if (model == "mixture"){
     for (alpha in alphavec){
       ialpha <- ifelse((n2 + 1) * alpha < 1, 1, floor((n2 + 1) * alpha))
       t <- icp.torus$score_ellipse[ialpha]
