@@ -94,7 +94,9 @@ hyperparam.J <- function(icp.torus.objects, option = c("risk", "AIC", "BIC")){
       criterion <- - sum.conformity.scores + (k * j - 1) * penalty +
         ifelse(option != "risk", nsingular * ((log(1e+6^(d - 2))) + d * log((2*pi))), 0)
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
+      cat(".")
     }
+    cat("\n")
 
     IC.index <- which.min(IC$criterion)
     Jhat <- IC[IC.index, 1]
@@ -126,7 +128,9 @@ hyperparam.J <- function(icp.torus.objects, option = c("risk", "AIC", "BIC")){
       # evaluate risk/AIC/BIC
       criterion <- - 2 * sum.conformity.scores + (k * j - 1) * penalty
       IC <- rbind(IC, data.frame(J = j, criterion = criterion))
+      cat(".")
     }
+    cat("\n")
 
     IC.index <- which.min(IC$criterion)
     Jhat <- IC[IC.index, 1]
