@@ -117,6 +117,8 @@ icp.torus <- function(data, split.id = NULL,
     split.id[ sample(n,floor(n/2)) ] <- 1
   }
 
+  
+  
   # if concentration is a vector, return a list of icp.torus objects
   if(length(concentration) > 1){
     if (model == "kde"){
@@ -170,9 +172,18 @@ icp.torus <- function(data, split.id = NULL,
 
   # For each method, use X1 to estimate phat, then use X2 to provide ranks.
 
+  
+  
+  
   # 1. kde
   if (model == "kde"){
     icp.torus$method <- "kde"
+     
+    if (!is.numeric(concentration) | concentration <= 0) {
+      concentration <- 25
+      warning("Concentration must be a positive number. Reset as concentration = 25 (default)\n")
+    }
+    
     phat <- kde.torus(X1, X2, concentration = concentration)
     icp.torus$concentration <- concentration
     icp.torus$score <- sort(phat)
@@ -185,6 +196,13 @@ icp.torus <- function(data, split.id = NULL,
     icp.torus$method <- "mixture"
     icp.torus$fittingmethod <- mixturefitmethod
 
+     
+    if (!is.numeric(J) | J < 1) {
+      J <- 4
+      warning("The number of components must be a positive integer Reset as J = 4 (default)\n")
+    }
+    J = as.integer(J)
+    
     vm2mixfit <- EMsinvMmix(X1, J = J, parammat = EMsinvMmix.init(data, J),
                             THRESHOLD = THRESHOLD, maxiter = maxiter,
                             type = mixturefitmethod,
@@ -221,8 +239,14 @@ icp.torus <- function(data, split.id = NULL,
     icp.torus$method <- "kmeans"
     icp.torus$fittingmethod <- kmeansfitmethod
 
+    if (!is.numeric(J) | J < 1) {
+      J <- 4
+      warning("The number of components must be a positive integer Reset as J = 4 (default)\n")
+    }
+    J = as.integer(J)
+    
     # consider -R as ehat in von mises mixture approximation
-    # where R is the notation in J. Shin (2019)
+    # where R is the notation in J. Shin (2019) 
     ellipse.param <- ellip.kmeans.torus(X1, centers = J,
                                         type = kmeansfitmethod,
                                         init = init,

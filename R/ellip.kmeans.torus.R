@@ -213,7 +213,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
     param.seq <- unlist(sphere.param)
 
     if (verbose){
-      cat("ellip.kmeans.torus: fitting appr. mixture, J =", J,  ", option = ", type, ".", sep = "")
+      cat("ellip.kmeans.torus: fitting appr. mixture, J = ", J,  ", option = ", type, ".", sep = "")
     }
 
     cnt <- 1
