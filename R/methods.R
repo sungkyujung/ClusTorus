@@ -387,10 +387,14 @@ print.cluster.obj <- function(x, ...){
 #' @rdname cluster.assign.torus
 #' @method plot cluster.obj
 #' @export
-plot.cluster.obj <- function(x, assignment = "outlier", overlay = FALSE, out = FALSE, ...){
+plot.cluster.obj <- function(x, 
+                             assignment = c("outlier", "log.density", "posterior", "mahalanobis"), 
+                             overlay = FALSE, out = FALSE, ...){
 
   cluster.obj <- x
   if(is.null(data)) {stop("invalid input: data must be input.")}
+  
+  assignment <- match.arg(assignment)
   if(!is.character(assignment) || !(assignment) %in% c("outlier", "log.density", "posterior", "mahalanobis")) {
     assignment <- "outlier"
     warning("invalid input: assignment must be a character, one of \"log.density\", \"posterior\", \"outlier\", \"mahalanobis\".")}
