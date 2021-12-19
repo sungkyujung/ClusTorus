@@ -3,6 +3,8 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/ClusTorus)](https://cran.r-project.org/package=ClusTorus)
 [![R-CMD-check](https://github.com/sungkyujung/ClusTorus/workflows/R-CMD-check/badge.svg)](https://github.com/sungkyujung/ClusTorus/actions)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![downloads](https://cranlogs.r-pkg.org/badges/ClusTorus)](https://cranlogs.r-pkg.org/badges/ClusTorus)
 <!-- badges: end -->
 Prediction and Clustering on The Torus by Conformal Prediction
 
