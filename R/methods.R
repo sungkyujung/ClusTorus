@@ -205,9 +205,10 @@ plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FA
       b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
     }
     colnames(b) <- c("phi","psi", model)
-    g0 <- ggplot2::ggplot(...) + ggplot2::geom_contour(ggplot2::aes(x = .data$phi, y = .data$psi, z = ifelse(b[, 3], 1, 0)),
-                                                    data = b, size = 1, lineend = "round" ) +
+    g0 <- ggplot2::ggplot(...) + 
       ggplot2::geom_point(mapping = ggplot2::aes(x = .data$x, y = .data$y), data = data.frame(x = data[, 1],y = data[, 2])) +
+      ggplot2::geom_contour(ggplot2::aes(x = .data$phi, y = .data$psi, z = ifelse(b[, 3], 1, 0)),
+                                                    data = b, size = 1, lineend = "round" ) +
       ggplot2::scale_x_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
       ggplot2::scale_y_continuous(breaks = c(0,1,2,3,4)*pi/2, labels = c("0","pi/2","pi","3pi/2","2pi"), limits = c(0,2*pi)) +
       ggplot2::ggtitle(paste0("(Inductive) conformal prediction set with level = ", (1-level) * 100,"%"))

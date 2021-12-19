@@ -23,7 +23,7 @@
 #'   with an EM algorithm. It supports the von Mises mixture and its variants
 #'   based conformity scores. If "kmeans", the model is also based on the von
 #'   Mises mixture, but the parameter estimation is implemented with the
-#'   elliptical k-means algorithm illustrated in Appendix. It supports the
+#'   elliptical k-means algorithm. It supports the
 #'   log-max-mixture based conformity score only. If the
 #'   dimension of data space is greater than 2, only "kmeans" is supported.
 #'   Default is \code{model = "kmeans"}.
