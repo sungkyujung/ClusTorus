@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/ClusTorus)](https://cran.r-project.org/package=ClusTorus)
+[![R-CMD-check](https://github.com/sungkyujung/ClusTorus/workflows/R-CMD-check/badge.svg)](https://github.com/sungkyujung/ClusTorus/actions)
 <!-- badges: end -->
 Prediction and Clustering on The Torus by Conformal Prediction
 

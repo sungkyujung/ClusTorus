@@ -71,14 +71,13 @@ the same as above, but with the constraint that ellipsoids must be spheres.
 If "homogeneous-circular", the same as above but the radii of the spheres are
 identical. Default is "general". This argument only works for \code{model = "kmeans"}.}
 
-\item{init}{determine the initial parameter of "kmeans" method,
-for option "general". Must be "hierarchical" or "kmeans".
-If "hierarchical", the initial parameters are obtained with hierarchical
-clustering method.
-If "kmeans", the initial parameters are obtained with extrinsic kmeans
-method. Some options for kmeans clustering and hierarchical clustering can be
-designated via argument \code{...}.
-Default is "hierarchical".}
+\item{init}{Methods for choosing initial values of "kmeans" fitting. 
+ Must be "hierarchical" or "kmeans". If "hierarchical", the initial 
+parameters are obtained with hierarchical clustering method. 
+If "kmeans", the initial parameters are obtained with extrinsic k-means method. 
+ Additional arguments for k-means clustering and hierarchical clustering can be designated 
+ via argument \code{...}. If no options are designated, \code{nstart=1} for \code{init="kmeans"} 
+ and \code{method="complete"} for \code{init="hierarchical"} are used. Default is "hierarchical".}
 
 \item{d}{pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
 which used in hierarchical clustering. If \code{init = "hierarchical"} and \code{d = NULL},
@@ -87,10 +86,10 @@ which used in hierarchical clustering. If \code{init = "hierarchical"} and \code
 \item{additional.condition}{boolean index.
 If \code{TRUE}, a singular matrix will be altered to the scaled identity.}
 
-\item{J}{the number of components for \code{model = c("mixture", "kmeans")}.
+\item{J}{A scalar or numeric vector for the number(s) of components for \code{model = c("mixture", "kmeans")}.
 Default is \code{J = 4}.}
 
-\item{concentration}{the concentration parameter for \code{model = "kde"}.
+\item{concentration}{A scalar or numeric vector for the concentration parameter(s) for \code{model = "kde"}.
 Default is \code{concentration = 25}.}
 
 \item{kmax}{the maximal number of kappa. If estimated kappa is

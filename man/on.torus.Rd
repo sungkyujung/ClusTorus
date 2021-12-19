@@ -17,8 +17,7 @@ d-dimensional radian-unit angular data on \eqn{[0, 2\pi)^d}.
   to be on \eqn{[0, 2\pi)^d}.
 }
 \examples{
-data <- SARS_CoV_2$tbl[1:200, 1:2]
-data <- data * pi / 180
+data <- SARS_CoV_2 * pi / 180
 
 on.torus(data)
 }

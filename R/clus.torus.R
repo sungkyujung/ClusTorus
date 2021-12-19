@@ -13,7 +13,6 @@
 #' \code{\link[ClusTorus]{icp.torus}}, \code{\link[ClusTorus]{hyperparam.J}}, \code{\link[ClusTorus]{hyperparam.alpha}}
 #' \code{\link[ClusTorus]{hyperparam.torus}}, \code{\link[ClusTorus]{cluster.assign.torus}}.
 #'
-#'
 #' @param data n x d matrix of toroidal data on \eqn{[0, 2\pi)^d}
 #'   or \eqn{[-\pi, \pi)^d}
 #' @param split.id a n-dimensional vector consisting of values 1 (estimation)
@@ -60,9 +59,9 @@
 #'     several methods. For detail, see \code{\link[ClusTorus]{cluster.assign.torus}}.}
 #'   \item{\code{icp.torus}}{\code{icp.torus} object; containing model parameters and
 #'     conformity scores. For detail, see \code{\link[ClusTorus]{icp.torus}}.}
-#'   \item{\code{hyperparam.select}} {\code{hyperparam.torus} object (if \code{J = NULL} or a 
-#'   sequence of numbers, and  \code{level = NULL} or a sequence of numbers), \code{hyperparam.J} object (if \code{level} is a scalar), or \code{hyperparam.alpha} object (if \code{J} is a scalar); 
-#'    contains information for the optimally chosen model (number of components J) and level (alpha) 
+#'   \item{\code{hyperparam.select}}{\code{hyperparam.torus} object (if \code{J = NULL} or a
+#'   sequence of numbers, and  \code{level = NULL} or a sequence of numbers), \code{hyperparam.J} object (if \code{level} is a scalar), or \code{hyperparam.alpha} object (if \code{J} is a scalar);
+#'    contains information for the optimally chosen model (number of components J) and level (alpha)
 #'   based on prespecified criterion.  For detail, see \code{\link[ClusTorus]{hyperparam.torus}}, \code{\link[ClusTorus]{hyperparam.J}}, and \code{\link[ClusTorus]{hyperparam.alpha}}.}
 #' }
 #' @export

@@ -106,16 +106,14 @@ Only available for \code{panel = 1}.}
 \value{
 \code{clus.torus} returns a \code{clus.torus} object, which consists of following 3 different S3 objects;
 \describe{
-  \item{\code{cluster.obj}}{\code{cluster.obj} object; clustering assigment results for
+  \item{\code{cluster.obj}}{\code{cluster.obj} object; clustering assignment results for
     several methods. For detail, see \code{\link[ClusTorus]{cluster.assign.torus}}.}
   \item{\code{icp.torus}}{\code{icp.torus} object; containing model parameters and
     conformity scores. For detail, see \code{\link[ClusTorus]{icp.torus}}.}
-  \item{\code{hyperparam.J}}{(optional)\code{hyperparam.J} object; contains informations for the
-    optimally chosen model(number of components J) based on prespecified criterion. For detail, see \code{\link[ClusTorus]{hyperparam.J}}.}
-  \item{\code{hyperparam.alpha}}{(optional)\code{hyperparam.alpha} object; contains informations for the
-    optimally chosen level(alpha) based on the longest interval choosing method. For detail, see \code{\link[ClusTorus]{hyperparam.alpha}}.}
-  \item{\code{hyperparam.torus}}{(optional)\code{hyperparam.torus} object; contains informations for the
-    optimally chosen model(number of components J) and level(alpha). For detail, see \code{\link[ClusTorus]{hyperparam.torus}}.}
+  \item{\code{hyperparam.select}}{\code{hyperparam.torus} object (if \code{J = NULL} or a
+  sequence of numbers, and  \code{level = NULL} or a sequence of numbers), \code{hyperparam.J} object (if \code{level} is a scalar), or \code{hyperparam.alpha} object (if \code{J} is a scalar);
+   contains information for the optimally chosen model (number of components J) and level (alpha)
+  based on prespecified criterion.  For detail, see \code{\link[ClusTorus]{hyperparam.torus}}, \code{\link[ClusTorus]{hyperparam.J}}, and \code{\link[ClusTorus]{hyperparam.alpha}}.}
 }
 }
 \description{
@@ -124,7 +122,7 @@ Only available for \code{panel = 1}.}
 }
 \details{
 \code{clus.torus} is a user-friendly all-in-one function which implements following
-precedures automatically: 1. compute conformity scores for given model and fitting method,
+procedures automatically: 1. compute conformity scores for given model and fitting method,
 2. choose optimal model and level based on prespecified criterion, and
 3. make clusters based on the chosen model and level. Procedure 1-3 can be
 independently done with \code{icp.torus}, \code{hyperparam.torus},
