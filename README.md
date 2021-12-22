@@ -12,7 +12,7 @@ Prediction and Clustering on The Torus by Conformal Prediction
 
 This R package provides R functions to perform clustering multivariate angular data of any dimension on general tori. 
 
-A part of the functions and data sets in this package was used to develop an unpublished paper "Clustering on the torus by conformal prediction" by Jung, Park and Kim. 
+A part of the functions and data sets in this package was used to develop an research article (Jung, Park and Kim (2021). "Clustering on the torus by conformal prediction" *Ann. Appl. Stat.*, 15(4), 1583-1603. 
 
 ## Installation
 
