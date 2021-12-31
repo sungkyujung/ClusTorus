@@ -71,12 +71,12 @@ the same as above, but with the constraint that ellipsoids must be spheres.
 If "homogeneous-circular", the same as above but the radii of the spheres are
 identical. Default is "general". This argument only works for \code{model = "kmeans"}.}
 
-\item{init}{Methods for choosing initial values of "kmeans" fitting. 
- Must be "hierarchical" or "kmeans". If "hierarchical", the initial 
-parameters are obtained with hierarchical clustering method. 
-If "kmeans", the initial parameters are obtained with extrinsic k-means method. 
- Additional arguments for k-means clustering and hierarchical clustering can be designated 
- via argument \code{...}. If no options are designated, \code{nstart=1} for \code{init="kmeans"} 
+\item{init}{Methods for choosing initial values of "kmeans" fitting.
+ Must be "hierarchical" or "kmeans". If "hierarchical", the initial
+parameters are obtained with hierarchical clustering method.
+If "kmeans", the initial parameters are obtained with extrinsic k-means method.
+ Additional arguments for k-means clustering and hierarchical clustering can be designated
+ via argument \code{...}. If no options are designated, \code{nstart=1} for \code{init="kmeans"}
  and \code{method="complete"} for \code{init="hierarchical"} are used. Default is "hierarchical".}
 
 \item{d}{pairwise distance matrix(\code{dist} object) for \code{init = "hierarchical"},
@@ -149,6 +149,11 @@ icp.torus <- icp.torus(data, model = "kmeans",
 }
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction"
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+
+  Mardia, K. V., Kent, J. T., Zhang, Z., Taylor, C. C., & Hamelryck, T. (2012). Mixtures of concentrated multivariate sine distributions with applications to bioinformatics. \emph{Journal of Applied Statistics}, 39(11), 2475-2492.
+
+  Di Marzio, M., Panzera, A., & Taylor, C. C. (2011). Kernel density estimation on the torus. \emph{Journal of Statistical Planning and Inference}, 141(6), 2156-2173.
+
+  Shin, J., Rinaldo, A., & Wasserman, L. (2019). Predictive clustering. \emph{arXiv preprint arXiv:1903.08125}.
 }

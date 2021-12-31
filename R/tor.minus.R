@@ -8,8 +8,7 @@
 #' @return angular subtraction bewtween n x d toroidal data and
 #'   a d dimensional vector.
 #' @seealso \code{\link{ang.minus}}
-#' @references S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction"
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 #' @export
 #' @examples
 #' data <- ILE[1:200, 1:2]

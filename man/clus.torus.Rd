@@ -44,7 +44,7 @@ on the von Mises mixture, fitted
 with an EM algorithm. It supports the von Mises mixture and its variants
 based conformity scores. If "kmeans", the model is also based on the von
 Mises mixture, but the parameter estimation is implemented with the
-elliptical k-means algorithm illustrated in Appendix. It supports the
+elliptical k-means algorithm. It supports the
 log-max-mixture based conformity score only. If the
 dimension of data space is greater than 2, only "kmeans" is supported.
 Default is \code{model = "kmeans"}.}
@@ -139,8 +139,11 @@ clus.torus(data = data, model = "kmeans", kmeansfitmethod = "general", J = 5:30,
 }
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction" to appear in Annals of Applied Statistics.
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+
+  Mardia, K. V., Kent, J. T., Zhang, Z., Taylor, C. C., & Hamelryck, T. (2012). Mixtures of concentrated multivariate sine distributions with applications to bioinformatics. \emph{Journal of Applied Statistics}, 39(11), 2475-2492.
+
+  Shin, J., Rinaldo, A., & Wasserman, L. (2019). Predictive clustering. \emph{arXiv preprint arXiv:1903.08125}.
 }
 \seealso{
 \code{\link[ClusTorus]{icp.torus}}, \code{\link[ClusTorus]{hyperparam.torus}},

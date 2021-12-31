@@ -19,8 +19,7 @@
 #' @source This data can be downloaded in
 #'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
 #'   \code{bio3d}. Precisely, we use the code: \code{bio3d::torsion.pdb(bio3d::read.pdb("6vxx"))}
-#' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
-#'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
+#' @references Walls, A. C., Park, Y. J., Tortorici, M. A., Wall, A., McGuire, A. T., & Veesler, D. (2020). Structure, function, and antigenicity of the SARS-CoV-2 spike glycoprotein. \emph{Cell}, 181(2), 281-292.
 #'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
 #' @seealso Description of the angluar information is from the 'value'
 #'   part of \code{torsion.pdb} in the package \code{bio3d}.
@@ -41,8 +40,7 @@
 #' @source This data can be downloaded in
 #'   \url{https://www.rcsb.org/structure/6VXX}, or with using R package
 #'   \code{bio3d}. To see the precise extracting code, visit \url{https://github.com/sungkyujung/ClusTorus/tree/master/data-raw}
-#' @references Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
-#'   spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
+#' @references Walls, A. C., Park, Y. J., Tortorici, M. A., Wall, A., McGuire, A. T., & Veesler, D. (2020). Structure, function, and antigenicity of the SARS-CoV-2 spike glycoprotein. \emph{Cell}, 181(2), 281-292.
 #'   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
 #' @seealso Description of the angluar information is from the 'value'
 #'   part of \code{torsion.pdb} in the package \code{bio3d}.
@@ -71,13 +69,9 @@
 #' @source This data is extracted from PISCES server \url{http://dunbrack.fccc.edu/pisces/}
 #' @references Data description is from \url{https://www.rcsb.org/ligand/ILE}.
 #'
-#'   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
-#'   "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306
-#'   \doi{https://doi.org/10.1186/1471-2105-11-306} and
+#'   The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M., Frellsen, J., Johansson, K. E., & Hamelryck, T. (2010). Beyond rotamers: a generative, probabilistic model of side chains in proteins. \emph{BMC bioinformatics}, 11(1), 1-13.
 #'
-#'   Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
-#'   "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
-#'   Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
+#'   Mardia, K. V., Kent, J. T., Zhang, Z., Taylor, C. C., & Hamelryck, T. (2012). Mixtures of concentrated multivariate sine distributions with applications to bioinformatics. \emph{Journal of Applied Statistics}, 39(11), 2475-2492.
 #'
 #' @seealso Description of the angluar information is from the 'value'
 #'   part of \code{torsion.pdb} in the package \code{bio3d}.
@@ -98,8 +92,7 @@
 #'   where three clusters are sampled from bivariate normal distributions
 #'   and the other two are each sampled from the uniform distribution on a rectangle.
 #'
-#' @references This simulation data is from S. Jung, K. Park, B. Kim (2021)
-#'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 "toydata1"
 
 #' toydata2: Labelled Data for 3 Clusters
@@ -119,6 +112,5 @@
 #'   and the third cluster of size 50 is sampled from the uniform distribution on the
 #'   entire 2-dimensional torus.
 #'
-#' @references This simulation data is from S. Jung, K. Park, B. Kim (2021)
-#'   "Clustering on the torus by conformal prediction". Annals of Applied Statistics
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 "toydata2"

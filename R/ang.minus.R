@@ -7,8 +7,7 @@
 #' @return returns a scalar or a vector whose elements are in
 #'   \eqn{[-\pi, \pi)}.
 #' @export
-#' @references S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction"
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. The Annals of Applied Statistics, 15(4), 1583-1603.
 #' @examples
 #' x <- c(pi/2, 0)
 #' y <- c(pi, pi/3)

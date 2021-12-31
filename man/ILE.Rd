@@ -35,13 +35,9 @@ ILE data is generated with collection of different pdb files. To select adequate
 \references{
 Data description is from \url{https://www.rcsb.org/ligand/ILE}.
 
-  The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M. et al.(2010)
-  "Beyond rotamers: a generative, probabilistic model of side chains in proteins". BMC Bioinformatics 11, 306
-  \doi{https://doi.org/10.1186/1471-2105-11-306} and
+  The data extracting method is from Harder, T., Boomsma, W., Paluszewski, M., Frellsen, J., Johansson, K. E., & Hamelryck, T. (2010). Beyond rotamers: a generative, probabilistic model of side chains in proteins. \emph{BMC bioinformatics}, 11(1), 1-13.
 
-  Kanti V. Mardia , John T. Kent , Zhengzheng Zhang , Charles C. Taylor & Thomas Hamelryck (2012)
-  "Mixtures of concentrated multivariate sine distributions with applications to bioinformatics",
-  Journal of Applied Statistics, 39:11, 2475-2492, DOI: 10.1080/02664763.2012.719221
+  Mardia, K. V., Kent, J. T., Zhang, Z., Taylor, C. C., & Hamelryck, T. (2012). Mixtures of concentrated multivariate sine distributions with applications to bioinformatics. \emph{Journal of Applied Statistics}, 39(11), 2475-2492.
 }
 \seealso{
 Description of the angluar information is from the 'value'

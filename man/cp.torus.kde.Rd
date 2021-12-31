@@ -44,8 +44,9 @@ cp.torus.kde(data, eval.point = grid.torus(),
              level = 0.05, concentration = 25)
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction"
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+
+  Di Marzio, M., Panzera, A., & Taylor, C. C. (2011). Kernel density estimation on the torus. \emph{Journal of Statistical Planning and Inference}, 141(6), 2156-2173.
 }
 \seealso{
 \code{\link{kde.torus}}, \code{\link{grid.torus}}

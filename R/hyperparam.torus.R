@@ -23,10 +23,11 @@
 #'   selected hyperparameters based on the designated criterion, and
 #'   an \code{icp.torus} object based the selected hyperparameters.
 #' @export
-#' @references S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction",
-#'   Akaike (1974), "A new look at the statistical model identification",
-#'   Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+#'
+#'   Akaike, H. (1974). A new look at the statistical model identification. \emph{IEEE transactions on automatic control}, 19(6), 716-723.
+#'
+#'   Schwarz, G. (1978). Estimating the dimension of a model. \emph{The annals of statistics}, 461-464.
 #' @examples
 #' \donttest{
 #' data <- toydata2[, 1:2]

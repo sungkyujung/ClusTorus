@@ -32,8 +32,7 @@ data_6VXX
 The torsion angle dataset of SARS-CoV-2 spike glycopreotein.
 }
 \references{
-Walls, A.C., et al. (2020), "Structure of the SARS-CoV-2
-  spike glycoprotein (closed state)" Cell 181: 281, DOI:10.2210/pdb6vxx/pdb.
+Walls, A. C., Park, Y. J., Tortorici, M. A., Wall, A., McGuire, A. T., & Veesler, D. (2020). Structure, function, and antigenicity of the SARS-CoV-2 spike glycoprotein. \emph{Cell}, 181(2), 281-292.
   Retrived from \url{https://www.wwpdb.org/pdb?id=pdb_00006vxx}
 }
 \seealso{

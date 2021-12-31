@@ -76,10 +76,11 @@ data <- ILE[1:200, 1:2]
 ellip.kmeans.torus(data, centers = 3, type = "general", init = "hierarchical")
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction", and
-  Jaehyeok Shin, Alessandro Rinaldo and Larry Wasserman (2019),
-  "Predictive Clustering"
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+
+  Mardia, K. V., Kent, J. T., Zhang, Z., Taylor, C. C., & Hamelryck, T. (2012). Mixtures of concentrated multivariate sine distributions with applications to bioinformatics. \emph{Journal of Applied Statistics}, 39(11), 2475-2492.
+
+  Shin, J., Rinaldo, A., & Wasserman, L. (2019). Predictive clustering. \emph{arXiv preprint arXiv:1903.08125}.
 }
 \seealso{
 \code{\link[ClusTorus]{kmeans.torus}}

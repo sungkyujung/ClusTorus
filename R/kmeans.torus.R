@@ -31,9 +31,9 @@
 #'   \item{\code{betweenss}}{The between-cluster sum of squares.}
 #' }
 #'
-#' @references 'S. Jung, K. Park, and B. Kim (2021),
-#'   "Clustering on the torus by conformal prediction"
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 #'
+#'   Gao, Y., Wang, S., Deng, M., & Xu, J. (2018). RaptorX-Angle: real-value prediction of protein backbone dihedral angles through a hybrid method of clustering and deep learning. \emph{BMC bioinformatics}, 19(4), 73-84.
 #' @seealso \code{\link[stats]{kmeans}}, \code{\link[ClusTorus]{ang.minus}}, \code{\link[ClusTorus]{ang.dist}}
 #' @export
 #' @examples

@@ -14,8 +14,11 @@
 #' @export
 #' @seealso \code{\link[ClusTorus]{icp.torus}}, \code{\link[ClusTorus]{hyperparam.torus}},
 #'   \code{\link[ClusTorus]{hyperparam.alpha}}
-#' @references Akaike (1974), "A new look at the statistical model identification",
-#'   Schwarz, Gideon E. (1978), "Estimating the dimension of a model"
+#' @references Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
+#'
+#'   Akaike, H. (1974). A new look at the statistical model identification. \emph{IEEE transactions on automatic control}, 19(6), 716-723.
+#'
+#'   Schwarz, G. (1978). Estimating the dimension of a model. \emph{The annals of statistics}, 461-464.
 #' @examples
 #' \donttest{
 #' data <- toydata1[,1:2]

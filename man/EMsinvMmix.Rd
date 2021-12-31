@@ -85,6 +85,5 @@ EMsinvMmix(data, J = 3,
 }
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction" to appear in \emph{Annals of Applied Statistics}.
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 }

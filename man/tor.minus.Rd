@@ -25,8 +25,7 @@ Mu1 <- c(4.5, 3)
 tor.minus(data, Mu1)
 }
 \references{
-S. Jung, K. Park, and B. Kim (2021),
-  "Clustering on the torus by conformal prediction"
+Jung, S., Park, K., & Kim, B. (2021). Clustering on the torus by conformal prediction. \emph{The Annals of Applied Statistics}, 15(4), 1583-1603.
 }
 \seealso{
 \code{\link{ang.minus}}
