@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/ClusTorus)](https://cran.r-project.org/package=ClusTorus)
-[![](https://img.shields.io/badge/devel%20version-0.2.2-blue.svg)](https://github.com/sungkyujung/ClusTorus)
+[![](https://img.shields.io/badge/devel%20version-0.2.3-blue.svg)](https://github.com/sungkyujung/ClusTorus)
 [![downloads](https://cranlogs.r-pkg.org/badges/ClusTorus)](https://cranlogs.r-pkg.org/badges/ClusTorus)
 
 [![R-CMD-check](https://github.com/sungkyujung/ClusTorus/workflows/R-CMD-check/badge.svg)](https://github.com/sungkyujung/ClusTorus/actions)
