@@ -105,6 +105,7 @@ logLik.icp.torus <- function(object, ...){
     df <- k * j - 1
   }
   cat("\'log Lik.\'", loglik, paste0("(df=", df,")"))
+  cat("\n")
 }
 
 #' @param object \code{icp.torus} object
@@ -205,7 +206,7 @@ plot.icp.torus <- function(x, data = NULL, level = 0.1, ellipse = TRUE, out = FA
       b <- data.frame(ia$eval.point, ia$Chat_kmeans == 1)
     }
     colnames(b) <- c("phi","psi", model)
-    g0 <- ggplot2::ggplot(...) + 
+    g0 <- ggplot2::ggplot(...) +
       ggplot2::geom_point(mapping = ggplot2::aes(x = .data$x, y = .data$y), data = data.frame(x = data[, 1],y = data[, 2])) +
       ggplot2::geom_contour(ggplot2::aes(x = .data$phi, y = .data$psi, z = ifelse(b[, 3], 1, 0)),
                                                     data = b, size = 1, lineend = "round" ) +
@@ -262,6 +263,7 @@ print.icp.torus.eval <- function(x, ...){
                           inclusion.max = icp.torus.eval$Chat_max, inclusion.e = icp.torus.eval$Chat_e), n = n))
   }
   cat("\n", nrow(icp.torus.eval$eval.point) - n, "rows are omitted.")
+  cat("\n")
 }
 
 # cp.torus.kde object ----------------------------------------------
@@ -301,6 +303,7 @@ print.cp.torus.kde <- function(x, ...){
   n_test <- min(nrow(cp.torus.kde$cp.torus), n_test)
   print(utils::head(data.frame(cp.torus.kde$cp.torus), n = n_test))
   cat("\n", nrow(cp.torus.kde$cp.torus) - n_test, "rows are omitted.")
+  cat("\n")
 }
 
 #' plot the conformal prediction set based on kernel density estimation
@@ -371,6 +374,7 @@ print.cluster.obj <- function(x, ...){
                                        function(x){sum(cluster.obj$cluster.id.by.Mah.dist == x)}), "\n")
   cat("\n")
   cat(length(cluster.obj$cluster.id.log.density) - n, "clustering results are omitted.")
+  cat("\n")
 }
 
 
@@ -388,13 +392,13 @@ print.cluster.obj <- function(x, ...){
 #' @rdname cluster.assign.torus
 #' @method plot cluster.obj
 #' @export
-plot.cluster.obj <- function(x, 
-                             assignment = c("outlier", "log.density", "posterior", "mahalanobis"), 
+plot.cluster.obj <- function(x,
+                             assignment = c("outlier", "log.density", "posterior", "mahalanobis"),
                              overlay = FALSE, out = FALSE, ...){
 
   cluster.obj <- x
   if(is.null(data)) {stop("invalid input: data must be input.")}
-  
+
   assignment <- match.arg(assignment)
   if(!is.character(assignment) || !(assignment) %in% c("outlier", "log.density", "posterior", "mahalanobis")) {
     assignment <- "outlier"
