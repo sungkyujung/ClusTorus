@@ -60,7 +60,7 @@ cluster.assign.torus <- function(icp.object, data = NULL, level = NULL){
 
 
 
-  if (class(icp.object) == "hyperparam.torus") {
+  if (is(icp.object, "hyperparam.torus")) {
     icp.torus <- icp.object$icp.torus
     if (is.null(level)){
       level <- icp.object$alphahat

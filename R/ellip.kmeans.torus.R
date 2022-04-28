@@ -89,7 +89,7 @@ ellip.kmeans.torus <- function(data, centers = 10,
     kmeans.out <- kmeans.torus(data, centers, ...)
   } else {
     J <- ifelse(is.null(ncol(centers)), centers, ncol(centers))
-    if (!(class(d) == "dist")) {stop("invalid d: d must be a distance matrix (dist object).")}
+    if (!is(d, "dist")) {stop("invalid d: d must be a distance matrix (dist object).")}
     kmeans.out <- hcluster.torus(data, J = centers, d = d, ...)
   }
 
